@@ -4,8 +4,9 @@
  * Les modèles (fichiers et aperçus dans MinIO) s'ajoutent avec l'étape Publication.
  */
 import { fileURLToPath } from "node:url";
-import { ensureCoreAccounts, hashPassword } from "@/features/account/bootstrap";
+import { ensureCoreAccounts } from "@/features/account/bootstrap";
 import { CATEGORIES, ensureCategories } from "@/features/catalog/categories";
+import { hashPassword } from "@/lib/auth/password";
 import { createPrismaClient } from "@/lib/db";
 import type { PrismaClient } from "@/lib/generated/prisma/client";
 import { slugify } from "@/lib/slug";

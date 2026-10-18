@@ -2,10 +2,16 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import { createTranslator } from "next-intl";
 import type * as NextIntl from "next-intl";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import messages from "@/messages/fr.json";
 import { seed } from "@/prisma/seed";
 import { prisma } from "@/tests/setup/backend";
+import { requestContext } from "@/tests/support/next-request";
+
+beforeEach(() => {
+  requestContext.reset();
+  requestContext.headers.set("x-nonce", "nonce-de-test");
+});
 
 // Hors runtime Next : traductions serveur et en-têtes de requête simulés.
 vi.mock("next-intl/server", () => ({
@@ -23,9 +29,7 @@ vi.mock("next-intl", async (importOriginal) => {
     ),
   };
 });
-vi.mock("next/headers", () => ({
-  headers: async () => new Headers({ "x-nonce": "nonce-de-test" }),
-}));
+vi.mock("next/headers", async () => (await import("@/tests/support/next-request")).headersModule);
 vi.mock("next/navigation", () => ({ usePathname: () => "/" }));
 vi.mock("@/app/fonts", () => ({
   bricolage: { variable: "font-bricolage" },

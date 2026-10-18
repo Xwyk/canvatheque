@@ -2,7 +2,13 @@
   "meta": {
     "siteName": "Canvathèque",
     "defaultTitle": "Canvathèque — modèles de découpe gratuits pour ScanNCut",
-    "description": "Des modèles de découpe .cwprj et .svg pour Brother ScanNCut, partagés gratuitement par la communauté."
+    "description": "Des modèles de découpe .cwprj et .svg pour Brother ScanNCut, partagés gratuitement par la communauté.",
+    "signIn": "Connexion",
+    "signUp": "Inscription",
+    "forgot": "Mot de passe oublié",
+    "reset": "Nouveau mot de passe",
+    "checkMail": "Confirmation d'adresse",
+    "settings": "Paramètres du compte"
   },
   "a11y": {
     "skipToContent": "Aller au contenu principal"
@@ -16,7 +22,11 @@
     "signIn": "Se connecter",
     "signInShort": "Connexion",
     "signUp": "Créer un compte",
-    "publish": "Publier un modèle"
+    "publish": "Publier un modèle",
+    "accountMenu": "Compte de {pseudo}",
+    "settings": "Paramètres du compte",
+    "signOut": "Se déconnecter",
+    "admin": "Administration"
   },
   "theme": {
     "toDark": "Activer le thème sombre",
@@ -58,7 +68,10 @@
     "ctaTitle": "Un compte gratuit, et tout s'ouvre.",
     "ctaText": "Téléchargez les modèles des autres, publiez les vôtres, gardez vos favoris. Sans abonnement, sans publicité.",
     "ctaButton": "Créer mon compte gratuit",
-    "popularFallback": ["Mandala", "Cartes de vœux", "Boîtes", "Anniversaire"]
+    "popularFallback": ["Mandala", "Cartes de vœux", "Boîtes", "Anniversaire"],
+    "ctaMemberTitle": "Votre atelier vous attend.",
+    "ctaMemberText": "Partagez vos créations : un fichier, un aperçu, quelques mots, et c'est en ligne.",
+    "ctaMemberButton": "Publier un modèle"
   },
   "notFound": {
     "title": "Cette page s'est envolée",
@@ -71,5 +84,158 @@
     "retry": "Réessayer",
     "back": "Retour à l'accueil",
     "reference": "Référence : {digest}"
+  },
+  "auth": {
+    "tabsLabel": "Connexion ou inscription",
+    "tabSignIn": "Connexion",
+    "tabSignUp": "Inscription",
+    "signInTitle": "Bon retour parmi nous",
+    "signInSubtitle": "Connectez-vous pour télécharger, publier et retrouver vos favoris.",
+    "signUpTitle": "Créez votre compte gratuit",
+    "signUpSubtitle": "Une minute, aucun paiement. Téléchargez et publiez des modèles dès l'inscription.",
+    "pseudo": "Pseudo",
+    "pseudoHint": "3 à 30 caractères : lettres, chiffres, point, tiret, tiret bas. Il ne pourra plus être modifié.",
+    "email": "Adresse e-mail",
+    "emailPlaceholder": "vous@exemple.fr",
+    "password": "Mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "acceptTos": "J'accepte les <terms>conditions d'utilisation</terms> et la <privacy>politique de confidentialité</privacy>.",
+    "signUpSubmit": "Créer mon compte",
+    "signInSubmit": "Se connecter",
+    "forgotLink": "Mot de passe oublié ?",
+    "haveAccount": "Déjà inscrit·e ?",
+    "noAccount": "Pas encore de compte ?",
+    "signInLink": "Se connecter",
+    "signUpLink": "Créer un compte",
+    "pending": "Un instant…",
+    "strength": {
+      "label": "Robustesse : {level} · {min} caractères minimum",
+      "empty": "{min} caractères minimum",
+      "tooShort": "trop court",
+      "weak": "faible",
+      "good": "bonne",
+      "strong": "excellente"
+    },
+    "forgotTitle": "Mot de passe oublié",
+    "forgotSubtitle": "Indiquez l'adresse de votre compte : nous vous enverrons un lien pour choisir un nouveau mot de passe.",
+    "forgotSubmit": "Recevoir le lien",
+    "forgotSent": "Si un compte existe pour cette adresse, un e-mail vient de partir. Le lien est valable une heure.",
+    "backToSignIn": "Retour à la connexion",
+    "resetTitle": "Choisissez un nouveau mot de passe",
+    "resetSubtitle": "Il remplacera l'ancien et fermera vos autres sessions.",
+    "resetSubmit": "Enregistrer et me connecter",
+    "resetInvalid": "Ce lien n'est plus valable : il a expiré ou a déjà servi. Demandez-en un nouveau.",
+    "resetRequestNew": "Demander un nouveau lien",
+    "checkMail": {
+      "verifiedTitle": "Adresse confirmée",
+      "verifiedText": "Merci ! Votre adresse e-mail est confirmée : vous pouvez publier des modèles.",
+      "alreadyVerifiedText": "Votre adresse e-mail était déjà confirmée.",
+      "changedTitle": "Nouvelle adresse enregistrée",
+      "changedText": "Votre compte utilise désormais l'adresse {email}.",
+      "invalidTitle": "Lien invalide ou expiré",
+      "invalidText": "Ce lien n'est plus valable. Depuis votre compte, vous pouvez en demander un nouveau.",
+      "continue": "Continuer",
+      "changedTextAnonymous": "Votre nouvelle adresse est enregistrée. Connectez-vous avec elle désormais."
+    },
+    "unverified": {
+      "text": "Confirmez votre adresse e-mail pour pouvoir publier : le lien vous a été envoyé à {email}.",
+      "resend": "Renvoyer le lien",
+      "sent": "Nouveau lien envoyé à {email}."
+    },
+    "flash": {
+      "welcome": "Bienvenue {pseudo} ! Un e-mail de confirmation vient de partir.",
+      "signedIn": "Vous êtes connecté·e.",
+      "signedOut": "Vous êtes déconnecté·e.",
+      "passwordReset": "Mot de passe modifié. Vous êtes connecté·e."
+    }
+  },
+  "settings": {
+    "title": "Paramètres du compte",
+    "subtitle": "Connecté·e en tant que {pseudo}",
+    "profileTitle": "Profil",
+    "bio": "Présentation",
+    "bioHint": "300 caractères maximum, visible sur votre profil public.",
+    "website": "Site web",
+    "websitePlaceholder": "https://",
+    "profileSubmit": "Enregistrer le profil",
+    "profileSaved": "Profil enregistré.",
+    "emailTitle": "Adresse e-mail",
+    "emailCurrent": "Adresse actuelle : {email}",
+    "emailVerified": "confirmée",
+    "emailUnverified": "non confirmée",
+    "newEmail": "Nouvelle adresse e-mail",
+    "emailSubmit": "Changer d'adresse",
+    "emailSent": "Un lien de confirmation a été envoyé à {email}. Le changement prendra effet après confirmation.",
+    "passwordTitle": "Mot de passe",
+    "passwordSubmit": "Changer le mot de passe",
+    "passwordChanged": "Mot de passe modifié. Vos autres sessions ont été fermées."
+  },
+  "errors": {
+    "generic": "Une erreur est survenue. Réessayez.",
+    "validation": "Certains champs sont à corriger.",
+    "rateLimited": "Trop de tentatives. Réessayez dans {minutes, plural, one {# minute} other {# minutes}}.",
+    "invalidCredentials": "Adresse e-mail ou mot de passe incorrect.",
+    "banned": "Ce compte a été suspendu.",
+    "pseudoTaken": "Ce pseudo est déjà pris.",
+    "emailTaken": "Un compte utilise déjà cette adresse.",
+    "wrongPassword": "Mot de passe incorrect.",
+    "sameEmail": "C'est déjà votre adresse actuelle.",
+    "unauthorized": "Connectez-vous pour continuer.",
+    "forbidden": "Action non autorisée.",
+    "field": {
+      "required": "Ce champ est obligatoire.",
+      "pseudoLength": "Entre 3 et 30 caractères.",
+      "pseudoChars": "Lettres, chiffres, point, tiret et tiret bas uniquement ; commence par une lettre ou un chiffre.",
+      "pseudoReserved": "Ce pseudo est réservé.",
+      "email": "Adresse e-mail invalide.",
+      "passwordShort": "10 caractères minimum.",
+      "passwordLong": "128 caractères maximum.",
+      "passwordCommon": "Ce mot de passe est trop courant : choisissez-en un autre.",
+      "tos": "Vous devez accepter les conditions pour créer un compte.",
+      "bioLong": "300 caractères maximum.",
+      "url": "Adresse web invalide (commençant par http:// ou https://).",
+      "emailTaken": "Un compte utilise déjà cette adresse.",
+      "pseudoTaken": "Ce pseudo est déjà pris.",
+      "wrongPassword": "Mot de passe incorrect.",
+      "sameEmail": "C'est déjà votre adresse actuelle."
+    }
+  },
+  "emails": {
+    "footer": "Canvathèque, modèles de découpe partagés par la communauté. Vous recevez ce message à la suite d'une action sur votre compte.",
+    "ignore": "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.",
+    "verify": {
+      "subject": "Confirmez votre adresse e-mail",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Bienvenue sur Canvathèque ! Confirmez votre adresse pour pouvoir publier vos modèles.",
+      "action": "Confirmer mon adresse",
+      "expiry": "Ce lien est valable 48 heures."
+    },
+    "reset": {
+      "subject": "Réinitialisation de votre mot de passe",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Vous avez demandé à changer votre mot de passe.",
+      "action": "Choisir un nouveau mot de passe",
+      "expiry": "Ce lien est valable une heure et ne sert qu'une fois."
+    },
+    "changeEmail": {
+      "subject": "Confirmez votre nouvelle adresse e-mail",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Vous avez demandé à utiliser cette adresse pour votre compte Canvathèque.",
+      "action": "Confirmer cette adresse",
+      "expiry": "Ce lien est valable 24 heures."
+    },
+    "emailChanged": {
+      "subject": "Votre adresse e-mail a changé",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "L'adresse de votre compte est désormais {email}. Si vous n'êtes pas à l'origine de ce changement, répondez à ce message sans attendre."
+    },
+    "passwordChanged": {
+      "subject": "Votre mot de passe a changé",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Le mot de passe de votre compte vient d'être modifié et vos autres sessions ont été fermées. Si vous n'êtes pas à l'origine de ce changement, réinitialisez-le immédiatement."
+    }
   }
 }

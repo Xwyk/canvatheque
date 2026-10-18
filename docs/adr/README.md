@@ -5,9 +5,9 @@ Chaque décision structurante est consignée ici : contexte, décision, conséqu
 | N°                                             | Titre                                                             | Statut   | Étape                     |
 | ---------------------------------------------- | ----------------------------------------------------------------- | -------- | ------------------------- |
 | [001](001-nextjs-app-router.md)                | Next.js App Router et Server Actions                              | Acceptée | 0                         |
-| [002](002-auth-sessions-en-base.md)            | Auth.js Credentials avec sessions en base                         | Acceptée | 0 (mise en œuvre étape 1) |
+| [002](002-auth-sessions-en-base.md)            | Sessions en base, module maison (amendée : remplace Auth.js)      | Acceptée | 1                         |
 | [003](003-rasterisation-resvg.md)              | resvg-js pour la rasterisation SVG, sharp pour le post-traitement | Acceptée | 0 (mise en œuvre étape 2) |
-| [004](004-rate-limit-postgresql.md)            | Limitation de débit dans PostgreSQL                               | Acceptée | 0 (mise en œuvre étape 1) |
+| [004](004-rate-limit-postgresql.md)            | Limitation de débit dans PostgreSQL                               | Acceptée | 1                         |
 | 005                                            | Recherche tsvector `french_unaccent`                              | Prévue   | 3                         |
 | 006                                            | Upload direct présigné avec confirmation serveur                  | Prévue   | 2                         |
 | 007                                            | Pagination par curseur                                            | Prévue   | 3                         |

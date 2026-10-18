@@ -3,6 +3,8 @@ import { ensureCategories } from "@/features/catalog/categories";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
+import { mailer } from "@/lib/mail/mailer";
+import { resetPasswordMessage } from "@/lib/mail/templates";
 
 /** Tâches exécutées une fois au démarrage du serveur (voir instrumentation.ts). */
 export async function runStartupTasks(): Promise<void> {
@@ -15,11 +17,24 @@ export async function runStartupTasks(): Promise<void> {
     appUrl: config.APP_URL,
   });
   if (result.resetUrl) {
-    // Pas encore d'envoi d'e-mail (étape 1) : le lien est affiché une fois dans les journaux.
-    logger.warn(
-      { event: "admin_bootstrap", resetUrl: result.resetUrl },
-      "Compte administrateur sans mot de passe : utilisez ce lien (valable 24 h) pour le définir",
-    );
+    if (config.SMTP_HOST) {
+      await mailer().send(
+        resetPasswordMessage(
+          { to: result.adminEmail, pseudo: result.adminPseudo },
+          result.resetUrl,
+        ),
+      );
+      logger.warn(
+        { event: "admin_bootstrap", delivery: "email" },
+        "Compte administrateur sans mot de passe : lien de définition envoyé par e-mail (24 h)",
+      );
+    } else {
+      // Sans SMTP, le lien n'a pas d'autre canal : il est affiché une fois dans les journaux.
+      logger.warn(
+        { event: "admin_bootstrap", delivery: "log", resetUrl: result.resetUrl },
+        "Compte administrateur sans mot de passe : utilisez ce lien (valable 24 h) pour le définir",
+      );
+    }
   }
   logger.info({ event: "startup_complete" }, "Canvathèque prête");
 }

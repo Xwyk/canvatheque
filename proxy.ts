@@ -6,6 +6,7 @@ import {
   resolveRequestId,
   securityHeaders,
 } from "@/lib/security/csp";
+import { SESSION_TTL_MS, sessionCookieName, sessionCookieOptions } from "@/lib/auth/session";
 
 export function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
@@ -29,6 +30,16 @@ export function proxy(request: NextRequest) {
   response.headers.set("x-request-id", requestId);
   for (const [name, value] of Object.entries(securityHeaders(isHttps))) {
     response.headers.set(name, value);
+  }
+  // Session glissante côté navigateur : la base reste l'autorité sur la validité.
+  // Uniquement en GET, pour ne pas interférer avec les cookies posés par les Server Actions.
+  if (request.method === "GET") {
+    const name = sessionCookieName(isHttps);
+    const token = request.cookies.get(name)?.value;
+    if (token) {
+      const expires = new Date(Date.now() + SESSION_TTL_MS);
+      response.cookies.set(name, token, sessionCookieOptions(isHttps, expires));
+    }
   }
   return response;
 }

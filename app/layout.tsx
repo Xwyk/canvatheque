@@ -3,10 +3,14 @@ import { headers } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { bricolage, figtree } from "@/app/fonts";
+import { FlashToast } from "@/components/flash-toast";
 import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/layout/theme-provider";
+import { UnverifiedBanner } from "@/components/layout/unverified-banner";
+import { Toaster } from "@/components/ui/sonner";
+import { getCurrentUser } from "@/lib/auth/current";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,6 +34,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   // Lire l'en-tête rend chaque page dynamique : condition de la CSP à nonces (ADR-011).
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   const t = await getTranslations("a11y");
+  const user = await getCurrentUser();
+  const headerUser = user
+    ? { pseudo: user.pseudo, email: user.email, isAdmin: user.role === "ADMIN" }
+    : null;
 
   return (
     <html
@@ -46,12 +54,15 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             >
               {t("skipToContent")}
             </a>
-            <SiteHeader />
+            {user && !user.emailVerifiedAt && <UnverifiedBanner email={user.email} />}
+            <SiteHeader user={headerUser} />
             <main id="contenu" tabIndex={-1} className="flex-1 outline-none">
               {children}
             </main>
             <SiteFooter />
             <MobileTabBar />
+            <Toaster position="top-center" richColors closeButton />
+            <FlashToast />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

@@ -1,0 +1,18 @@
+# Pile de tests de bout en bout : image de production + Mailpit.
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build --wait
+# Les limites de débit sont relevées : les scénarios créent de nombreux comptes depuis la même IP
+# (les limites elles-mêmes sont couvertes par les tests d'intégration).
+services:
+  app:
+    environment:
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      RATE_LIMIT_SIGNUP_PER_HOUR: "1000"
+      RATE_LIMIT_LOGIN_PER_15MIN: "1000"
+      RATE_LIMIT_RESET_PER_HOUR: "1000"
+    depends_on:
+      mailpit:
+        condition: service_healthy
+
+  mailpit:
+    profiles: !reset []

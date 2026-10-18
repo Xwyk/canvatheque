@@ -94,8 +94,8 @@ jobs:
         run: |
           cp .env.example .env
           sed -i "s#^AUTH_SECRET=.*#AUTH_SECRET=$(openssl rand -base64 32)#" .env
-      - name: Construction et démarrage de la pile de production
-        run: docker compose -f docker-compose.yml up -d --build --wait --wait-timeout 300
+      - name: Construction et démarrage de la pile (production + Mailpit)
+        run: docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build --wait --wait-timeout 300
       - name: Santé
         run: curl -fsS http://localhost:3000/api/health
       - run: npm ci
@@ -103,7 +103,7 @@ jobs:
       - run: npm run test:e2e
       - name: Journaux en cas d'échec
         if: failure()
-        run: docker compose -f docker-compose.yml logs --no-color
+        run: docker compose -f docker-compose.yml -f docker-compose.e2e.yml logs --no-color
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

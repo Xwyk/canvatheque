@@ -32,6 +32,29 @@ describe("proxy", () => {
     expect(response.headers.get("Content-Security-Policy")).toContain("'unsafe-eval'");
   });
 
+  it("prolonge le cookie de session pendant la navigation (GET uniquement)", () => {
+    vi.stubEnv("APP_URL", "https://canvatheque.example");
+    const cookie = { cookie: "__Host-canvatheque.session=jeton" };
+    const get = proxy(new NextRequest("https://canvatheque.example/models", { headers: cookie }));
+    const renewed = get.cookies.get("__Host-canvatheque.session");
+    expect(renewed).toMatchObject({
+      value: "jeton",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+    });
+    expect(new Date(renewed!.expires!).getTime()).toBeGreaterThan(
+      Date.now() + 29 * 24 * 3600 * 1000,
+    );
+
+    const post = proxy(
+      new NextRequest("https://canvatheque.example/login", { method: "POST", headers: cookie }),
+    );
+    expect(post.cookies.get("__Host-canvatheque.session")).toBeUndefined();
+    const anonymous = proxy(new NextRequest("https://canvatheque.example/"));
+    expect(anonymous.cookies.getAll()).toEqual([]);
+  });
+
   it("exclut les ressources statiques et les préchargements", () => {
     const [matcher] = config.matcher;
     expect(matcher.source).toContain("_next/static");

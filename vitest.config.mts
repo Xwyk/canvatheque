@@ -24,6 +24,7 @@ export default defineConfig({
           include: [
             "components/**/*.test.tsx",
             "app/**/*.test.tsx",
+            "features/**/*.test.tsx",
             "tests/components/**/*.test.tsx",
           ],
           setupFiles: ["tests/setup/components.ts"],

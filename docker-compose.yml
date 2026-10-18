@@ -23,7 +23,9 @@ services:
       <<: *s3-env
       DATABASE_URL: postgresql://${POSTGRES_USER:-canvatheque}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant}@postgres:5432/${POSTGRES_DB:-canvatheque}
     ports:
-      - "${APP_PORT:-3000}:3000"
+      # Publié sur la boucle locale seulement : en production, Caddy est le seul point d'entrée
+      # (X-Forwarded-For fiable pour les limites par IP). APP_BIND=0.0.0.0 pour l'exposer.
+      - "${APP_BIND:-127.0.0.1}:${APP_PORT:-3000}:3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -74,7 +76,7 @@ services:
     volumes:
       - miniodata:/data
     ports:
-      - "${MINIO_PORT:-9000}:9000"
+      - "${APP_BIND:-127.0.0.1}:${MINIO_PORT:-9000}:9000"
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 5s
@@ -102,8 +104,8 @@ services:
     profiles: ["dev"]
     restart: unless-stopped
     ports:
-      - "8025:8025"
-      - "1025:1025"
+      - "127.0.0.1:8025:8025"
+      - "127.0.0.1:1025:1025"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8025/livez"]
       interval: 10s
@@ -128,11 +130,8 @@ services:
       sonar-db:
         condition: service_healthy
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'wget -qO- http://127.0.0.1:9000/api/system/status | grep -q ''"status":"UP"''',
-        ]
+      # L'image SonarQube fournit curl (pas wget).
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:9000/api/system/status | grep -q UP"]
       interval: 15s
       timeout: 5s
       start_period: 120s

@@ -14,7 +14,9 @@ export type ActionError = {
   retryAfter?: number;
 };
 
-export type Result<T> = { ok: true; data: T } | { ok: false; error: ActionError };
+export type Failure = { ok: false; error: ActionError };
+
+export type Result<T> = { ok: true; data: T } | Failure;
 
 export const ok = <T>(data: T): Result<T> => ({ ok: true, data });
 
@@ -22,7 +24,7 @@ export const fail = (
   code: ErrorCode,
   message: string,
   extra: Omit<ActionError, "code" | "message"> = {},
-): Result<never> => ({ ok: false, error: { code, message, ...extra } });
+): Failure => ({ ok: false, error: { code, message, ...extra } });
 
 const HTTP_STATUS: Record<ErrorCode, number> = {
   VALIDATION: 400,

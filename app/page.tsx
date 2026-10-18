@@ -7,14 +7,16 @@ import {
   getPopularTagNames,
   withFallbackSuggestions,
 } from "@/features/catalog/queries";
+import { getCurrentUser } from "@/lib/auth/current";
 import { db } from "@/lib/db";
 
 export default async function HomePage() {
   const t = await getTranslations("home");
   const prisma = db();
-  const [categories, popular] = await Promise.all([
+  const [categories, popular, user] = await Promise.all([
     getCategories(prisma),
     getPopularTagNames(prisma),
+    getCurrentUser(),
   ]);
   const suggestions = withFallbackSuggestions(popular, t.raw("popularFallback") as string[]);
 
@@ -23,7 +25,7 @@ export default async function HomePage() {
       <HomeHero popularTags={suggestions} />
       <CategoryBand categories={categories} />
       {/* « Populaires cette semaine » et « Derniers modèles » : étape Catalogue. */}
-      <DarkCtaPanel />
+      <DarkCtaPanel member={!!user} />
     </>
   );
 }

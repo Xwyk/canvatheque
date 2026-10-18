@@ -5,6 +5,8 @@ const mocks = vi.hoisted(() => ({
   ensureCategories: vi.fn(),
   warn: vi.fn(),
   info: vi.fn(),
+  send: vi.fn(),
+  smtpHost: undefined as string | undefined,
 }));
 
 vi.mock("@/features/account/bootstrap", () => ({ ensureCoreAccounts: mocks.ensureCoreAccounts }));
@@ -15,13 +17,16 @@ vi.mock("@/lib/env", () => ({
     ADMIN_EMAIL: "admin@x.test",
     ADMIN_PASSWORD: undefined,
     APP_URL: "http://localhost:3000",
+    SMTP_HOST: mocks.smtpHost,
   }),
 }));
+vi.mock("@/lib/mail/mailer", () => ({ mailer: () => ({ send: mocks.send }) }));
 vi.mock("@/lib/logger", () => ({ logger: { warn: mocks.warn, info: mocks.info } }));
 
 describe("runStartupTasks", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.smtpHost = undefined;
   });
 
   it("affiche le lien de définition du mot de passe administrateur", async () => {
@@ -42,6 +47,29 @@ describe("runStartupTasks", () => {
       expect.any(String),
     );
     expect(mocks.info).toHaveBeenCalled();
+  });
+
+  it("envoie le lien par e-mail quand SMTP est configuré, sans l'écrire dans les journaux", async () => {
+    mocks.smtpHost = "mailpit";
+    mocks.ensureCoreAccounts.mockResolvedValue({
+      adminId: "a",
+      adminEmail: "admin@x.test",
+      adminPseudo: "admin",
+      systemUserId: "s",
+      resetUrl: "http://x/reset/t",
+    });
+    const { runStartupTasks } = await import("@/lib/startup");
+    await runStartupTasks();
+    expect(mocks.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "admin@x.test",
+        subject: "Réinitialisation de votre mot de passe",
+      }),
+    );
+    expect(mocks.warn).toHaveBeenCalledWith(
+      { event: "admin_bootstrap", delivery: "email" },
+      expect.any(String),
+    );
   });
 
   it("reste silencieux quand l'administrateur a déjà un mot de passe", async () => {
