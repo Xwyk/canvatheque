@@ -99,6 +99,8 @@ jobs:
       - name: Santé
         run: curl -fsS http://localhost:3000/api/health
       - run: npm ci
+      - name: Données de démonstration (30 modèles, utilisées par les E2E du catalogue)
+        run: npm run db:seed
       - run: npx playwright install --with-deps
       - run: npm run test:e2e
       - name: Journaux en cas d'échec

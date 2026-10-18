@@ -1,0 +1,79 @@
+{
+  "gallery": {
+    "title": "Tous les modèles",
+    "metaTitle": "Tous les modèles",
+    "metaSearchTitle": "Recherche « {q} »",
+    "metaDescription": "Parcourez les modèles de découpe .cwprj et .svg pour Brother ScanNCut partagés par la communauté : filtrez par format, catégorie et licence.",
+    "filtersLabel": "Filtres",
+    "format": "Format",
+    "formats": {
+      "cwprj": "CWPRJ (CanvasWorkspace)",
+      "svg": "SVG"
+    },
+    "formatChip": {
+      "cwprj": "CWPRJ",
+      "svg": "SVG"
+    },
+    "category": "Catégorie",
+    "license": "Licence",
+    "licenseGroups": {
+      "free": "Libre, même commercial",
+      "noncommercial": "Libre, hors usage commercial",
+      "personal": "Usage personnel uniquement"
+    },
+    "tagChip": "#{tag}",
+    "apply": "Appliquer les filtres",
+    "reset": "Réinitialiser les filtres",
+    "filtersButton": "{count, plural, =0 {Filtres} other {Filtres (#)}}",
+    "filtersPanelTitle": "Filtres",
+    "filtersPanelDescription": "Les résultats se mettent à jour à chaque choix.",
+    "closeFilters": "Fermer les filtres",
+    "showResults": "{count, plural, =0 {Aucun modèle} one {Voir # modèle} other {Voir les # modèles}}",
+    "resultsLabel": "Résultats",
+    "count": "{count, plural, =0 {Aucun modèle} one {# modèle} other {# modèles}}",
+    "activeFilters": "Filtres actifs",
+    "removeFilter": "Retirer le filtre {label}",
+    "sortLabel": "Trier par",
+    "sortSubmit": "Trier",
+    "sorts": {
+      "relevance": "Pertinence",
+      "recent": "Plus récents",
+      "popular": "Populaires cette semaine",
+      "downloads": "Plus téléchargés"
+    },
+    "loadMore": "Charger plus de modèles",
+    "loadingMore": "Chargement des modèles suivants",
+    "loadError": "Les modèles suivants n'ont pas pu être chargés.",
+    "retry": "Réessayer",
+    "backToTop": "Revenir en haut",
+    "empty": {
+      "refined": {
+        "title": "Aucun modèle ne correspond",
+        "text": "Essayez d'autres mots ou retirez quelques filtres : le modèle que vous cherchez existe peut-être sous un autre nom."
+      },
+      "category": {
+        "title": "Aucun modèle dans cette catégorie pour l'instant",
+        "text": "Cette catégorie attend ses premiers modèles. Et si vous partagiez le vôtre ?"
+      },
+      "catalog": {
+        "title": "Aucun modèle publié pour l'instant",
+        "text": "Le catalogue attend ses premiers modèles. Et si vous partagiez le vôtre ?"
+      }
+    },
+    "seeAll": "Voir tous les modèles",
+    "publish": "Publier un modèle",
+    "breadcrumb": "Fil d'Ariane",
+    "categoryMetaTitle": "{name} : modèles de découpe",
+    "categoryMetaDescription": "Modèles de découpe .cwprj et .svg de la catégorie « {name} » pour Brother ScanNCut, partagés gratuitement par la communauté.",
+    "categoryIntro": "Les modèles de la catégorie « {name} », partagés par la communauté."
+  },
+  "categoriesPage": {
+    "title": "Catégories",
+    "subtitle": "Choisissez un thème pour parcourir les modèles qui s'y rattachent.",
+    "metaDescription": "Les catégories de modèles de découpe pour Brother ScanNCut : cartes, décoration, textile, fêtes, enfants, nature, lettrages, boîtes…",
+    "listLabel": "Liste des catégories",
+    "count": "{count, plural, =0 {Aucun modèle} one {# modèle} other {# modèles}}",
+    "empty": "Aucune catégorie pour l'instant.",
+    "seeAll": "Voir tous les modèles"
+  }
+}

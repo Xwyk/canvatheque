@@ -3,11 +3,11 @@
 Application web communautaire et gratuite de partage de modèles de découpe pour Brother ScanNCut
 (`.cwprj` et `.svg`).
 
-> **État : étape 2 (publication) livrée.** Socle, comptes et publication : envoi direct vers le
-> stockage, vérification et nettoyage des fichiers, aperçus, assistant en 4 étapes, brouillons,
-> modification, suppression, « Mes modèles ». Le catalogue public (galerie, fiche) et le
-> téléchargement arrivent aux étapes suivantes (voir [Feuille de route](#feuille-de-route)) ; les
-> liens Modèles, Catégories et Aide mènent pour l'instant à la page 404.
+> **État : étape 3 (catalogue) livrée.** Socle, comptes, publication et catalogue public :
+> recherche plein texte, galerie filtrable à défilement infini, catégories, fiche modèle, profil
+> public, référencement (Open Graph, schema.org, sitemap, robots). Le téléchargement des fichiers
+> et les favoris arrivent à l'étape 4 (voir [Feuille de route](#feuille-de-route)) ; d'ici là, les
+> boutons de téléchargement de la fiche et les liens Aide, Favoris et pages légales mènent à une 404.
 
 ## Démarrage rapide (Docker)
 
@@ -83,13 +83,15 @@ par le seed lui-même et 4 `.cwprj` fictifs, passés par le même pipeline d'ape
 | `npm run sonar`                                               | analyse SonarQube locale, Quality Gate bloquant                                |
 
 Les E2E lisent les e-mails dans Mailpit : lancez la pile avec la surcharge `docker-compose.e2e.yml`
-(Mailpit actif, limites de débit relevées). Premier lancement : `npx playwright install`.
+(Mailpit actif, limites de débit relevées, PostgreSQL publié sur `127.0.0.1:5432`), puis
+`npm run db:seed` : les tests du catalogue s'appuient sur les 30 modèles de démonstration. Premier lancement : `npx playwright install`.
 
 ## Vérification de bout en bout
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.e2e.yml up --build -d --wait
 curl -f http://localhost:3000/api/health
+npm run db:seed
 npm run lint && npm run typecheck && npm run test:coverage
 npm run test:e2e
 docker compose --profile quality up -d sonarqube && npm run sonar
@@ -159,6 +161,30 @@ Le bannissement est disponible côté service (`banUser`) ; son interface arrive
   administrateurs exemptés). Suppression logique en base, objets MinIO effacés aussitôt
   ([ADR-008](docs/adr/008-suppression-logique.md)) ; envois abandonnés purgés au démarrage.
 
+### Catalogue
+
+| Écran         | Adresse                             | Détails                                                                                                                                          |
+| ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Accueil       | `/`                                 | recherche, catégories, « Populaires cette semaine » (téléchargements des 7 derniers jours, repli sur les plus téléchargés), « Derniers modèles » |
+| Galerie       | `/models`                           | filtres format, catégorie, groupe de licences, mots-clés ; tris pertinence, récents, populaires, téléchargés ; état dans l'URL ; sans JS aussi   |
+| Catégories    | `/categories`, `/categories/<slug>` | index avec nombre de modèles ; page de catégorie = galerie préfiltrée                                                                            |
+| Fiche         | `/models/<slug>`                    | aperçu zoomable (boutons, molette, pincement), description Markdown, licence expliquée, mots-clés, « Dans le même esprit », autres modèles       |
+| Profil public | `/members/<pseudo>`                 | présentation, site, statistiques, modèles publiés                                                                                                |
+| API           | `GET /api/models`                   | pages suivantes de la galerie (JSON, mêmes paramètres, curseur)                                                                                  |
+
+- **Recherche** ([ADR-005](docs/adr/005-recherche-tsvector.md)) : PostgreSQL `french_unaccent`
+  (« etoiles noel » trouve « Étoile de Noël »), syntaxe `websearch` (guillemets, `-mot`).
+- **Pagination** ([ADR-007](docs/adr/007-pagination-curseur.md)) : curseur opaque, première page
+  rendue par le serveur, suivantes chargées au défilement (bouton « Charger plus » en secours).
+- **Visibilité** : seuls les modèles publiés apparaissent ; brouillons et modèles masqués ne sont
+  visibles que de leur auteur et des administrateurs (bandeau d'état, Modifier / Supprimer).
+- **Référencement** : titre, description et URL canonique par page ; Open Graph et Twitter (aperçu
+  du modèle ou image par défaut) ; données structurées `WebSite`, `Organization` et `CreativeWork` ;
+  `/sitemap.xml` et `/robots.txt` générés à la demande. Les pages de recherche et de filtres sont
+  en `noindex, follow`.
+- **Performance** : Lighthouse (mobile, 4G simulée) ≥ 90 sur l'accueil, la galerie et la fiche ;
+  accessibilité, bonnes pratiques et SEO à 100.
+
 ### Sécurité (socle)
 
 - CSP à nonces par requête (`script-src 'nonce-…' 'strict-dynamic'`), `frame-ancestors 'none'`,
@@ -205,7 +231,7 @@ téléchargements, métriques du processus Node.
 | 0     | Socle : design system, accueil, Docker, base, tests, CI                            | ✅      |
 | 1     | Comptes : inscription, connexion, e-mails, réinitialisation, bannissement, limites | ✅      |
 | 2     | Publication : envoi présigné, validation, nettoyage SVG, aperçus, assistant        | ✅      |
-| 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | à venir |
+| 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | ✅      |
 | 4     | Téléchargement et favoris, CanvasWorkspace                                         | à venir |
 | 5     | Modération et administration                                                       | à venir |
 | 6     | RGPD et pages de contenu                                                           | à venir |

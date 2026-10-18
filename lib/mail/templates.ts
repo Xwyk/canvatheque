@@ -1,6 +1,6 @@
 import { createTranslator } from "next-intl";
 import type { MailMessage } from "@/lib/mail/mailer";
-import messages from "@/messages/fr.json";
+import { messages } from "@/messages";
 
 const t = createTranslator({ locale: "fr", messages, namespace: "emails" });
 

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/validation";
 
 const ratio = z.number().min(0).max(1);
 

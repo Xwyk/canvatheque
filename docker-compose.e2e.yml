@@ -2,6 +2,8 @@
 #   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build --wait
 # Les limites de débit sont relevées : les scénarios créent de nombreux comptes depuis la même IP
 # (les limites elles-mêmes sont couvertes par les tests d'intégration).
+# PostgreSQL est publié sur la boucle locale pour le seed (30 modèles de démonstration) :
+#   npm run db:seed
 services:
   app:
     environment:
@@ -13,6 +15,10 @@ services:
     depends_on:
       mailpit:
         condition: service_healthy
+
+  postgres:
+    ports:
+      - "127.0.0.1:5432:5432"
 
   mailpit:
     profiles: !reset []

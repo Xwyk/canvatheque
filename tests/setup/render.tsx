@@ -2,7 +2,7 @@ import { render, type RenderOptions } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "next-themes";
 import type { ReactElement, ReactNode } from "react";
-import messages from "@/messages/fr.json";
+import { messages } from "@/messages";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (

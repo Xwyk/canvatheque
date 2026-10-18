@@ -1,0 +1,16 @@
+{
+  "homeSections": {
+    "popularTitle": "Populaires cette semaine",
+    "latestTitle": "Derniers modèles",
+    "seeAll": "Tout voir",
+    "popularSeeAllHint": "les modèles populaires",
+    "latestSeeAllHint": "les derniers modèles",
+    "emptyTitle": "Le catalogue attend ses premiers modèles",
+    "emptyText": "Aucun modèle n'est encore publié. Partagez une création : elle sera la première de la Canvathèque.",
+    "emptyButton": "Publier un modèle"
+  },
+  "seo": {
+    "ogImageAlt": "Canvathèque, modèles de découpe gratuits pour ScanNCut",
+    "organizationDescription": "Bibliothèque communautaire et gratuite de modèles de découpe .cwprj et .svg pour Brother ScanNCut."
+  }
+}

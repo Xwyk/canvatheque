@@ -1,26 +1,12 @@
-import { z } from "zod";
+import { LICENSES } from "@/features/models/licenses";
 import { MAX_TAGS, TAG_MAX_LENGTH } from "@/lib/tags";
+import { z } from "@/lib/validation";
 
 /**
  * Schémas partagés client/serveur de la publication. Messages = clés `errors.field.*`.
  */
 
-export const LICENSES = [
-  "CC0",
-  "CC_BY",
-  "CC_BY_SA",
-  "CC_BY_NC",
-  "CC_BY_NC_SA",
-  "PERSONAL_USE",
-] as const;
-export type LicenseValue = (typeof LICENSES)[number];
-
-/** Groupes de licences de la galerie (planche Galerie). */
-export const LICENSE_GROUPS = {
-  free: ["CC0", "CC_BY", "CC_BY_SA"],
-  noncommercial: ["CC_BY_NC", "CC_BY_NC_SA"],
-  personal: ["PERSONAL_USE"],
-} as const satisfies Record<string, readonly LicenseValue[]>;
+export { LICENSE_GROUPS, LICENSES, type LicenseValue } from "@/features/models/licenses";
 
 export const TITLE_MIN_LENGTH = 3;
 export const TITLE_MAX_LENGTH = 80;

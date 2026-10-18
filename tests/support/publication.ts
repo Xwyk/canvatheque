@@ -2,6 +2,7 @@ import { GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import type { ModelActor } from "@/features/models/service";
 import type { UploadDeps, UploadTicket } from "@/features/uploads/service";
 import type { PrismaClient } from "@/lib/generated/prisma/client";
+import { slugify } from "@/lib/slug";
 import { buckets, publicS3, s3 } from "@/lib/storage/s3";
 
 export const PNG_1PX = Buffer.from(
@@ -55,10 +56,7 @@ export async function createMember(
 
 /** Catégorie minimale (la base vidée entre les tests n'a pas les catégories de référence). */
 export async function createCategory(prisma: PrismaClient, name = "Décoration") {
-  const slug = name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[^a-z]+/g, "-");
+  const slug = slugify(name);
   return prisma.category.upsert({
     where: { slug },
     update: {},

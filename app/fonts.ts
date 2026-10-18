@@ -9,16 +9,9 @@ export const bricolage = localFont({
 });
 
 export const figtree = localFont({
-  src: [
-    {
-      path: "../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2",
-      style: "normal",
-    },
-    {
-      path: "../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-italic.woff2",
-      style: "italic",
-    },
-  ],
+  // Pas de fichier italique (rare : descriptions) : le navigateur incline la police droite,
+  // ce qui évite 21 Ko préchargés sur chaque page.
+  src: "../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2",
   variable: "--font-figtree",
   weight: "300 900",
   display: "swap",

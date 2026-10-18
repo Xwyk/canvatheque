@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("next-intl/server", () => ({ getRequestConfig: (fn: unknown) => fn }));
 
 import getRequestConfig, { DEFAULT_LOCALE } from "@/i18n/request";
-import messages from "@/messages/fr.json";
+import { messages } from "@/messages";
 
 type ConfigFn = (params: { requestLocale: Promise<string | undefined> }) => Promise<{
   locale: string;

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/validation";
 
 const intFromString = (fallback: number) => z.coerce.number().int().positive().default(fallback);
 

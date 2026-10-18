@@ -9,11 +9,12 @@ import { cn } from "@/lib/utils";
 
 type TabKey = "home" | "models" | "publish" | "favorites";
 
-const TABS: { href: string; key: TabKey; icon: LucideIcon }[] = [
+const TABS: { href: string; key: TabKey; icon: LucideIcon; prefetch?: false }[] = [
   { href: "/", key: "home", icon: House },
   { href: "/models", key: "models", icon: LayoutGrid },
   { href: "/publish", key: "publish", icon: CirclePlus },
-  { href: "/me/favorites", key: "favorites", icon: Heart },
+  // Page des favoris : étape 4 ; pas de préchargement d'ici là (404 en console).
+  { href: "/me/favorites", key: "favorites", icon: Heart, prefetch: false },
 ];
 
 /** Barre d'onglets fixe sous 768 px (planche MobileAccueil). */
@@ -26,12 +27,13 @@ export function MobileTabBar() {
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="flex h-20 items-stretch justify-around px-2 pt-1.5 pb-3.5">
-        {TABS.map(({ href, key, icon: Icon }) => {
+        {TABS.map(({ href, key, icon: Icon, prefetch }) => {
           const active = isActivePath(pathname, href);
           return (
             <li key={href} className="flex flex-1">
               <Link
                 href={href}
+                prefetch={prefetch}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex flex-1 flex-col items-center justify-center gap-0.5 text-xs no-underline",

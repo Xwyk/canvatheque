@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { createTranslator } from "next-intl";
 import type * as NextIntl from "next-intl";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import messages from "@/messages/fr.json";
+import { messages } from "@/messages";
 import { seed } from "@/prisma/seed";
 import { prisma } from "@/tests/setup/backend";
 import { requestContext } from "@/tests/support/next-request";
@@ -21,7 +21,7 @@ vi.mock("next-intl/server", () => ({
 // Le fournisseur serveur déduit locale et messages de i18n/request.ts ; ici on les fournit.
 vi.mock("next-intl", async (importOriginal) => {
   const actual = await importOriginal<typeof NextIntl>();
-  const { default: fr } = await import("@/messages/fr.json");
+  const { messages: fr } = await import("@/messages");
   return {
     ...actual,
     NextIntlClientProvider: (props: React.ComponentProps<typeof actual.NextIntlClientProvider>) => (

@@ -2,7 +2,7 @@ import { createTranslator, NextIntlClientProvider } from "next-intl";
 import type * as NextIntl from "next-intl";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import messages from "@/messages/fr.json";
+import { messages } from "@/messages";
 
 vi.mock("next/headers", async () => (await import("@/tests/support/next-request")).headersModule);
 vi.mock("next/navigation", async () => ({
@@ -18,7 +18,7 @@ vi.mock("next-intl/server", () => ({
 }));
 vi.mock("next-intl", async (importOriginal) => {
   const actual = await importOriginal<typeof NextIntl>();
-  const { default: fr } = await import("@/messages/fr.json");
+  const { messages: fr } = await import("@/messages");
   return {
     ...actual,
     NextIntlClientProvider: (props: React.ComponentProps<typeof actual.NextIntlClientProvider>) => (
