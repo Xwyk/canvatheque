@@ -50,3 +50,6 @@ next-env.d.ts
 /backups/
 !.env.example
 /.sonar/
+
+# Plan de travail (local, hors dépôt)
+/docs/plan.md
