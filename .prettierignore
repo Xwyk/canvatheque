@@ -1,0 +1,10 @@
+.next
+node_modules
+coverage
+playwright-report
+test-results
+lib/generated
+docs/mockups
+package-lock.json
+docker/ops/package-lock.json
+prisma/migrations

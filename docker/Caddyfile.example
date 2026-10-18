@@ -1,0 +1,31 @@
+# Reverse proxy de production (Caddy 2) : HTTPS automatique (Let's Encrypt).
+# Remplacez canvatheque.example par votre domaine, puis dans .env :
+#   APP_URL=https://canvatheque.example
+#   S3_PUBLIC_URL=https://s3.canvatheque.example
+# Caddy doit partager le réseau Docker de la pile (ou viser 127.0.0.1:3000 / :9000).
+
+canvatheque.example {
+	encode zstd gzip
+
+	reverse_proxy app:3000 {
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Forwarded-Host {host}
+		header_up X-Real-IP {remote_host}
+	}
+
+	log {
+		output file /var/log/caddy/canvatheque.log
+		format json
+	}
+}
+
+# Stockage objet : aperçus publics et URL présignées (MinIO).
+# Sous-domaine dédié plutôt qu'un sous-chemin : la signature SigV4 couvre l'hôte et le
+# chemin, une réécriture de chemin invaliderait les URL présignées.
+s3.canvatheque.example {
+	# Envois directs du navigateur : 20 Mo par défaut (MAX_FILE_SIZE_MB) + marge.
+	request_body {
+		max_size 25MB
+	}
+	reverse_proxy minio:9000
+}

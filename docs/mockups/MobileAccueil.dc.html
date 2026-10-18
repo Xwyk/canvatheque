@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Atelier Découpe — Accueil mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#221F3A}a:hover{color:#C81E4B}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #FFFFFF; color: #221F3A; font-family: 'Figtree', system-ui, sans-serif; font-size: 16px; line-height: 1.5">
+
+<div style="height: 764px; overflow: hidden; box-sizing: border-box; padding: 0 20px">
+<header style="display: flex; align-items: center; justify-content: space-between; height: 64px">
+<a href="MobileAccueil.dc.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #221F3A; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 20px; min-height: 44px">
+<svg viewBox="0 0 100 100" aria-hidden="true" style="width: 32px; height: 32px"><circle cx="50" cy="50" r="46" fill="#C81E4B"/><path d="M50 18 L59 40 L82 40 L63 54 L70 77 L50 63 L30 77 L37 54 L18 40 L41 40 Z" fill="#FFFFFF"/></svg>
+Atelier Découpe
+</a>
+<a href="Connexion.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; background: #C81E4B; color: #FFFFFF; font-weight: 700; font-size: 15px; text-decoration: none">Connexion</a>
+</header>
+
+<h1 style="margin: 16px 0 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 800; font-size: 36px; line-height: 1.05; letter-spacing: -0.02em">Des modèles de découpe, partagés par la communauté.</h1>
+<p style="margin: 12px 0 0; color: #5B5873; font-size: 16px">Pour votre ScanNCut : fichiers .cwprj et .svg, 100 % gratuits.</p>
+
+<form action="#" style="margin-top: 20px">
+<label for="mq" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Rechercher un modèle</label>
+<div style="position: relative">
+<input id="mq" type="search" placeholder="Rechercher un modèle" style="width: 100%; height: 52px; box-sizing: border-box; padding: 0 56px 0 20px; border-radius: 999px; border: 2px solid #221F3A; font-family: 'Figtree', system-ui, sans-serif; font-size: 16px; color: #221F3A; background: #FFFFFF">
+<button type="submit" aria-label="Lancer la recherche" style="position: absolute; top: 4px; right: 4px; width: 44px; height: 44px; border-radius: 999px; border: 0; background: #C81E4B; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 22px; height: 22px" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16 L20.5 20.5"/></svg></button>
+</div>
+</form>
+
+<div style="display: flex; gap: 8px; margin: 16px -20px 0; padding: 0 20px 4px; overflow-x: auto">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="5">
+<a href="Galerie.dc.html" style="flex: 0 0 auto; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: #F1EEF9; text-decoration: none; font-weight: 600; font-size: 15px">{{c}}</a>
+</sc-for>
+</div>
+
+<div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 24px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; font-size: 24px">Derniers modèles</h2>
+<a href="Galerie.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 15px; text-decoration: none">Tout voir</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; margin-top: 4px">
+<sc-for list="{{models}}" as="item" hint-placeholder-count="4">
+<article style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+<div style="position: relative; aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden; background: {{item.bg}}; display: flex; align-items: center; justify-content: center">
+<svg viewBox="0 0 100 100" aria-hidden="true" style="width: 58%; height: 58%"><path d="{{item.d}}" fill="{{item.fg}}"/></svg>
+<span style="position: absolute; top: 10px; left: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 700; font-size: 11px; letter-spacing: 0.04em; background: {{item.badgeBg}}; color: {{item.badgeFg}}">{{item.fmt}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="MobileFiche.dc.html" style="font-weight: 700; font-size: 16px; line-height: 1.25; text-decoration: none">{{item.title}}</a>
+<span style="color: #5B5873; font-size: 13px">{{item.author}}</span>
+</div>
+</article>
+</sc-for>
+</div>
+</div>
+
+<nav aria-label="Navigation mobile" style="position: absolute; left: 0; right: 0; bottom: 0; height: 80px; box-sizing: border-box; padding: 6px 8px 14px; background: #FFFFFF; border-top: 1px solid #E4E0F0; display: flex; justify-content: space-around">
+<a href="MobileAccueil.dc.html" aria-current="page" style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #C81E4B; font-weight: 800; font-size: 12px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px" fill="none" stroke="#C81E4B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 L12 4 L20 11 V20 H4 Z"/></svg>Accueil</a>
+<a href="Galerie.dc.html" style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #3D3A57; font-weight: 600; font-size: 12px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px" fill="none" stroke="#3D3A57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>Modèles</a>
+<a href="Publier.dc.html" style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #3D3A57; font-weight: 600; font-size: 12px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px" fill="none" stroke="#3D3A57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 8 V16 M8 12 H16"/></svg>Publier</a>
+<a href="Connexion.dc.html" style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-decoration: none; color: #3D3A57; font-weight: 600; font-size: 12px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 24px; height: 24px" fill="none" stroke="#3D3A57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5 C4 14.5 3 9 6.5 6.5 C9 4.8 11.5 6 12 8 C12.5 6 15 4.8 17.5 6.5 C21 9 20 14.5 12 20.5 Z"/></svg>Favoris</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const shapes = {
+      star: 'M50 8 L61 38 L93 38 L67 57 L77 88 L50 69 L23 88 L33 57 L7 38 L39 38 Z',
+      heart: 'M50 88 C10 58 6 30 28 20 C40 15 50 24 50 32 C50 24 60 15 72 20 C94 30 90 58 50 88 Z',
+      butterfly: 'M50 30 C30 5 6 15 10 40 C12 55 30 55 42 52 C28 60 24 80 40 88 C48 90 50 78 50 70 C50 78 52 90 60 88 C76 80 72 60 58 52 C70 55 88 55 90 40 C94 15 70 5 50 30 Z',
+      box: 'M12 45 L50 12 L88 45 L88 88 L12 88 Z'
+    };
+    const raw = [
+      ['Étoile festive','lucie.m','CWPRJ','star','#FFF0C2','#F5B82E'],
+      ['Cœur pour faire-part','atelier-noa','SVG','heart','#FDE3E8','#C81E4B'],
+      ['Papillon ajouré','mamie-ciseaux','CWPRJ','butterfly','#D9F0EF','#0F7C7E'],
+      ['Boîte maison','julien.d','SVG','box','#E5DEF7','#5B3FA6']
+    ];
+    return {
+      chips: ['Mandala','Cartes de vœux','Boîtes','Anniversaire','Lettrages'],
+      models: raw.map(r => ({
+        title: r[0], author: r[1], fmt: r[2], d: shapes[r[3]], bg: r[4], fg: r[5],
+        badgeBg: r[2] === 'SVG' ? '#F5B82E' : '#221F3A',
+        badgeFg: r[2] === 'SVG' ? '#221F3A' : '#FFFFFF'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

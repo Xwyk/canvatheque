@@ -1,0 +1,12 @@
+{
+  "name": "canvatheque-ops",
+  "private": true,
+  "description": "Outils d'exploitation embarqués dans l'image (prisma migrate deploy).",
+  "dependencies": {
+    "prisma": "7.10.1"
+  },
+  "allowScripts": {
+    "prisma@7.10.1": true,
+    "@prisma/engines@7.10.1": true
+  }
+}

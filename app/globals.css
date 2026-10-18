@@ -1,0 +1,240 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Design tokens Canvathèque : voir docs/design-tokens.md.
+   Clair = maquettes ; sombre = dérivé. Les noms shadcn (primary, muted, accent…)
+   sont conservés pour les primitives ; les tokens propres aux maquettes s'ajoutent. */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-surface: var(--card);
+  --color-surface-muted: var(--muted);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-text-secondary: var(--text-secondary);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-highlight-soft: var(--highlight-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-info: var(--info);
+  --color-danger: var(--destructive);
+  --color-panel: var(--panel);
+  --color-panel-foreground: var(--panel-foreground);
+  --color-panel-muted: var(--panel-muted);
+
+  --color-tint-rose: #fde3e8;
+  --color-tint-teal: #d9f0ef;
+  --color-tint-yellow: #fff0c2;
+  --color-tint-lilac: #e5def7;
+  --color-tint-green: #e3f1dd;
+  --color-tint-blue: #dcebfb;
+  --color-tint-peach: #ffe6d2;
+
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: var(--radius);
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+  --radius-4xl: 2rem;
+
+  --shadow-card: 0 10px 28px rgb(34 31 58 / 0.08);
+  --shadow-float: 0 14px 34px rgb(34 31 58 / 0.14);
+  --shadow-cta: 0 6px 16px rgb(200 30 75 / 0.28);
+  --shadow-dialog: 0 24px 64px rgb(34 31 58 / 0.35);
+  --shadow-chip: 0 1px 2px rgb(34 31 58 / 0.1);
+  --shadow-fab: 0 2px 8px rgb(34 31 58 / 0.16);
+
+  --breakpoint-xs: 22.5rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 90rem;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+}
+
+:root {
+  --radius: 0.875rem;
+
+  --background: #ffffff;
+  --foreground: #221f3a;
+  --card: #ffffff;
+  --card-foreground: #221f3a;
+  --popover: #ffffff;
+  --popover-foreground: #221f3a;
+  --primary: #c81e4b;
+  --primary-hover: #a3183f;
+  --primary-foreground: #ffffff;
+  --secondary: #f1eef9;
+  --secondary-foreground: #221f3a;
+  --muted: #f1eef9;
+  --muted-foreground: #5b5873;
+  --accent: #f1eef9;
+  --accent-foreground: #221f3a;
+  --destructive: #b0362e;
+  --border: #e4e0f0;
+  --input: #8a85a8;
+  --ring: #221f3a;
+
+  --ink: #221f3a;
+  --ink-foreground: #ffffff;
+  --text-secondary: #3d3a57;
+  --highlight: #f5b82e;
+  --highlight-foreground: #221f3a;
+  --highlight-soft: #fff0c2;
+  --success: #0f7c7e;
+  --success-soft: #e3f1f0;
+  --info: #5b3fa6;
+  --panel: #221f3a;
+  --panel-foreground: #ffffff;
+  --panel-muted: #e4e0f0;
+
+  --checker-a: #f1eef9;
+  --checker-b: #ffffff;
+  --overlay: rgb(34 31 58 / 0.62);
+
+  color-scheme: light;
+}
+
+.dark {
+  --background: #181630;
+  --foreground: #f4f2fa;
+  --card: #221f3a;
+  --card-foreground: #f4f2fa;
+  --popover: #221f3a;
+  --popover-foreground: #f4f2fa;
+  --primary: #f04a74;
+  --primary-hover: #ff6b8f;
+  --primary-foreground: #181630;
+  --secondary: #2c2847;
+  --secondary-foreground: #f4f2fa;
+  --muted: #2c2847;
+  --muted-foreground: #b8b3d1;
+  --accent: #2c2847;
+  --accent-foreground: #f4f2fa;
+  --destructive: #f0776f;
+  --border: #3a365a;
+  --input: #716c9c;
+  --ring: #f4f2fa;
+
+  --ink: #f4f2fa;
+  --ink-foreground: #181630;
+  --text-secondary: #d6d2e8;
+  --highlight: #f5b82e;
+  --highlight-foreground: #221f3a;
+  --highlight-soft: #4a3d1a;
+  --success: #3fb3b5;
+  --success-soft: #1d3a3d;
+  --info: #a48be8;
+  --panel: #2c2847;
+  --panel-foreground: #f4f2fa;
+  --panel-muted: #d6d2e8;
+
+  --checker-a: #2c2847;
+  --checker-b: #221f3a;
+  --overlay: rgb(0 0 0 / 0.7);
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  @media (min-width: 48rem) {
+    body {
+      font-size: 1.0625rem;
+    }
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    text-wrap: balance;
+  }
+  a {
+    text-underline-offset: 0.2em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    width: 100%;
+    max-width: 75rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 48rem) {
+    .container-page {
+      padding-inline: 1.5rem;
+    }
+  }
+  .bg-checker {
+    background: repeating-conic-gradient(var(--checker-a) 0% 25%, var(--checker-b) 0% 50%) 0 0 /
+      32px 32px;
+  }
+  .section-label {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,346 @@
+// Schéma Canvathèque (v1). Voir docs/architecture.md.
+// Les éléments non exprimables en Prisma (tsvector, index partiels, CHECK)
+// sont ajoutés à la main dans la migration initiale.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+enum ModelFormat {
+  CWPRJ
+  SVG
+}
+
+enum ModelStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+}
+
+enum License {
+  CC0
+  CC_BY
+  CC_BY_NC
+  CC_BY_SA
+  CC_BY_NC_SA
+  PERSONAL_USE
+}
+
+enum ReportReason {
+  DROITS_AUTEUR
+  CONTENU_INAPPROPRIE
+  FICHIER_DEFECTUEUX
+  SPAM
+  AUTRE
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  DISMISSED
+}
+
+enum AdminActionType {
+  MODEL_HIDE
+  MODEL_UNHIDE
+  MODEL_DELETE
+  USER_BAN
+  USER_UNBAN
+  USER_PROMOTE
+  REPORT_RESOLVE
+  REPORT_DISMISS
+  COMMENT_DELETE
+}
+
+enum EmailTokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+  CHANGE_EMAIL
+}
+
+enum UploadKind {
+  MODEL
+  PREVIEW
+}
+
+enum UploadStatus {
+  PENDING
+  CONFIRMED
+  ABANDONED
+}
+
+model User {
+  id              String    @id @default(cuid())
+  /// 3 à 30 caractères, immuable en v1
+  pseudo          String    @unique
+  /// Pseudo normalisé pour /members/[pseudo]
+  pseudoSlug      String    @unique
+  email           String    @unique
+  /// null pour l'admin initial tant qu'il n'a pas défini son mot de passe
+  passwordHash    String?
+  avatarKey       String?
+  bio             String?   @db.VarChar(300)
+  website         String?
+  role            Role      @default(MEMBER)
+  /// Compte système « Auteur supprimé »
+  isSystem        Boolean   @default(false)
+  emailVerifiedAt DateTime?
+  bannedAt        DateTime?
+  bannedReason    String?
+  tosAcceptedAt   DateTime
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  models          Model[]
+  favorites       Favorite[]
+  downloads       Download[]
+  comments        Comment[]
+  reports         Report[]      @relation("reporter")
+  resolvedReports Report[]      @relation("resolver")
+  adminActions    AdminAction[]
+  emailTokens     EmailToken[]
+  uploads         Upload[]
+  sessions        Session[]
+  accounts        Account[]
+}
+
+model Model {
+  id            String                   @id @default(cuid())
+  slug          String                   @unique
+  title         String                   @db.VarChar(80)
+  /// Markdown limité
+  description   String                   @default("") @db.VarChar(5000)
+  format        ModelFormat
+  /// null tant qu'aucun fichier n'est confirmé (brouillon)
+  fileKey       String?
+  fileName      String?
+  fileSize      Int?
+  /// SHA-256 hexadécimal
+  fileChecksum  String?
+  previewKey    String?
+  previewWidth  Int?
+  previewHeight Int?
+  status        ModelStatus              @default(DRAFT)
+  license       License?
+  categoryId    String?
+  authorId      String
+  downloadCount Int                      @default(0)
+  favoriteCount Int                      @default(0)
+  /// Texte dénormalisé (titre, description, tags, pseudo) source de searchVector
+  searchText    String                   @default("")
+  /// Colonne GENERATED STORED créée dans la migration SQL
+  searchVector  Unsupported("tsvector")?
+  hiddenReason  String?
+  publishedAt   DateTime?
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  deletedAt     DateTime?
+
+  author    User       @relation(fields: [authorId], references: [id])
+  category  Category?  @relation(fields: [categoryId], references: [id])
+  tags      ModelTag[]
+  favorites Favorite[]
+  downloads Download[]
+  comments  Comment[]
+  reports   Report[]
+  uploads   Upload[]
+
+  @@index([status, publishedAt(sort: Desc), id])
+  @@index([status, downloadCount(sort: Desc), id])
+  @@index([authorId, status])
+  @@index([categoryId, status])
+  @@index([fileChecksum])
+}
+
+model Category {
+  id     String  @id @default(cuid())
+  slug   String  @unique
+  name   String
+  /// Nom d'icône Lucide
+  icon   String
+  /// Couleur de la pastille (hexadécimal)
+  color  String
+  order  Int
+  models Model[]
+}
+
+model Tag {
+  id     String     @id @default(cuid())
+  /// Minuscules sans accents
+  name   String     @unique
+  models ModelTag[]
+}
+
+model ModelTag {
+  modelId String
+  tagId   String
+  model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([modelId, tagId])
+  @@index([tagId])
+}
+
+model Favorite {
+  userId    String
+  modelId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model     Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, modelId])
+  @@index([modelId])
+}
+
+model Download {
+  id        String   @id @default(cuid())
+  userId    String
+  modelId   String
+  /// Date UTC, pour le dédoublonnage quotidien
+  day       DateTime @db.Date
+  /// true = premier téléchargement du jour pour ce couple utilisateur/modèle
+  counted   Boolean
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model     Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  @@index([modelId, createdAt])
+  @@index([userId, createdAt])
+  @@index([userId, modelId, day])
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  modelId   String
+  authorId  String
+  content   String    @db.VarChar(1000)
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  model     Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  author    User      @relation(fields: [authorId], references: [id])
+
+  @@index([modelId, createdAt])
+}
+
+model Report {
+  id           String       @id @default(cuid())
+  modelId      String
+  reporterId   String
+  reason       ReportReason
+  details      String?      @db.VarChar(1000)
+  status       ReportStatus @default(OPEN)
+  resolvedById String?
+  resolvedAt   DateTime?
+  resolution   String?
+  createdAt    DateTime     @default(now())
+  model        Model        @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  reporter     User         @relation("reporter", fields: [reporterId], references: [id])
+  resolvedBy   User?        @relation("resolver", fields: [resolvedById], references: [id])
+
+  @@unique([modelId, reporterId, status])
+  @@index([status, createdAt])
+}
+
+model AdminAction {
+  id         String          @id @default(cuid())
+  adminId    String
+  type       AdminActionType
+  targetType String
+  targetId   String
+  details    Json?
+  createdAt  DateTime        @default(now())
+  admin      User            @relation(fields: [adminId], references: [id])
+
+  @@index([createdAt])
+}
+
+model EmailToken {
+  id        String         @id @default(cuid())
+  userId    String
+  type      EmailTokenType
+  tokenHash String         @unique
+  /// Nouvelle adresse pour CHANGE_EMAIL
+  payload   String?
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+model Upload {
+  id           String       @id @default(cuid())
+  userId       String
+  kind         UploadKind
+  key          String
+  declaredName String
+  declaredSize Int
+  declaredMime String
+  status       UploadStatus @default(PENDING)
+  modelId      String?
+  expiresAt    DateTime
+  createdAt    DateTime     @default(now())
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model        Model?       @relation(fields: [modelId], references: [id], onDelete: SetNull)
+
+  @@index([status, expiresAt])
+}
+
+model RateLimit {
+  key    String
+  bucket DateTime
+  count  Int      @default(0)
+
+  @@id([key, bucket])
+  @@index([bucket])
+}
+
+// --- Auth.js (adaptateur Prisma) ---
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}

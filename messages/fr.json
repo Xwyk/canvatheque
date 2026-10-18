@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "siteName": "Canvathèque",
+    "defaultTitle": "Canvathèque — modèles de découpe gratuits pour ScanNCut",
+    "description": "Des modèles de découpe .cwprj et .svg pour Brother ScanNCut, partagés gratuitement par la communauté."
+  },
+  "a11y": {
+    "skipToContent": "Aller au contenu principal"
+  },
+  "header": {
+    "homeLink": "Canvathèque, accueil",
+    "mainNav": "Navigation principale",
+    "models": "Modèles",
+    "categories": "Catégories",
+    "help": "Aide",
+    "signIn": "Se connecter",
+    "signInShort": "Connexion",
+    "signUp": "Créer un compte",
+    "publish": "Publier un modèle"
+  },
+  "theme": {
+    "toDark": "Activer le thème sombre",
+    "toLight": "Activer le thème clair"
+  },
+  "tabBar": {
+    "label": "Navigation mobile",
+    "home": "Accueil",
+    "models": "Modèles",
+    "publish": "Publier",
+    "favorites": "Favoris"
+  },
+  "footer": {
+    "label": "Pied de page",
+    "about": "À propos",
+    "help": "Aide",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "CGU",
+    "tagline": "Modèles de découpe gratuits, partagés par la communauté."
+  },
+  "search": {
+    "label": "Rechercher un modèle",
+    "placeholder": "Mandala, carte de vœux, lettrage…",
+    "submit": "Rechercher"
+  },
+  "home": {
+    "badge": "100 % gratuit · fait par la communauté",
+    "title": "Des modèles de découpe, partagés par celles et ceux qui les créent.",
+    "subtitle": "Trouvez un modèle .cwprj ou .svg pour votre ScanNCut, ouvrez-le dans CanvasWorkspace et lancez la découpe. Publiez les vôtres en quelques clics.",
+    "popular": "Populaires :",
+    "popularLabel": "Recherches populaires",
+    "categoriesTitle": "Parcourir par catégorie",
+    "heroCards": {
+      "heart": "Cœur pour faire-part",
+      "butterfly": "Papillon ajouré",
+      "star": "Étoile festive"
+    },
+    "ctaTitle": "Un compte gratuit, et tout s'ouvre.",
+    "ctaText": "Téléchargez les modèles des autres, publiez les vôtres, gardez vos favoris. Sans abonnement, sans publicité.",
+    "ctaButton": "Créer mon compte gratuit",
+    "popularFallback": ["Mandala", "Cartes de vœux", "Boîtes", "Anniversaire"]
+  },
+  "notFound": {
+    "title": "Cette page s'est envolée",
+    "text": "Le lien est peut-être erroné, ou le modèle a été retiré.",
+    "back": "Retour à l'accueil"
+  },
+  "error": {
+    "title": "Un fil s'est coincé",
+    "text": "Une erreur inattendue est survenue. Vous pouvez réessayer ; si le problème persiste, revenez un peu plus tard.",
+    "retry": "Réessayer",
+    "back": "Retour à l'accueil",
+    "reference": "Référence : {digest}"
+  }
+}

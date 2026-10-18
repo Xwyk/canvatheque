@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  lint-typecheck-audit:
+    name: Lint, typage, audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run format:check
+      - name: Audit des dépendances de production
+        run: npm audit --omit=dev --audit-level=high
+
+  tests:
+    name: Tests unitaires, composants, backend (couverture)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      # Les trois projets Vitest en une passe : un seul coverage/lcov.info, seuils 80 % bloquants.
+      # Le projet backend démarre PostgreSQL et MinIO via Testcontainers (Docker du runner).
+      - run: npm run test:coverage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov.info
+          retention-days: 7
+
+  sonar:
+    name: SonarQube (Quality Gate)
+    runs-on: ubuntu-latest
+    needs: tests
+    services:
+      sonarqube:
+        image: sonarqube:26.10.0.133078-community
+        env:
+          SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+        ports:
+          - 9000:9000
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/download-artifact@v5
+        with:
+          name: coverage
+          path: coverage
+      # Instance éphémère : le script initialise le Quality Gate puis échoue s'il n'est pas atteint.
+      - run: node scripts/sonar.mjs
+        env:
+          SONAR_HOST_URL: http://localhost:9000
+
+  docker-e2e:
+    name: Image Docker et E2E
+    runs-on: ubuntu-latest
+    needs: lint-typecheck-audit
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Configuration
+        run: |
+          cp .env.example .env
+          sed -i "s#^AUTH_SECRET=.*#AUTH_SECRET=$(openssl rand -base64 32)#" .env
+      - name: Construction et démarrage de la pile de production
+        run: docker compose -f docker-compose.yml up -d --build --wait --wait-timeout 300
+      - name: Santé
+        run: curl -fsS http://localhost:3000/api/health
+      - run: npm ci
+      - run: npx playwright install --with-deps
+      - run: npm run test:e2e
+      - name: Journaux en cas d'échec
+        if: failure()
+        run: docker compose -f docker-compose.yml logs --no-color
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

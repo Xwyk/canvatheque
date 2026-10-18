@@ -1,0 +1,39 @@
+# Développement : chargé automatiquement par `docker compose up`.
+# Production : `docker compose -f docker-compose.yml up -d`.
+services:
+  app:
+    build:
+      target: deps
+    image: canvatheque-app-dev:latest
+    entrypoint: []
+    command: >
+      sh -c "npx prisma generate && npx prisma migrate deploy && npm run dev -- -H 0.0.0.0"
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      WATCHPACK_POLLING: "true"
+      LOG_PRETTY: "false"
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    healthcheck:
+      start_period: 180s
+    deploy:
+      resources:
+        limits:
+          memory: 3g
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  minio:
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  mailpit:
+    profiles: !reset []
