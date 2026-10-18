@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   warn: vi.fn(),
   info: vi.fn(),
   send: vi.fn(),
+  cleanup: vi.fn(async () => 0),
   smtpHost: undefined as string | undefined,
 }));
 
@@ -21,6 +22,8 @@ vi.mock("@/lib/env", () => ({
   }),
 }));
 vi.mock("@/lib/mail/mailer", () => ({ mailer: () => ({ send: mocks.send }) }));
+vi.mock("@/features/uploads/service", () => ({ cleanupExpiredUploads: mocks.cleanup }));
+vi.mock("@/lib/storage/s3", () => ({ s3: () => ({}), buckets: () => ({}) }));
 vi.mock("@/lib/logger", () => ({ logger: { warn: mocks.warn, info: mocks.info } }));
 
 describe("runStartupTasks", () => {
@@ -77,6 +80,25 @@ describe("runStartupTasks", () => {
     const { runStartupTasks } = await import("@/lib/startup");
     await runStartupTasks();
     expect(mocks.warn).not.toHaveBeenCalled();
+    expect(mocks.cleanup).toHaveBeenCalledOnce();
+  });
+
+  it("purge les envois expirés sans bloquer le démarrage si le stockage échoue", async () => {
+    mocks.ensureCoreAccounts.mockResolvedValue({ adminId: "a", systemUserId: "s" });
+    const { runStartupTasks } = await import("@/lib/startup");
+    mocks.cleanup.mockResolvedValueOnce(3);
+    await runStartupTasks();
+    expect(mocks.info).toHaveBeenCalledWith(
+      { event: "uploads_cleanup", abandoned: 3 },
+      expect.any(String),
+    );
+    mocks.cleanup.mockRejectedValueOnce(new Error("MinIO indisponible"));
+    await runStartupTasks();
+    expect(mocks.warn).toHaveBeenCalledWith(
+      expect.objectContaining({ event: "uploads_cleanup_failed" }),
+      expect.any(String),
+    );
+    expect(mocks.info).toHaveBeenLastCalledWith({ event: "startup_complete" }, expect.any(String));
   });
 });
 

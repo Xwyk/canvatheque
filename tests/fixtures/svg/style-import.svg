@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg"><style>@import url("https://evil.example/x.css");</style><style>rect{fill:url(https://evil.example/track)}</style><style>circle{fill:#C81E4B}</style><rect width="5" height="5"/><circle r="5"/></svg>

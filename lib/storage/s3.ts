@@ -17,7 +17,32 @@ export function createS3Client(config: StorageConfig): S3Client {
   });
 }
 
-const globalForS3 = globalThis as unknown as { canvathequeS3?: S3Client };
+const globalForS3 = globalThis as unknown as {
+  canvathequeS3?: S3Client;
+  canvathequePublicS3?: S3Client;
+};
+
+/**
+ * Client signant pour l'origine publique (S3_PUBLIC_URL) : les formulaires d'envoi
+ * présignés visent l'adresse vue par le navigateur. Aucune requête n'en part.
+ */
+export function publicS3(): S3Client {
+  const e = env();
+  globalForS3.canvathequePublicS3 ??= createS3Client({
+    endpoint: e.S3_PUBLIC_URL,
+    region: e.S3_REGION,
+    accessKeyId: e.S3_ACCESS_KEY,
+    secretAccessKey: e.S3_SECRET_KEY,
+  });
+  return globalForS3.canvathequePublicS3;
+}
+
+/** URL publique d'un objet du bucket des aperçus (lecture anonyme autorisée). */
+export function publicObjectUrl(bucket: string, key: string): string {
+  let base = env().S3_PUBLIC_URL;
+  while (base.endsWith("/")) base = base.slice(0, -1);
+  return `${base}/${bucket}/${key.split("/").map(encodeURIComponent).join("/")}`;
+}
 
 /** Client interne (réseau Docker) pour les opérations serveur. */
 export function s3(): S3Client {
@@ -33,6 +58,7 @@ export function s3(): S3Client {
 
 export function setS3ForTests(client: S3Client | undefined): void {
   globalForS3.canvathequeS3 = client;
+  globalForS3.canvathequePublicS3 = undefined;
 }
 
 export function buckets() {

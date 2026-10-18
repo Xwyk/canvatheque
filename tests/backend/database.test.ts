@@ -2,9 +2,12 @@ import argon2 from "argon2";
 import { describe, expect, it } from "vitest";
 import { ADMIN_PSEUDO, SYSTEM_USER, ensureCoreAccounts } from "@/features/account/bootstrap";
 import { getCategories, getPopularTagNames } from "@/features/catalog/queries";
+import { buckets, s3 } from "@/lib/storage/s3";
 import { hashToken } from "@/lib/tokens";
 import { CATEGORIES, DEMO_MEMBERS, DEMO_TAGS, seed } from "@/prisma/seed";
+import { DEMO_MODELS } from "@/prisma/seed-models";
 import { prisma } from "@/tests/setup/backend";
+import { objectExists } from "@/tests/support/publication";
 
 const SEED_OPTIONS = {
   adminEmail: "Admin@Canvatheque.test",
@@ -35,11 +38,12 @@ async function createModel(
   });
 }
 
-describe("migration initiale", () => {
-  it("s'applique sur une base vide (globalSetup) et crée la recherche plein texte", async () => {
+describe("migrations", () => {
+  it("s'appliquent sur une base vide (globalSetup) et créent la recherche plein texte", async () => {
     const [{ count }] = await prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*) AS count FROM "_prisma_migrations" WHERE "finished_at" IS NOT NULL`;
-    expect(Number(count)).toBe(1);
+    // Une migration par étape qui modifie le schéma (initiale, aperçu choisi par le membre).
+    expect(Number(count)).toBe(2);
 
     await seed(prisma, SEED_OPTIONS);
     await createModel({ title: "Étoile festive", searchText: "Décorations de Noël pour sapins" });
@@ -93,6 +97,29 @@ describe("seed", () => {
     const member = await prisma.user.findUniqueOrThrow({ where: { pseudoSlug: "lucie-m" } });
     expect(await argon2.verify(member.passwordHash!, SEED_OPTIONS.memberPassword)).toBe(true);
     expect(member.passwordHash).toMatch(/^\$argon2id\$/);
+  });
+
+  it("crée les modèles de démonstration avec fichiers et aperçus (une seule fois)", async () => {
+    const storage = { s3: s3(), buckets: buckets() };
+    const first = await seed(prisma, { ...SEED_OPTIONS, storage });
+    expect(first.models).toBe(DEMO_MODELS.length);
+    expect((await seed(prisma, { ...SEED_OPTIONS, storage })).models).toBe(0);
+
+    const models = await prisma.model.findMany({ include: { tags: true, category: true } });
+    expect(models).toHaveLength(30);
+    expect(new Set(models.map((m) => m.categoryId)).size).toBe(CATEGORIES.length);
+    expect(models.filter((m) => m.format === "CWPRJ")).toHaveLength(4);
+    for (const model of models) {
+      expect(model).toMatchObject({ status: "PUBLISHED", previewWidth: 1600 });
+      expect(model.tags.length).toBeGreaterThan(0);
+    }
+    const sample = models.find((m) => m.format === "SVG")!;
+    expect(await objectExists(buckets().models, sample.fileKey!)).toBe(true);
+    expect(await objectExists(buckets().previews, `${sample.previewKey}-md.webp`)).toBe(true);
+    // Recherche plein texte alimentée.
+    const [hit] = await prisma.$queryRaw<{ title: string }[]>`
+      SELECT "title" FROM "Model" WHERE "searchVector" @@ websearch_to_tsquery('french_unaccent', 'dragees')`;
+    expect(hit?.title).toBe("Boîte à dragées");
   });
 
   it("ordonne les catégories comme la maquette", async () => {

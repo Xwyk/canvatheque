@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Settings, ShieldCheck } from "lucide-react";
+import { LayoutGrid, LogOut, Settings, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
@@ -33,6 +33,12 @@ export function AccountMenu({ user }: { user: HeaderUser }) {
           <span className="truncate text-xs font-normal text-muted-foreground">{user.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/me" className="min-h-11">
+            <LayoutGrid aria-hidden="true" />
+            {t("myModels")}
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/me/settings" className="min-h-11">
             <Settings aria-hidden="true" />

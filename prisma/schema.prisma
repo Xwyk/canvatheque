@@ -130,6 +130,8 @@ model Model {
   previewKey    String?
   previewWidth  Int?
   previewHeight Int?
+  /// true : image choisie par le membre (sinon aperçu généré depuis le SVG)
+  previewCustom Boolean                  @default(false)
   status        ModelStatus              @default(DRAFT)
   license       License?
   categoryId    String?

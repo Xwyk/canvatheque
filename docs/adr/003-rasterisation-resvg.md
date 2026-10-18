@@ -1,6 +1,6 @@
 # ADR-003 : resvg-js pour la rasterisation SVG, sharp pour le post-traitement
 
-- Statut : acceptée (2026-10-18), mise en œuvre à l'étape 2
+- Statut : acceptée (2026-10-18), mise en œuvre à l'étape 2 (`lib/images/preview.ts`)
 
 ## Contexte
 
@@ -18,3 +18,7 @@ le rendu doit être isolé du système (polices, ressources externes) et borné 
 
 - Rendu indépendant de la version de libvips/librsvg de l'image.
 - Deux dépendances natives : vérifiées dans l'image Alpine par le job Docker de la CI.
+- Sans police système, le texte d'un SVG n'apparaît pas dans l'aperçu (les modèles de découpe
+  sont des tracés) ; le fichier téléchargé, lui, est intact.
+- Rendu asynchrone (`renderAsync`, hors du fil principal) ; plus grand côté ramené à 1600 px ;
+  sharp limité à 40 mégapixels en entrée.

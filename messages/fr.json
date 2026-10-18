@@ -8,7 +8,10 @@
     "forgot": "Mot de passe oublié",
     "reset": "Nouveau mot de passe",
     "checkMail": "Confirmation d'adresse",
-    "settings": "Paramètres du compte"
+    "settings": "Paramètres du compte",
+    "publish": "Publier un modèle",
+    "editModel": "Modifier « {title} »",
+    "me": "Mon espace"
   },
   "a11y": {
     "skipToContent": "Aller au contenu principal"
@@ -26,7 +29,8 @@
     "accountMenu": "Compte de {pseudo}",
     "settings": "Paramètres du compte",
     "signOut": "Se déconnecter",
-    "admin": "Administration"
+    "admin": "Administration",
+    "myModels": "Mes modèles"
   },
   "theme": {
     "toDark": "Activer le thème sombre",
@@ -149,7 +153,8 @@
       "welcome": "Bienvenue {pseudo} ! Un e-mail de confirmation vient de partir.",
       "signedIn": "Vous êtes connecté·e.",
       "signedOut": "Vous êtes déconnecté·e.",
-      "passwordReset": "Mot de passe modifié. Vous êtes connecté·e."
+      "passwordReset": "Mot de passe modifié. Vous êtes connecté·e.",
+      "modelPublished": "Votre modèle est publié. Merci pour ce partage !"
     }
   },
   "settings": {
@@ -200,7 +205,43 @@
       "emailTaken": "Un compte utilise déjà cette adresse.",
       "pseudoTaken": "Ce pseudo est déjà pris.",
       "wrongPassword": "Mot de passe incorrect.",
-      "sameEmail": "C'est déjà votre adresse actuelle."
+      "sameEmail": "C'est déjà votre adresse actuelle.",
+      "titleLength": "Entre 3 et 80 caractères.",
+      "descriptionLength": "5 000 caractères maximum.",
+      "category": "Choisissez une catégorie.",
+      "license": "Choisissez une licence.",
+      "tagsCount": "10 mots-clés maximum.",
+      "certifyRights": "Cochez cette case pour publier.",
+      "fileRequired": "Ajoutez un fichier.",
+      "previewRequired": "Ajoutez une image d'aperçu.",
+      "crop": "Recadrage invalide."
+    },
+    "notFound": "Ce modèle est introuvable.",
+    "upload": {
+      "fileName": "Nom de fichier invalide (1 à 120 caractères).",
+      "doubleExtension": "Ce nom de fichier contient une double extension suspecte.",
+      "extension": "Seuls les fichiers .cwprj et .svg sont acceptés.",
+      "empty": "Ce fichier est vide.",
+      "tooLarge": "Ce fichier dépasse la taille maximale autorisée.",
+      "imageType": "Seules les images PNG, JPG ou WebP sont acceptées.",
+      "imageTooLarge": "Cette image dépasse 5 Mo.",
+      "imageInvalid": "Cette image est illisible ou trop grande (40 mégapixels maximum).",
+      "signature": "Le contenu de ce fichier ne correspond pas à un projet CanvasWorkspace.",
+      "svgInvalid": "Ce fichier SVG est invalide ou mal formé.",
+      "svgEntities": "Ce fichier SVG contient des déclarations d'entités, refusées pour des raisons de sécurité.",
+      "svgTooComplex": "Ce fichier SVG est trop complexe (50 000 éléments maximum).",
+      "svgRender": "Impossible de générer l'aperçu de ce SVG.",
+      "quota": "Vous avez atteint le nombre maximal de modèles. Supprimez-en un pour continuer.",
+      "formatChange": "Un modèle publié garde son format : choisissez un fichier du même type.",
+      "missing": "Le fichier n'a pas été reçu. Recommencez l'envoi.",
+      "notFound": "Cet envoi est introuvable. Recommencez.",
+      "expired": "Cet envoi a expiré. Recommencez.",
+      "network": "L'envoi a échoué (connexion interrompue ?). Réessayez."
+    },
+    "publish": {
+      "unverified": "Confirmez votre adresse e-mail pour publier.",
+      "hidden": "Ce modèle a été masqué par la modération et ne peut pas être republié.",
+      "incomplete": "Il manque des informations pour publier."
     }
   },
   "emails": {
@@ -237,5 +278,165 @@
       "greeting": "Bonjour {pseudo},",
       "intro": "Le mot de passe de votre compte vient d'être modifié et vos autres sessions ont été fermées. Si vous n'êtes pas à l'origine de ce changement, réinitialisez-le immédiatement."
     }
+  },
+  "modelCard": {
+    "by": "par {pseudo}",
+    "downloads": "{count, plural, =0 {Aucun téléchargement} one {# téléchargement} other {# téléchargements}}"
+  },
+  "licenses": {
+    "CC0": {
+      "name": "CC0 (domaine public)",
+      "summary": "Chacun peut tout faire, même vendre, sans vous citer."
+    },
+    "CC_BY": {
+      "name": "CC BY",
+      "summary": "Usage libre, même commercial, en vous citant."
+    },
+    "CC_BY_SA": {
+      "name": "CC BY-SA",
+      "summary": "Usage libre, même commercial, en vous citant et en partageant les modifications sous la même licence."
+    },
+    "CC_BY_NC": {
+      "name": "CC BY-NC",
+      "summary": "Usage libre hors usage commercial, en vous citant."
+    },
+    "CC_BY_NC_SA": {
+      "name": "CC BY-NC-SA",
+      "summary": "Usage libre hors usage commercial, en vous citant et en partageant les modifications sous la même licence."
+    },
+    "PERSONAL_USE": {
+      "name": "Usage personnel uniquement",
+      "summary": "Pour soi seulement : ni vente, ni redistribution."
+    }
+  },
+  "status": {
+    "DRAFT": "Brouillon",
+    "PUBLISHED": "Publié",
+    "HIDDEN": "Masqué"
+  },
+  "publish": {
+    "title": "Publier un modèle",
+    "editTitle": "Modifier le modèle",
+    "savedNow": "Brouillon enregistré à l'instant",
+    "savedAgo": "Brouillon enregistré il y a {minutes, plural, one {# minute} other {# minutes}}",
+    "changesSaved": "Modifications enregistrées",
+    "saving": "Enregistrement…",
+    "stepsLabel": "Étapes de publication",
+    "steps": {
+      "file": "Fichier",
+      "preview": "Aperçu",
+      "info": "Informations",
+      "review": "Relecture"
+    },
+    "back": "Retour",
+    "continue": "Continuer",
+    "recapLabel": "Récapitulatif",
+    "galleryPreview": "Aperçu dans la galerie",
+    "titlePlaceholder": "Titre de votre modèle",
+    "fileValid": "{size} · fichier valide",
+    "unverified": "Vous pouvez préparer votre modèle dès maintenant ; la publication sera possible une fois votre adresse e-mail confirmée.",
+    "quotaReached": "Vous avez atteint le nombre maximal de modèles ({max}).",
+    "file": {
+      "heading": "Choisissez votre fichier",
+      "text": "Un projet CanvasWorkspace (.cwprj) ou une image vectorielle (.svg). Les SVG sont nettoyés et leur aperçu est généré automatiquement.",
+      "dropTitle": "Glissez votre fichier ici",
+      "dropHint": ".cwprj ou .svg · {max} Mo maximum",
+      "replaceTitle": "Glissez un autre fichier pour le remplacer",
+      "choose": "Choisir un fichier",
+      "checked": "Fichier vérifié : {name}",
+      "duplicate": "Un modèle publié contient déjà exactement ce fichier : « {title} ». Vous pouvez continuer si c'est bien votre création."
+    },
+    "preview": {
+      "heading": "Ajoutez une image d'aperçu",
+      "textCwprj": "Les fichiers .cwprj ne peuvent pas s'afficher dans le navigateur. Une belle photo ou capture de votre modèle aide les autres à le reconnaître.",
+      "textSvg": "Nous avons généré cet aperçu à partir de votre SVG. Vous pouvez le remplacer par votre propre image.",
+      "textCustom": "Votre image sera affichée dans la galerie. Vous pouvez la remplacer à tout moment.",
+      "none": "Aucun aperçu pour l'instant",
+      "dropTitle": "Glissez votre image ici",
+      "replaceTitle": "Remplacer par ma propre image",
+      "dropHint": "PNG, JPG ou WebP · 5 Mo maximum",
+      "choose": "Choisir un fichier",
+      "zoomIn": "Agrandir l'aperçu",
+      "zoomOut": "Réduire l'aperçu",
+      "alt": "Aperçu de « {title} »"
+    },
+    "info": {
+      "heading": "Décrivez votre modèle",
+      "title": "Titre",
+      "description": "Description",
+      "descriptionHint": "Matériaux, dimensions, conseils de découpe… Gras, italique, listes et liens sont acceptés.",
+      "toolbar": "Mise en forme",
+      "bold": "Gras",
+      "italic": "Italique",
+      "list": "Liste à puces",
+      "link": "Lien",
+      "category": "Catégorie",
+      "categoryPlaceholder": "Choisissez une catégorie",
+      "tags": "Mots-clés",
+      "tagsHint": "Jusqu'à 10 mots-clés. Validez chacun avec Entrée ou une virgule.",
+      "tagsPlaceholder": "papillon, mariage…",
+      "tagRemove": "Retirer le mot-clé {tag}",
+      "tagSuggestions": "Suggestions",
+      "tagAdd": "Ajouter le mot-clé {tag}",
+      "license": "Licence",
+      "licenseHint": "Ce que les autres membres ont le droit de faire avec votre modèle."
+    },
+    "review": {
+      "heading": "Relisez avant de publier",
+      "file": "Fichier",
+      "title": "Titre",
+      "category": "Catégorie",
+      "license": "Licence",
+      "tags": "Mots-clés",
+      "description": "Description",
+      "none": "—",
+      "certify": "Je certifie être l'auteur·e de ce modèle ou disposer des droits nécessaires pour le partager.",
+      "saveDraft": "Enregistrer le brouillon",
+      "publish": "Publier",
+      "publishing": "Publication…",
+      "saveChanges": "Enregistrer les modifications",
+      "publishedNotice": "Ce modèle est publié : vos modifications sont visibles dès leur enregistrement.",
+      "hiddenNotice": "Ce modèle est masqué par la modération.",
+      "draftSaved": "Brouillon enregistré. Retrouvez-le dans Mes modèles.",
+      "toMyModels": "Mes modèles"
+    },
+    "upload": {
+      "processing": "Vérification…",
+      "progress": "Envoi de {name}",
+      "cancel": "Annuler l'envoi"
+    },
+    "crop": {
+      "title": "Recadrer l'aperçu",
+      "description": "Les cartes de la galerie sont carrées. Ajustez le cadrage, ou gardez l'image entière.",
+      "close": "Fermer",
+      "imageAlt": "Image choisie",
+      "zoom": "Zoom",
+      "horizontal": "Position horizontale",
+      "vertical": "Position verticale",
+      "whole": "Image entière",
+      "apply": "Recadrer"
+    }
+  },
+  "me": {
+    "title": "Mon espace",
+    "subtitle": "Bonjour {pseudo} ! Retrouvez ici vos modèles, publiés ou en préparation.",
+    "tabsLabel": "Sections de mon espace",
+    "tabModels": "Mes modèles",
+    "tabSettings": "Paramètres",
+    "count": "{count, plural, =0 {Aucun modèle} one {# modèle} other {# modèles}}",
+    "publish": "Publier un modèle",
+    "emptyTitle": "Aucun modèle pour l'instant",
+    "emptyText": "Partagez votre première création : un .cwprj ou un .svg suffit.",
+    "actions": "Actions pour « {title} »",
+    "edit": "Modifier",
+    "unpublish": "Dépublier",
+    "delete": "Supprimer",
+    "deleteTitle": "Supprimer « {title} » ?",
+    "deleteText": "Le modèle, son fichier et ses aperçus seront définitivement effacés. Cette action est irréversible.",
+    "deleteConfirm": "Supprimer définitivement",
+    "cancel": "Annuler",
+    "deleted": "« {title} » a été supprimé.",
+    "unpublished": "Le modèle est repassé en brouillon.",
+    "updated": "Modifié le {date}"
   }
 }

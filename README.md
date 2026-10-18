@@ -3,11 +3,11 @@
 Application web communautaire et gratuite de partage de modèles de découpe pour Brother ScanNCut
 (`.cwprj` et `.svg`).
 
-> **État : étape 1 (comptes) livrée.** Socle (accueil, thèmes, Docker, tests, CI) et comptes :
-> inscription, connexion, confirmation d'adresse, mot de passe oublié, paramètres du compte.
-> La publication, le catalogue et le téléchargement arrivent aux étapes suivantes
-> (voir [Feuille de route](#feuille-de-route)) ; les liens Modèles, Catégories, Aide et Publier
-> mènent pour l'instant à la page 404.
+> **État : étape 2 (publication) livrée.** Socle, comptes et publication : envoi direct vers le
+> stockage, vérification et nettoyage des fichiers, aperçus, assistant en 4 étapes, brouillons,
+> modification, suppression, « Mes modèles ». Le catalogue public (galerie, fiche) et le
+> téléchargement arrivent aux étapes suivantes (voir [Feuille de route](#feuille-de-route)) ; les
+> liens Modèles, Catégories et Aide mènent pour l'instant à la page 404.
 
 ## Démarrage rapide (Docker)
 
@@ -64,7 +64,8 @@ npm run dev
 
 Le seed est idempotent : catégories, administrateur, compte système, 5 membres de démonstration
 (`<pseudo>@demo.canvatheque.test`, mot de passe `SEED_MEMBER_PASSWORD` ou aléatoire affiché),
-10 tags. Les modèles de démonstration arriveront avec l'étape Publication.
+10 tags et, si le stockage S3 est configuré (variables `S3_*`), 30 modèles publiés : SVG générés
+par le seed lui-même et 4 `.cwprj` fictifs, passés par le même pipeline d'aperçus que les envois.
 
 ## Commandes
 
@@ -131,6 +132,33 @@ PostgreSQL ([ADR-004](docs/adr/004-rate-limit-postgresql.md)) : connexion 10/15 
 inscription 5/h (IP), réinitialisation 3/h (adresse), configurables par variables `RATE_LIMIT_*`.
 Le bannissement est disponible côté service (`banUser`) ; son interface arrive avec l'étape 5.
 
+### Publication
+
+| Parcours    | Pages                                 | Détails                                                                                                                      |
+| ----------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Publier     | `/publish` puis `/models/<slug>/edit` | assistant Fichier → Aperçu → Informations → Relecture ; le brouillon existe dès le premier fichier vérifié                   |
+| Mes modèles | `/me`                                 | état (Brouillon, Publié, Masqué), Modifier, Dépublier, Supprimer (confirmation, irréversible)                                |
+| Modifier    | `/models/<slug>/edit`                 | mêmes écrans, étapes libres ; un modèle publié garde son format ; réservé au propriétaire et aux administrateurs (404 sinon) |
+
+- **Envoi** ([ADR-006](docs/adr/006-envoi-direct-presigne.md)) : formulaire POST présigné vers MinIO
+  (clé imposée, taille bornée par la politique), progression et annulation ; le serveur ne relaie
+  jamais le binaire entrant. 20 envois par heure et par membre (`RATE_LIMIT_UPLOAD_PER_HOUR`).
+- **Contrôles** : extensions `.cwprj` et `.svg` (aperçus PNG, JPG, WebP de 5 Mo), nom nettoyé,
+  double extension dangereuse refusée (`facture.exe.svg`), taille réelle revérifiée, signature lue.
+  Un `.cwprj` est un bloc opaque (format chiffré, sans signature) : seuls les exécutables, scripts,
+  pages HTML et SVG déguisés sont refusés.
+- **SVG** : analyse XML stricte, entités et DOCTYPE à sous-ensemble interne refusés, 50 000 éléments
+  au plus, puis DOMPurify (profil SVG) : pas de script, de `foreignObject`, de gestionnaire `on*`,
+  de lien `javascript:` ni de ressource externe ; le fichier publié est la version nettoyée.
+- **Aperçus** ([ADR-003](docs/adr/003-rasterisation-resvg.md)) : rendu resvg du SVG (fond
+  transparent) ou image du membre, recadrage carré optionnel, rotation EXIF appliquée puis
+  métadonnées supprimées, WebP 400 / 800 / 1600 px dans le bucket public `previews`.
+- **Doublons** : empreinte SHA-256 ; un fichier identique à un modèle publié est signalé, sans blocage.
+- **Règles** : publication réservée aux adresses confirmées, catégorie, licence, aperçu et
+  certification des droits obligatoires ; quota `MAX_MODELS_PER_USER` (brouillons compris,
+  administrateurs exemptés). Suppression logique en base, objets MinIO effacés aussitôt
+  ([ADR-008](docs/adr/008-suppression-logique.md)) ; envois abandonnés purgés au démarrage.
+
 ### Sécurité (socle)
 
 - CSP à nonces par requête (`script-src 'nonce-…' 'strict-dynamic'`), `frame-ancestors 'none'`,
@@ -176,7 +204,7 @@ téléchargements, métriques du processus Node.
 | ----- | ---------------------------------------------------------------------------------- | ------- |
 | 0     | Socle : design system, accueil, Docker, base, tests, CI                            | ✅      |
 | 1     | Comptes : inscription, connexion, e-mails, réinitialisation, bannissement, limites | ✅      |
-| 2     | Publication : envoi présigné, validation, nettoyage SVG, aperçus, assistant        | à venir |
+| 2     | Publication : envoi présigné, validation, nettoyage SVG, aperçus, assistant        | ✅      |
 | 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | à venir |
 | 4     | Téléchargement et favoris, CanvasWorkspace                                         | à venir |
 | 5     | Modération et administration                                                       | à venir |

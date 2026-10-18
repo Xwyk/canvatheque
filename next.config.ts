@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Cache Components / PPR désactivés : incompatibles avec la CSP à nonces (ADR-011).
   cacheComponents: false,
-  serverExternalPackages: ["argon2", "pino", "pino-pretty"],
+  // Modules natifs ou à chargement dynamique : jamais regroupés par le compilateur.
+  serverExternalPackages: ["argon2", "pino", "pino-pretty", "@resvg/resvg-js", "sharp", "jsdom"],
   outputFileTracingIncludes: {
     "/*": ["./node_modules/argon2/prebuilds/linux-*/**/*"],
   },
