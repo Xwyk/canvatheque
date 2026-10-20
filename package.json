@@ -91,7 +91,6 @@
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "prisma": "^7.10.1",
-    "shadcn": "^4.22.0",
     "tailwindcss": "^4",
     "testcontainers": "^12.2.1",
     "tsx": "^4.23.15",

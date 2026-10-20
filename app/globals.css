@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import "./shadcn.css";
 
 /* Design tokens Canvathèque : voir docs/design-tokens.md.
    Clair = maquettes ; sombre = dérivé. Les noms shadcn (primary, muted, accent…)
