@@ -1,0 +1,63 @@
+{
+  "authGate": {
+    "downloadTitle": "Créez un compte gratuit pour télécharger",
+    "downloadSubtitle": "Une minute, aucun paiement. Votre téléchargement démarre dès l'inscription.",
+    "favoriteTitle": "Créez un compte gratuit pour garder vos favoris",
+    "favoriteSubtitle": "Retrouvez vos modèles préférés sur tous vos appareils.",
+    "publishTitle": "Créez un compte gratuit pour publier",
+    "publishSubtitle": "Partagez vos créations avec la communauté, gratuitement.",
+    "close": "Fermer",
+    "tabsLabel": "Connexion ou inscription",
+    "tabSignIn": "Connexion",
+    "tabSignUp": "Inscription",
+    "signUpAndDownload": "Créer mon compte et télécharger",
+    "signInAndDownload": "Se connecter et télécharger",
+    "haveAccount": "Déjà inscrit·e ?",
+    "noAccount": "Pas encore de compte ?",
+    "switchToSignIn": "Se connecter",
+    "switchToSignUp": "Créer un compte"
+  },
+  "favorites": {
+    "add": "Ajouter « {title} » aux favoris",
+    "remove": "Retirer « {title} » des favoris",
+    "pill": "Favori",
+    "pillActive": "Dans vos favoris",
+    "added": "Ajouté à vos favoris.",
+    "removed": "Retiré de vos favoris."
+  },
+  "downloads": {
+    "started": "Téléchargement lancé : {name}",
+    "error": "Le téléchargement a échoué. Réessayez dans un instant.",
+    "rateLimited": "Vous avez beaucoup téléchargé : réessayez dans {minutes, plural, one {# minute} other {# minutes}}.",
+    "notFound": "Ce fichier n'est plus disponible."
+  },
+  "canvasWorkspace": {
+    "title": "Ouvrir le modèle dans CanvasWorkspace",
+    "intro": "Le fichier « {name} » est en cours de téléchargement. Pour l'ouvrir :",
+    "step1": "Lancez CanvasWorkspace sur votre ordinateur (Windows ou macOS).",
+    "step2": "Choisissez Fichier, puis Ouvrir.",
+    "step3": "Sélectionnez « {name} » dans votre dossier Téléchargements.",
+    "noSoftware": "Vous n'avez pas CanvasWorkspace ? <link>Le télécharger sur le site de Brother</link>.",
+    "dontShowAgain": "Ne plus afficher ces explications",
+    "ok": "J'ai compris"
+  },
+  "library": {
+    "tabsLabel": "Sections de mon espace",
+    "tabModels": "Mes modèles",
+    "tabFavorites": "Mes favoris",
+    "tabDownloads": "Mes téléchargements",
+    "tabSettings": "Paramètres",
+    "favoritesTitle": "Mes favoris",
+    "favoritesCount": "{count, plural, =0 {Aucun favori} one {# favori} other {# favoris}}",
+    "favoritesEmptyTitle": "Pas encore de favori",
+    "favoritesEmptyText": "Touchez le cœur d'un modèle pour le retrouver ici.",
+    "downloadsTitle": "Mes téléchargements",
+    "downloadsCount": "{count, plural, =0 {Aucun modèle} one {# modèle} other {# modèles}}",
+    "downloadsEmptyTitle": "Aucun téléchargement pour l'instant",
+    "downloadsEmptyText": "Les modèles que vous téléchargez apparaîtront ici, du plus récent au plus ancien.",
+    "downloadedOn": "Téléchargé le {date}",
+    "browse": "Parcourir les modèles",
+    "metaFavorites": "Mes favoris",
+    "metaDownloads": "Mes téléchargements"
+  }
+}

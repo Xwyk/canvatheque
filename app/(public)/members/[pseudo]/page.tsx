@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server";
 import { cache } from "react";
 import { MemberProfileView } from "@/features/catalog/components/member/member-profile";
 import { getMemberProfile } from "@/features/catalog/member";
+import { withFavorites } from "@/features/favorites/service";
+import { getCurrentUser } from "@/lib/auth/current";
 import { summarize } from "@/features/catalog/model-page";
 import { absoluteUrl, DEFAULT_OG_IMAGE } from "@/features/catalog/seo";
 import { db } from "@/lib/db";
@@ -46,5 +48,7 @@ export default async function MemberPage({ params }: PageProps<"/members/[pseudo
   const { pseudo } = await params;
   const profile = await loadProfile(pseudo);
   if (!profile) notFound();
-  return <MemberProfileView profile={profile} />;
+  const user = await getCurrentUser();
+  const models = await withFavorites(db(), user?.id, profile.models);
+  return <MemberProfileView profile={{ ...profile, models }} />;
 }

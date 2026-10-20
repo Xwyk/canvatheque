@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
+import { MeTabs } from "@/components/layout/me-tabs";
 import { EmailForm, PasswordForm, ProfileForm } from "@/features/auth/components/settings-forms";
 import { requireUserPage } from "@/lib/auth/current";
 import { db } from "@/lib/db";
@@ -41,6 +42,7 @@ export default async function SettingsPage() {
         </h1>
         <p className="m-0 text-muted-foreground">{t("subtitle", { pseudo: session.pseudo })}</p>
       </div>
+      <MeTabs current="/me/settings" />
 
       <SettingsCard id="profile-title" title={t("profileTitle")}>
         <ProfileForm bio={profile.bio ?? ""} website={profile.website ?? ""} />

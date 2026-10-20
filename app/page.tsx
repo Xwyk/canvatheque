@@ -13,6 +13,7 @@ import {
   withFallbackSuggestions,
 } from "@/features/catalog/queries";
 import { absoluteUrl, DEFAULT_OG_IMAGE, jsonLd } from "@/features/catalog/seo";
+import { withFavorites } from "@/features/favorites/service";
 import { getCurrentUser } from "@/lib/auth/current";
 import { db } from "@/lib/db";
 
@@ -66,6 +67,10 @@ export default async function HomePage() {
     headers(),
   ]);
   const suggestions = withFallbackSuggestions(popularTags, t.raw("popularFallback") as string[]);
+  const [popular, latest] = await Promise.all([
+    withFavorites(prisma, user?.id, sections.popular),
+    withFavorites(prisma, user?.id, sections.latest),
+  ]);
   const nonce = requestHeaders.get("x-nonce") ?? undefined;
 
   return (
@@ -77,8 +82,8 @@ export default async function HomePage() {
       />
       <HomeHero popularTags={suggestions} />
       <CategoryBand categories={categories} />
-      <PopularSection models={sections.popular} />
-      <LatestSection models={sections.latest} empty={<EmptyCatalog />} />
+      <PopularSection models={popular} />
+      <LatestSection models={latest} empty={<EmptyCatalog />} />
       <DarkCtaPanel member={!!user} />
     </>
   );

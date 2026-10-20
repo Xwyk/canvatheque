@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
-import { clientOs } from "@/features/catalog/components/model-page/download-actions";
+import { clientOs } from "@/features/downloads/links";
 import { ModelView } from "@/features/catalog/components/model-page/model-view";
 import {
   getAuthorModels,
@@ -14,6 +14,7 @@ import {
   type ModelPageData,
 } from "@/features/catalog/model-page";
 import { absoluteUrl, DEFAULT_OG_IMAGE, jsonLd } from "@/features/catalog/seo";
+import { withFavorites } from "@/features/favorites/service";
 import { getCurrentUser } from "@/lib/auth/current";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
@@ -77,13 +78,25 @@ export default async function ModelPage({ params }: PageProps<"/models/[slug]">)
 
   const requestHeaders = await headers();
   const nonce = requestHeaders.get("x-nonce") ?? undefined;
-  const [similar, authorModels, description] = await Promise.all([
+  const user = await getCurrentUser();
+  const [similarModels, otherModels, description] = await Promise.all([
     getSimilarModels(db(), data.model),
     data.author.hasProfile
       ? getAuthorModels(db(), { id: data.model.id, authorId: data.author.id })
       : [],
     describe(data),
   ]);
+  // Une seule requête de favoris pour la fiche et ses deux listes.
+  const marked = await withFavorites(db(), user?.id, [
+    { id: data.model.id },
+    ...similarModels,
+    ...otherModels,
+  ]);
+  const favorited = new Set(marked.filter((item) => item.favorited).map((item) => item.id));
+  const mark = <T extends { id: string }>(items: T[]) =>
+    items.map((item) => ({ ...item, favorited: favorited.has(item.id) }));
+  const similar = mark(similarModels);
+  const authorModels = mark(otherModels);
   const canonical = canonicalOf(data.model.slug);
 
   return (
@@ -103,6 +116,7 @@ export default async function ModelPage({ params }: PageProps<"/models/[slug]">)
         similar={similar}
         authorModels={authorModels}
         canonicalUrl={canonical}
+        favorited={favorited.has(data.model.id)}
         os={clientOs(requestHeaders.get("user-agent"))}
       />
     </>

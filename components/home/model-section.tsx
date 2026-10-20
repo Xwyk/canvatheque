@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
-import { ModelCard, ModelGrid } from "@/components/model-card";
+import { ModelGrid } from "@/components/model-card";
+import { CatalogCard } from "@/features/catalog/components/catalog-card";
 import type { CatalogItem } from "@/features/catalog/search";
 
 /**
@@ -48,12 +49,7 @@ export function ModelSection({
           <ModelGrid>
             {models.map((model) => (
               <li key={model.id} className="min-w-0">
-                <ModelCard
-                  model={model}
-                  variant="plain"
-                  tintKey={model.id}
-                  href={`/models/${model.slug}`}
-                />
+                <CatalogCard item={model} />
               </li>
             ))}
           </ModelGrid>

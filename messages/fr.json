@@ -420,9 +420,7 @@
   "me": {
     "title": "Mon espace",
     "subtitle": "Bonjour {pseudo} ! Retrouvez ici vos modèles, publiés ou en préparation.",
-    "tabsLabel": "Sections de mon espace",
     "tabModels": "Mes modèles",
-    "tabSettings": "Paramètres",
     "count": "{count, plural, =0 {Aucun modèle} one {# modèle} other {# modèles}}",
     "publish": "Publier un modèle",
     "emptyTitle": "Aucun modèle pour l'instant",

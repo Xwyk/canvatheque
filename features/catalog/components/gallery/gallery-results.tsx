@@ -2,8 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ModelCard, ModelGrid } from "@/components/model-card";
+import { ModelGrid } from "@/components/model-card";
 import { pillButton } from "@/components/ui/pill-button";
+import { CatalogCard } from "@/features/catalog/components/catalog-card";
 import type { CatalogItem, CatalogPage } from "@/features/catalog/search";
 import { cn } from "@/lib/utils";
 import { interceptClick, useGallery } from "./gallery-context";
@@ -115,13 +116,7 @@ export function GalleryResults({
       <ModelGrid min={220}>
         {items.map((item, index) => (
           <li key={item.id}>
-            <ModelCard
-              model={item}
-              href={`/models/${item.slug}`}
-              variant="plain"
-              tintKey={item.id}
-              priority={index < PRIORITY_CARDS}
-            />
+            <CatalogCard item={item} priority={index < PRIORITY_CARDS} />
           </li>
         ))}
       </ModelGrid>

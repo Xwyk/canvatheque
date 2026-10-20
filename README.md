@@ -3,11 +3,10 @@
 Application web communautaire et gratuite de partage de modèles de découpe pour Brother ScanNCut
 (`.cwprj` et `.svg`).
 
-> **État : étape 3 (catalogue) livrée.** Socle, comptes, publication et catalogue public :
-> recherche plein texte, galerie filtrable à défilement infini, catégories, fiche modèle, profil
-> public, référencement (Open Graph, schema.org, sitemap, robots). Le téléchargement des fichiers
-> et les favoris arrivent à l'étape 4 (voir [Feuille de route](#feuille-de-route)) ; d'ici là, les
-> boutons de téléchargement de la fiche et les liens Aide, Favoris et pages légales mènent à une 404.
+> **État : étape 4 (téléchargement et favoris) livrée.** Socle, comptes, publication, catalogue
+> public, téléchargement (modale visiteur, ouverture dans CanvasWorkspace) et favoris. La
+> modération arrive à l'étape 5 (voir [Feuille de route](#feuille-de-route)) ; les liens Aide et
+> pages légales mènent encore à une 404.
 
 ## Démarrage rapide (Docker)
 
@@ -185,6 +184,23 @@ Le bannissement est disponible côté service (`banUser`) ; son interface arrive
 - **Performance** : Lighthouse (mobile, 4G simulée) ≥ 90 sur l'accueil, la galerie et la fiche ;
   accessibilité, bonnes pratiques et SEO à 100.
 
+### Téléchargement et favoris
+
+| Parcours                     | Où                                        | Détails                                                                                                                                                                |
+| ---------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Télécharger                  | fiche, `GET /api/models/<slug>/download`  | membre connecté (adresse confirmée ou non) ; URL présignée courte (`SIGNED_URL_TTL_SECONDS`), toujours en pièce jointe ; 60 par heure (`RATE_LIMIT_DOWNLOAD_PER_HOUR`) |
+| Visiteur                     | modale sur la fiche                       | « Créez un compte gratuit pour télécharger » (inscription ou connexion), retour sur la fiche et téléchargement automatique                                             |
+| Ouvrir dans CanvasWorkspace  | fiche d'un `.cwprj`                       | Brother ne documente aucun lien d'ouverture directe : téléchargement puis explications pas à pas (« Ne plus afficher » mémorisé dans le navigateur)                    |
+| Favoris                      | cœur des cartes, pilule et icône de fiche | mise à jour immédiate puis confirmée ; visiteur : modale d'inscription                                                                                                 |
+| Mes favoris, téléchargements | `/me/favorites`, `/me/downloads`          | onglets de l'espace membre avec Mes modèles et Paramètres                                                                                                              |
+
+- **Compteurs** : un téléchargement compte une fois par jour et par membre (index unique partiel) ;
+  « Populaires cette semaine » s'appuie sur ces téléchargements comptés.
+- **Réponses** : 302 vers le fichier ; JSON `{ url }` avec `Accept: application/json` (bouton de la
+  fiche, qui garde la page) ; erreurs JSON 401 (avec `loginUrl`), 404, 429 (`Retry-After`) ; un visiteur qui ouvre le lien
+  directement est renvoyé vers la connexion, puis sur la fiche.
+- `GET /api/models` renseigne les favoris d'un membre connecté (réponse privée, `Vary: Cookie`).
+
 ### Sécurité (socle)
 
 - CSP à nonces par requête (`script-src 'nonce-…' 'strict-dynamic'`), `frame-ancestors 'none'`,
@@ -232,7 +248,7 @@ téléchargements, métriques du processus Node.
 | 1     | Comptes : inscription, connexion, e-mails, réinitialisation, bannissement, limites | ✅      |
 | 2     | Publication : envoi présigné, validation, nettoyage SVG, aperçus, assistant        | ✅      |
 | 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | ✅      |
-| 4     | Téléchargement et favoris, CanvasWorkspace                                         | à venir |
+| 4     | Téléchargement et favoris, CanvasWorkspace                                         | ✅      |
 | 5     | Modération et administration                                                       | à venir |
 | 6     | RGPD et pages de contenu                                                           | à venir |
 | 7     | Commentaires                                                                       | à venir |

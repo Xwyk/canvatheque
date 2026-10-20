@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { preconnect } from "react-dom";
 import { getTranslations } from "next-intl/server";
 import { bricolage, figtree } from "@/app/fonts";
+import { AuthGateProvider } from "@/components/auth/auth-gate";
 import { FlashToast } from "@/components/flash-toast";
 import { MobileTabBar } from "@/components/layout/mobile-tab-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -77,13 +78,15 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             >
               {t("skipToContent")}
             </a>
-            {user && !user.emailVerifiedAt && <UnverifiedBanner email={user.email} />}
-            <SiteHeader user={headerUser} />
-            <main id="contenu" tabIndex={-1} className="flex-1 outline-none">
-              {children}
-            </main>
-            <SiteFooter />
-            <MobileTabBar />
+            <AuthGateProvider signedIn={!!user}>
+              {user && !user.emailVerifiedAt && <UnverifiedBanner email={user.email} />}
+              <SiteHeader user={headerUser} />
+              <main id="contenu" tabIndex={-1} className="flex-1 outline-none">
+                {children}
+              </main>
+              <SiteFooter />
+              <MobileTabBar />
+            </AuthGateProvider>
             <Toaster position="top-center" richColors closeButton />
             <FlashToast />
           </ThemeProvider>

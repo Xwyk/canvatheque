@@ -168,7 +168,8 @@ export async function getSimilarModels(
   return rows.map(itemFrom);
 }
 
-const itemSelect = {
+/** Sélection Prisma d'une carte du catalogue (voir `catalogItem`). */
+export const itemSelect = {
   id: true,
   slug: true,
   title: true,

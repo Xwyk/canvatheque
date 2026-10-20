@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-import { clientOs, downloadHref } from "@/features/catalog/components/model-page/download-actions";
+import { clientOs, downloadHref } from "@/features/downloads/links";
 import { ModelView } from "@/features/catalog/components/model-page/model-view";
 import type { ModelPageData } from "@/features/catalog/model-page";
 import type { CatalogItem } from "@/features/catalog/search";

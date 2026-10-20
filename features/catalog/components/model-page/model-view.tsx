@@ -2,17 +2,19 @@ import { ArrowLeft, EyeOff, FilePen } from "lucide-react";
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import { Avatar } from "@/components/avatar";
-import { FormatBadge, ModelCard, ModelGrid } from "@/components/model-card";
+import { FormatBadge, ModelGrid } from "@/components/model-card";
 import {
   DownloadPanel,
   MobileActionBar,
-  type ClientOs,
 } from "@/features/catalog/components/model-page/download-actions";
+import { CatalogCard } from "@/features/catalog/components/catalog-card";
 import { OwnerActions } from "@/features/catalog/components/model-page/owner-actions";
 import { ShareButton } from "@/features/catalog/components/model-page/share-button";
 import { ZoomablePreview } from "@/features/catalog/components/model-page/zoomable-preview";
 import type { ModelPageData } from "@/features/catalog/model-page";
 import type { CatalogItem } from "@/features/catalog/search";
+import type { ClientOs } from "@/features/downloads/links";
+import { FavoriteButton } from "@/features/favorites/components/favorite-button";
 import { cn } from "@/lib/utils";
 
 const tagHref = (tag: string) => `/models?tag=${encodeURIComponent(tag)}`;
@@ -205,12 +207,7 @@ function ModelSection({
       <ModelGrid>
         {items.map((item) => (
           <li key={item.id} className="min-w-0">
-            <ModelCard
-              variant="plain"
-              href={`/models/${item.slug}`}
-              tintKey={item.id}
-              model={item}
-            />
+            <CatalogCard item={item} />
           </li>
         ))}
       </ModelGrid>
@@ -224,17 +221,22 @@ export function ModelView({
   similar,
   authorModels,
   canonicalUrl,
+  favorited = false,
   os,
 }: {
   data: ModelPageData;
   similar: CatalogItem[];
   authorModels: CatalogItem[];
   canonicalUrl: string;
+  /** Modèle dans les favoris du membre connecté. */
+  favorited?: boolean;
   os: ClientOs;
 }) {
   const t = useTranslations("modelPage");
   const { model, author, preview } = data;
   const sizeLabel = model.fileSizeLabel;
+  // Nom du fichier enregistré (en-tête Content-Disposition du téléchargement).
+  const fileName = `${model.slug}.${model.format === "SVG" ? "svg" : "cwprj"}`;
 
   return (
     <div className={cn("container-page pb-16", sizeLabel && "max-md:pb-40")}>
@@ -247,7 +249,18 @@ export function ModelView({
         >
           <ArrowLeft aria-hidden="true" className="size-6" />
         </Link>
-        <ShareButton variant="icon" title={model.title} url={canonicalUrl} />
+        <div className="flex">
+          {model.status === "PUBLISHED" && (
+            <FavoriteButton
+              variant="icon"
+              modelId={model.id}
+              title={model.title}
+              favorited={favorited}
+              className="size-12"
+            />
+          )}
+          <ShareButton variant="icon" title={model.title} url={canonicalUrl} />
+        </div>
       </div>
       <Breadcrumb data={data} />
       <StatusBanner data={data} />
@@ -276,12 +289,22 @@ export function ModelView({
                 slug={model.slug}
                 format={model.format}
                 sizeLabel={sizeLabel}
+                fileName={fileName}
                 os={os}
               />
             </div>
           )}
 
           <div className="flex flex-wrap gap-2">
+            {model.status === "PUBLISHED" && (
+              <FavoriteButton
+                variant="pill"
+                modelId={model.id}
+                title={model.title}
+                favorited={favorited}
+                className="max-md:hidden"
+              />
+            )}
             <ShareButton title={model.title} url={canonicalUrl} className="max-md:hidden" />
             {data.canEdit && (
               <OwnerActions modelId={model.id} slug={model.slug} title={model.title} />
@@ -325,7 +348,12 @@ export function ModelView({
       />
 
       {sizeLabel && (
-        <MobileActionBar slug={model.slug} format={model.format} sizeLabel={sizeLabel} />
+        <MobileActionBar
+          slug={model.slug}
+          format={model.format}
+          sizeLabel={sizeLabel}
+          fileName={fileName}
+        />
       )}
     </div>
   );

@@ -10,7 +10,13 @@ import { TextField } from "@/components/forms/text-field";
 import { signInAction } from "@/features/auth/actions";
 import { IDLE } from "@/features/auth/form-state";
 
-export function SignInForm({ redirectTo }: { redirectTo?: string }) {
+export function SignInForm({
+  redirectTo,
+  submitLabel,
+}: {
+  redirectTo?: string;
+  submitLabel?: string;
+}) {
   const t = useTranslations("auth");
   const [state, action] = useActionState(signInAction, IDLE);
 
@@ -41,7 +47,7 @@ export function SignInForm({ redirectTo }: { redirectTo?: string }) {
       >
         {t("forgotLink")}
       </Link>
-      <SubmitButton>{t("signInSubmit")}</SubmitButton>
+      <SubmitButton>{submitLabel ?? t("signInSubmit")}</SubmitButton>
     </form>
   );
 }

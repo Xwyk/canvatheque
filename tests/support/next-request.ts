@@ -61,4 +61,5 @@ export const navigationModule = {
     throw new RedirectError(url);
   },
   usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams(),
 };

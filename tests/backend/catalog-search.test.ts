@@ -1,4 +1,8 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+// La route lit la session (cookies) pour renseigner les favoris.
+vi.mock("next/headers", async () => (await import("@/tests/support/next-request")).headersModule);
+
 import { GET } from "@/app/api/models/route";
 import { parseCatalogParams } from "@/features/catalog/params";
 import { searchModels } from "@/features/catalog/search";

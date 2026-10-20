@@ -1,5 +1,6 @@
 import type { CatalogFilters } from "@/features/catalog/params";
 import { searchModels, type CatalogItem } from "@/features/catalog/search";
+import { withFavorites } from "@/features/favorites/service";
 import type { PrismaClient } from "@/lib/generated/prisma/client";
 
 export type CategoryWithCount = {
@@ -34,13 +35,14 @@ export type GalleryPage = { items: CatalogItem[]; nextCursor: string | null; tot
 export async function loadGalleryPage(
   prisma: PrismaClient,
   filters: CatalogFilters,
+  viewerId?: string | null,
 ): Promise<GalleryPage> {
   const [page, first] = await Promise.all([
     searchModels(prisma, filters),
     filters.cursor ? searchModels(prisma, { ...filters, cursor: null, limit: 1 }) : null,
   ]);
   return {
-    items: page.items,
+    items: await withFavorites(prisma, viewerId, page.items),
     nextCursor: page.nextCursor,
     total: (first ?? page).total ?? page.items.length,
   };

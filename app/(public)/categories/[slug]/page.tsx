@@ -7,6 +7,7 @@ import { cache } from "react";
 import { GalleryScreen } from "@/features/catalog/components/gallery/gallery-screen";
 import { isRefined } from "@/features/catalog/components/gallery/gallery-href";
 import { loadGalleryPage } from "@/features/catalog/gallery";
+import { getCurrentUser } from "@/lib/auth/current";
 import { parseCatalogParams, type SearchParamsInput } from "@/features/catalog/params";
 import { getCategories } from "@/features/catalog/queries";
 import { db } from "@/lib/db";
@@ -49,7 +50,7 @@ export default async function CategoryPage({
   const t = await getTranslations("gallery");
   const tc = await getTranslations("categoriesPage");
   const filters = categoryFilters(slug, await searchParams);
-  const page = await loadGalleryPage(db(), filters);
+  const page = await loadGalleryPage(db(), filters, (await getCurrentUser())?.id);
 
   const breadcrumb = (
     <nav aria-label={t("breadcrumb")}>

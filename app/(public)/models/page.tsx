@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { GalleryScreen } from "@/features/catalog/components/gallery/gallery-screen";
 import { isRefined } from "@/features/catalog/components/gallery/gallery-href";
 import { loadGalleryPage } from "@/features/catalog/gallery";
+import { getCurrentUser } from "@/lib/auth/current";
 import { parseCatalogParams } from "@/features/catalog/params";
 import { getCategories } from "@/features/catalog/queries";
 import { db } from "@/lib/db";
@@ -26,9 +27,10 @@ export default async function ModelsPage({ searchParams }: PageProps<"/models">)
   const t = await getTranslations("gallery");
   const filters = parseCatalogParams(await searchParams);
   const prisma = db();
+  const user = await getCurrentUser();
   const [categories, page] = await Promise.all([
     getCategories(prisma),
-    loadGalleryPage(prisma, filters),
+    loadGalleryPage(prisma, filters, user?.id),
   ]);
   return (
     <GalleryScreen

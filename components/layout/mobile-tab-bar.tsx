@@ -4,36 +4,43 @@ import { CirclePlus, Heart, House, LayoutGrid, type LucideIcon } from "lucide-re
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useAuthGate, type GateReason } from "@/components/auth/auth-gate";
 import { isActivePath } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 type TabKey = "home" | "models" | "publish" | "favorites";
 
-const TABS: { href: string; key: TabKey; icon: LucideIcon; prefetch?: false }[] = [
+const TABS: { href: string; key: TabKey; icon: LucideIcon; gate?: GateReason }[] = [
   { href: "/", key: "home", icon: House },
   { href: "/models", key: "models", icon: LayoutGrid },
-  { href: "/publish", key: "publish", icon: CirclePlus },
-  // Page des favoris : étape 4 ; pas de préchargement d'ici là (404 en console).
-  { href: "/me/favorites", key: "favorites", icon: Heart, prefetch: false },
+  { href: "/publish", key: "publish", icon: CirclePlus, gate: "publish" },
+  { href: "/me/favorites", key: "favorites", icon: Heart, gate: "favorite" },
 ];
 
 /** Barre d'onglets fixe sous 768 px (planche MobileAccueil). */
 export function MobileTabBar() {
   const t = useTranslations("tabBar");
   const pathname = usePathname();
+  const gate = useAuthGate();
   return (
     <nav
       aria-label={t("label")}
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="flex h-20 items-stretch justify-around px-2 pt-1.5 pb-3.5">
-        {TABS.map(({ href, key, icon: Icon, prefetch }) => {
+        {TABS.map(({ href, key, icon: Icon, gate: reason }) => {
           const active = isActivePath(pathname, href);
           return (
             <li key={href} className="flex flex-1">
               <Link
                 href={href}
-                prefetch={prefetch}
+                onClick={(event) => {
+                  // Visiteur : « Publier » et « Favoris » ouvrent la modale d'inscription.
+                  if (reason && !gate.signedIn) {
+                    event.preventDefault();
+                    gate.open(reason, href);
+                  }
+                }}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex flex-1 flex-col items-center justify-center gap-0.5 text-xs no-underline",

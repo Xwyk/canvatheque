@@ -2,12 +2,12 @@ import { CirclePlus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { MeTabs } from "@/components/layout/me-tabs";
 import { pillButton } from "@/components/ui/pill-button";
 import { MyModels } from "@/features/models/components/my-models";
 import { listMyModels } from "@/features/models/service";
 import { requireUserPage } from "@/lib/auth/current";
 import { db } from "@/lib/db";
-import { cn } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");
@@ -34,27 +34,7 @@ export default async function MePage() {
         </Link>
       </div>
 
-      <nav aria-label={t("tabsLabel")}>
-        <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-          <li>
-            <Link
-              href="/me"
-              aria-current="page"
-              className={cn(
-                pillButton({ variant: "primary", size: "sm" }),
-                "border-ink bg-ink text-ink-foreground hover:border-ink hover:bg-ink hover:text-ink-foreground",
-              )}
-            >
-              {t("tabModels")}
-            </Link>
-          </li>
-          <li>
-            <Link href="/me/settings" className={pillButton({ variant: "soft", size: "sm" })}>
-              {t("tabSettings")}
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <MeTabs current="/me" />
 
       <section aria-labelledby="my-models" className="flex flex-col gap-5">
         <h2 id="my-models" className="m-0 text-2xl font-bold">

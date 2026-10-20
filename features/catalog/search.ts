@@ -25,6 +25,8 @@ export type CatalogItem = {
   authorPseudo: string;
   authorSlug: string;
   downloadCount: number;
+  /** Favori du membre connecté (renseigné par `withFavorites`). */
+  favorited?: boolean;
 };
 
 export type CatalogPage = {

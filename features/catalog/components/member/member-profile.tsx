@@ -1,7 +1,8 @@
 import { Download, Link2, Shapes } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { Avatar } from "@/components/avatar";
-import { ModelCard, ModelGrid } from "@/components/model-card";
+import { ModelGrid } from "@/components/model-card";
+import { CatalogCard } from "@/features/catalog/components/catalog-card";
 import type { MemberProfile } from "@/features/catalog/member";
 
 /** Hôte affiché du site web (« exemple.fr/atelier »). */
@@ -71,13 +72,7 @@ export function MemberProfileView({ profile }: { profile: MemberProfile }) {
           <ModelGrid>
             {profile.models.map((item, index) => (
               <li key={item.id} className="min-w-0">
-                <ModelCard
-                  variant="plain"
-                  href={`/models/${item.slug}`}
-                  tintKey={item.id}
-                  priority={index === 0}
-                  model={item}
-                />
+                <CatalogCard item={item} priority={index === 0} />
               </li>
             ))}
           </ModelGrid>
