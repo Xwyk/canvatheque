@@ -102,3 +102,93 @@ export function passwordChangedNotice({ to, pseudo }: Recipient): MailMessage {
     paragraphs: [t("passwordChanged.greeting", { pseudo }), t("passwordChanged.intro")],
   });
 }
+
+// --- Modération (étape 5) ------------------------------------------------------------------
+
+export function reportReceivedNotice(
+  { to, pseudo }: Recipient,
+  model: { title: string; url: string },
+): MailMessage {
+  return render({
+    to,
+    subject: t("reportReceived.subject"),
+    paragraphs: [
+      t("reportReceived.greeting", { pseudo }),
+      t("reportReceived.intro", { title: model.title }),
+    ],
+    action: { label: t("reportReceived.action"), url: model.url },
+    notes: [t("reportReceived.note")],
+  });
+}
+
+export function modelHiddenNotice(
+  { to, pseudo }: Recipient,
+  model: { title: string; url: string },
+  reason: string,
+): MailMessage {
+  return render({
+    to,
+    subject: t("modelHidden.subject", { title: model.title }),
+    paragraphs: [
+      t("modelHidden.greeting", { pseudo }),
+      t("modelHidden.intro", { title: model.title }),
+      t("modelHidden.reason", { reason }),
+    ],
+    action: { label: t("modelHidden.action"), url: model.url },
+    notes: [t("modelHidden.note")],
+  });
+}
+
+export function modelRestoredNotice(
+  { to, pseudo }: Recipient,
+  model: { title: string; url: string },
+): MailMessage {
+  return render({
+    to,
+    subject: t("modelRestored.subject", { title: model.title }),
+    paragraphs: [
+      t("modelRestored.greeting", { pseudo }),
+      t("modelRestored.intro", { title: model.title }),
+    ],
+    action: { label: t("modelRestored.action"), url: model.url },
+  });
+}
+
+export function modelRemovedNotice(
+  { to, pseudo }: Recipient,
+  title: string,
+  reason: string,
+): MailMessage {
+  return render({
+    to,
+    subject: t("modelRemoved.subject", { title }),
+    paragraphs: [
+      t("modelRemoved.greeting", { pseudo }),
+      t("modelRemoved.intro", { title }),
+      t("modelRemoved.reason", { reason }),
+    ],
+    notes: [t("modelRemoved.note")],
+  });
+}
+
+export function accountBannedNotice({ to, pseudo }: Recipient, reason: string): MailMessage {
+  return render({
+    to,
+    subject: t("accountBanned.subject"),
+    paragraphs: [
+      t("accountBanned.greeting", { pseudo }),
+      t("accountBanned.intro"),
+      t("accountBanned.reason", { reason }),
+    ],
+    notes: [t("accountBanned.note")],
+  });
+}
+
+export function accountRestoredNotice({ to, pseudo }: Recipient, url: string): MailMessage {
+  return render({
+    to,
+    subject: t("accountRestored.subject"),
+    paragraphs: [t("accountRestored.greeting", { pseudo }), t("accountRestored.intro")],
+    action: { label: t("accountRestored.action"), url },
+  });
+}

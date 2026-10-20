@@ -1,0 +1,249 @@
+{
+  "reports": {
+    "pill": "Signaler",
+    "title": "Signaler « {title} »",
+    "subtitle": "Votre signalement reste confidentiel : l'auteur ne saura pas qui l'a envoyé.",
+    "close": "Fermer",
+    "reasonLegend": "Motif du signalement",
+    "reasons": {
+      "DROITS_AUTEUR": {
+        "label": "Atteinte aux droits d'auteur",
+        "hint": "Modèle copié ou repris sans autorisation."
+      },
+      "CONTENU_INAPPROPRIE": {
+        "label": "Contenu inapproprié",
+        "hint": "Choquant, haineux ou illégal."
+      },
+      "FICHIER_DEFECTUEUX": {
+        "label": "Fichier défectueux",
+        "hint": "Ne s'ouvre pas ou ne correspond pas à l'aperçu."
+      },
+      "SPAM": {
+        "label": "Spam ou publicité",
+        "hint": "Publication sans rapport avec la découpe."
+      },
+      "AUTRE": {
+        "label": "Autre motif",
+        "hint": "Précisez le problème ci-dessous."
+      }
+    },
+    "details": "Précisions (facultatif)",
+    "detailsRequired": "Précisions",
+    "detailsHint": "{count, plural, one {# caractère restant} other {# caractères restants}}",
+    "cancel": "Annuler",
+    "submit": "Envoyer le signalement",
+    "sent": "Merci, votre signalement a été envoyé à l'équipe de modération.",
+    "rateLimited": "Vous avez envoyé beaucoup de signalements aujourd'hui : réessayez demain."
+  },
+  "admin": {
+    "title": "Administration",
+    "navLabel": "Sections de l'administration",
+    "nav": {
+      "dashboard": "Tableau de bord",
+      "reports": "Signalements ({count})",
+      "members": "Membres",
+      "models": "Modèles",
+      "log": "Journal"
+    },
+    "meta": {
+      "dashboard": "Administration",
+      "reports": "Signalements · Administration",
+      "members": "Membres · Administration",
+      "models": "Modèles · Administration",
+      "log": "Journal · Administration"
+    },
+    "dashboard": {
+      "stats": "Chiffres clés",
+      "openReports": "{count, plural, =0 {Aucun signalement ouvert} one {# signalement ouvert} other {# signalements ouverts}}",
+      "members": "{count, plural, one {# membre} other {# membres}}",
+      "bannedMembers": "{count, plural, =0 {aucun banni} one {dont # banni} other {dont # bannis}}",
+      "publishedModels": "{count, plural, one {# modèle publié} other {# modèles publiés}}",
+      "hiddenModels": "{count, plural, =0 {aucun masqué} one {# masqué} other {# masqués}}",
+      "oldestReports": "Signalements les plus anciens",
+      "allReports": "Tous les signalements",
+      "lastActions": "Dernières actions",
+      "fullLog": "Tout le journal",
+      "noReports": "Aucun signalement en attente. Tout est calme.",
+      "noActions": "Aucune action pour l'instant."
+    },
+    "reports": {
+      "heading": "Signalements",
+      "tabsLabel": "État des signalements",
+      "tabOpen": "À traiter",
+      "tabClosed": "Traités",
+      "emptyOpen": "Aucun signalement à traiter.",
+      "emptyClosed": "Aucun signalement traité pour l'instant.",
+      "by": "Signalé par {pseudo}, le {date}",
+      "author": "Modèle de {pseudo}",
+      "others": "{count, plural, one {# autre signalement ouvert} other {# autres signalements ouverts}} sur ce modèle",
+      "noDetails": "Aucune précision.",
+      "status": {
+        "OPEN": "À traiter",
+        "RESOLVED": "Traité",
+        "DISMISSED": "Classé sans suite"
+      },
+      "closedBy": "{status} par {pseudo}, le {date}",
+      "resolution": "Raison : {reason}",
+      "modelDeleted": "Modèle supprimé",
+      "modelHidden": "Modèle masqué",
+      "modelDraft": "Modèle dépublié"
+    },
+    "members": {
+      "heading": "Membres",
+      "search": "Rechercher un membre",
+      "searchPlaceholder": "Pseudo ou adresse e-mail",
+      "searchSubmit": "Rechercher",
+      "filtersLabel": "Filtrer les membres",
+      "filters": {
+        "all": "Tous",
+        "banned": "Bannis",
+        "admins": "Administrateurs"
+      },
+      "empty": "Aucun membre ne correspond.",
+      "caption": "Membres, du plus récent au plus ancien",
+      "columns": {
+        "member": "Membre",
+        "joined": "Inscription",
+        "models": "Modèles",
+        "status": "État",
+        "actions": "Actions"
+      },
+      "admin": "Administrateur",
+      "banned": "Banni",
+      "bannedReason": "Banni : {reason}",
+      "active": "Actif",
+      "unverified": "E-mail non confirmé",
+      "self": "Vous"
+    },
+    "models": {
+      "heading": "Modèles",
+      "search": "Rechercher un modèle",
+      "searchPlaceholder": "Titre ou pseudo de l'auteur",
+      "searchSubmit": "Rechercher",
+      "filtersLabel": "Filtrer les modèles",
+      "filters": {
+        "all": "Tous",
+        "PUBLISHED": "Publiés",
+        "HIDDEN": "Masqués",
+        "DRAFT": "Brouillons"
+      },
+      "empty": "Aucun modèle ne correspond.",
+      "caption": "Modèles, du plus récemment modifié au plus ancien",
+      "columns": {
+        "model": "Modèle",
+        "author": "Auteur",
+        "status": "État",
+        "reports": "Signalements",
+        "actions": "Actions"
+      },
+      "status": {
+        "PUBLISHED": "Publié",
+        "HIDDEN": "Masqué",
+        "DRAFT": "Brouillon"
+      },
+      "openReports": "{count, plural, =0 {—} one {# ouvert} other {# ouverts}}"
+    },
+    "log": {
+      "heading": "Journal des actions",
+      "filtersLabel": "Filtrer par type d'action",
+      "all": "Toutes",
+      "empty": "Aucune action enregistrée.",
+      "entry": "{admin} · {date}",
+      "types": {
+        "MODEL_HIDE": "Modèle masqué",
+        "MODEL_UNHIDE": "Modèle réaffiché",
+        "MODEL_DELETE": "Modèle supprimé",
+        "USER_BAN": "Membre banni",
+        "USER_UNBAN": "Bannissement levé",
+        "USER_PROMOTE": "Membre promu administrateur",
+        "REPORT_RESOLVE": "Signalement traité",
+        "REPORT_DISMISS": "Signalement classé sans suite",
+        "COMMENT_DELETE": "Commentaire supprimé"
+      },
+      "reason": "Raison : {reason}"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Page précédente",
+      "next": "Page suivante",
+      "page": "Page {page}"
+    },
+    "moderation": {
+      "close": "Fermer",
+      "cancel": "Annuler",
+      "reason": "Raison",
+      "reasonHint": "Obligatoire. Enregistrée dans le journal ; transmise au membre lorsqu'il est prévenu.",
+      "hide": {
+        "button": "Masquer",
+        "title": "Masquer « {name} » ?",
+        "description": "Le modèle disparaît du catalogue et ne peut plus être téléchargé. Ses signalements ouverts sont clos et l'auteur est prévenu par e-mail.",
+        "confirm": "Masquer le modèle",
+        "success": "« {name} » est masqué."
+      },
+      "unhide": {
+        "button": "Réafficher",
+        "title": "Réafficher « {name} » ?",
+        "description": "Le modèle revient dans le catalogue. L'auteur est prévenu par e-mail.",
+        "confirm": "Réafficher le modèle",
+        "success": "« {name} » est de nouveau visible."
+      },
+      "deleteModel": {
+        "button": "Supprimer",
+        "title": "Supprimer « {name} » ?",
+        "description": "Le modèle, son fichier et ses aperçus sont supprimés définitivement. Ses signalements ouverts sont clos et l'auteur est prévenu par e-mail.",
+        "confirm": "Supprimer le modèle",
+        "success": "« {name} » est supprimé."
+      },
+      "resolveHide": {
+        "button": "Masquer le modèle",
+        "title": "Masquer « {name} » ?",
+        "description": "Le modèle disparaît du catalogue ; ce signalement et les autres signalements ouverts sur ce modèle sont clos. L'auteur est prévenu par e-mail.",
+        "confirm": "Masquer le modèle",
+        "success": "« {name} » est masqué, signalement traité."
+      },
+      "resolveDelete": {
+        "button": "Supprimer le modèle",
+        "title": "Supprimer « {name} » ?",
+        "description": "Le modèle, son fichier et ses aperçus sont supprimés définitivement ; les signalements ouverts sur ce modèle sont clos. L'auteur est prévenu par e-mail.",
+        "confirm": "Supprimer le modèle",
+        "success": "« {name} » est supprimé, signalement traité."
+      },
+      "resolveNone": {
+        "button": "Marquer comme traité",
+        "title": "Marquer ce signalement comme traité ?",
+        "description": "Le modèle « {name} » n'est pas modifié (déjà corrigé, déjà masqué ou supprimé).",
+        "confirm": "Marquer comme traité",
+        "success": "Signalement traité."
+      },
+      "dismiss": {
+        "button": "Classer sans suite",
+        "title": "Classer ce signalement sans suite ?",
+        "description": "Le modèle « {name} » reste en ligne. Le membre qui l'a signalé pourra le signaler de nouveau.",
+        "confirm": "Classer sans suite",
+        "success": "Signalement classé sans suite."
+      },
+      "ban": {
+        "button": "Bannir",
+        "title": "Bannir {name} ?",
+        "description": "Le membre est déconnecté de tous ses appareils et ne peut plus se connecter. Il est prévenu par e-mail.",
+        "option": "Masquer aussi ses modèles publiés",
+        "confirm": "Bannir le membre",
+        "success": "{name} est banni."
+      },
+      "unban": {
+        "button": "Lever le bannissement",
+        "title": "Lever le bannissement de {name} ?",
+        "description": "Le membre peut de nouveau se connecter ; il est prévenu par e-mail. Ses modèles masqués le restent : réaffichez-les un par un.",
+        "confirm": "Lever le bannissement",
+        "success": "{name} n'est plus banni."
+      },
+      "promote": {
+        "button": "Promouvoir",
+        "title": "Promouvoir {name} administrateur ?",
+        "description": "Le membre aura accès à l'administration : signalements, modèles, membres et journal. Ce rôle ne peut pas être retiré depuis l'interface.",
+        "confirm": "Promouvoir administrateur",
+        "success": "{name} est administrateur."
+      }
+    }
+  }
+}

@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 const STATUS_TONE: Record<ModelStatus, string> = {
   DRAFT: "bg-background text-foreground",
-  PUBLISHED: "bg-success text-white",
+  PUBLISHED: "bg-success text-white dark:text-background",
   HIDDEN: "bg-highlight text-highlight-foreground",
 };
 

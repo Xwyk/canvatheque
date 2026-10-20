@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import {
   createSession,
@@ -12,6 +12,7 @@ import {
 } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
+import { can } from "@/lib/permissions";
 
 export function secureCookies(): boolean {
   return env().APP_URL.startsWith("https://");
@@ -31,6 +32,13 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 export async function requireUserPage(returnTo: string): Promise<SessionUser> {
   const user = await getCurrentUser();
   if (!user) redirect(`/login?redirectTo=${encodeURIComponent(returnTo)}`);
+  return user;
+}
+
+/** Page d'administration : visiteur → connexion ; membre non administrateur → 404 (rien à voir). */
+export async function requireAdminPage(returnTo: string): Promise<SessionUser> {
+  const user = await requireUserPage(returnTo);
+  if (!can(user, "admin:access")) notFound();
   return user;
 }
 

@@ -42,8 +42,9 @@ describe("migrations", () => {
   it("s'appliquent sur une base vide (globalSetup) et créent la recherche plein texte", async () => {
     const [{ count }] = await prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*) AS count FROM "_prisma_migrations" WHERE "finished_at" IS NOT NULL`;
-    // Une migration par étape qui modifie le schéma (initiale, aperçu choisi par le membre).
-    expect(Number(count)).toBe(2);
+    // Une migration par étape qui modifie le schéma (initiale, aperçu choisi par le membre,
+    // unicité des signalements ouverts).
+    expect(Number(count)).toBe(3);
 
     await seed(prisma, SEED_OPTIONS);
     await createModel({ title: "Étoile festive", searchText: "Décorations de Noël pour sapins" });
@@ -83,6 +84,17 @@ describe("migrations", () => {
     await prisma.download.create({ data: { ...base, counted: false } });
     await expect(prisma.download.create({ data: { ...base, counted: true } })).rejects.toThrow();
   });
+
+  it("un seul signalement ouvert par membre et par modèle (index unique partiel)", async () => {
+    await seed(prisma, SEED_OPTIONS);
+    const model = await createModel();
+    const user = await prisma.user.findFirstOrThrow({ where: { pseudoSlug: "lucie-m" } });
+    const base = { modelId: model.id, reporterId: user.id, reason: "SPAM" as const };
+    await prisma.report.create({ data: { ...base, status: "DISMISSED" } });
+    await prisma.report.create({ data: { ...base, status: "DISMISSED" } });
+    await prisma.report.create({ data: base });
+    await expect(prisma.report.create({ data: base })).rejects.toThrow();
+  });
 });
 
 describe("seed", () => {
@@ -120,6 +132,8 @@ describe("seed", () => {
     const [hit] = await prisma.$queryRaw<{ title: string }[]>`
       SELECT "title" FROM "Model" WHERE "searchVector" @@ websearch_to_tsquery('french_unaccent', 'dragees')`;
     expect(hit?.title).toBe("Boîte à dragées");
+    // Un signalement ouvert de démonstration, créé une seule fois.
+    expect(await prisma.report.count({ where: { status: "OPEN" } })).toBe(1);
   });
 
   it("ordonne les catégories comme la maquette", async () => {

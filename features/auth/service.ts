@@ -331,7 +331,7 @@ export async function banUser(
         type: "USER_BAN",
         targetType: "User",
         targetId: userId,
-        details: { reason },
+        details: { reason, label: target.pseudo },
       },
     }),
   ]);
@@ -358,7 +358,7 @@ export async function unbanUser(
         type: "USER_UNBAN",
         targetType: "User",
         targetId: userId,
-        details: { reason },
+        details: { reason, label: target.pseudo },
       },
     }),
   ]);

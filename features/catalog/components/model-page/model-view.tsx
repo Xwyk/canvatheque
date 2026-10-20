@@ -14,10 +14,40 @@ import { ZoomablePreview } from "@/features/catalog/components/model-page/zoomab
 import type { ModelPageData } from "@/features/catalog/model-page";
 import type { CatalogItem } from "@/features/catalog/search";
 import type { ClientOs } from "@/features/downloads/links";
+import { ModerationButton } from "@/features/admin/components/moderation-button";
 import { FavoriteButton } from "@/features/favorites/components/favorite-button";
+import { ReportButton } from "@/features/reports/components/report-button";
 import { cn } from "@/lib/utils";
 
 const tagHref = (tag: string) => `/models?tag=${encodeURIComponent(tag)}`;
+
+/** Actions de modération sur la fiche (administrateurs). */
+function ModerationPanel({ data }: { data: ModelPageData }) {
+  const t = useTranslations("modelPage");
+  const { model } = data;
+  return (
+    <section
+      aria-label={t("moderation")}
+      className="flex flex-wrap items-center gap-2 rounded-[20px] border-2 border-dashed border-border px-4 py-3"
+    >
+      <span className="mr-auto text-[13px] font-extrabold tracking-[0.06em] text-muted-foreground uppercase">
+        {t("moderation")}
+      </span>
+      {model.status === "PUBLISHED" && (
+        <ModerationButton kind="hide" targetId={model.id} name={model.title} />
+      )}
+      {model.status === "HIDDEN" && (
+        <ModerationButton kind="unhide" targetId={model.id} name={model.title} />
+      )}
+      <ModerationButton
+        kind="deleteModel"
+        targetId={model.id}
+        name={model.title}
+        redirectTo="/admin/models"
+      />
+    </section>
+  );
+}
 
 function Breadcrumb({ data }: { data: ModelPageData }) {
   const t = useTranslations("modelPage");
@@ -306,10 +336,12 @@ export function ModelView({
               />
             )}
             <ShareButton title={model.title} url={canonicalUrl} className="max-md:hidden" />
+            {data.canReport && <ReportButton modelId={model.id} title={model.title} />}
             {data.canEdit && (
               <OwnerActions modelId={model.id} slug={model.slug} title={model.title} />
             )}
           </div>
+          {data.canModerate && <ModerationPanel data={data} />}
 
           <InfoPanel data={data} />
         </aside>

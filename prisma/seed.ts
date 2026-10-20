@@ -82,7 +82,32 @@ export async function seed(prisma: PrismaClient, options: SeedOptions) {
   }
 
   const models = options.storage ? await seedModels(prisma, options.storage, authors, now) : 0;
+  await seedReport(prisma, authors);
   return { ...core, models };
+}
+
+/** Un signalement ouvert de démonstration (idempotent) pour l'administration. */
+async function seedReport(prisma: PrismaClient, authors: { id: string }[]) {
+  const reporter = authors[1];
+  if (!reporter) return;
+  const model = await prisma.model.findFirst({
+    where: { status: "PUBLISHED", deletedAt: null, authorId: { not: reporter.id } },
+    orderBy: [{ publishedAt: "asc" }, { id: "asc" }],
+    select: { id: true },
+  });
+  if (!model) return;
+  const existing = await prisma.report.findFirst({
+    where: { modelId: model.id, reporterId: reporter.id },
+  });
+  if (existing) return;
+  await prisma.report.create({
+    data: {
+      modelId: model.id,
+      reporterId: reporter.id,
+      reason: "FICHIER_DEFECTUEUX",
+      details: "Le contour extérieur n'est pas fermé : la découpe s'arrête à mi-chemin.",
+    },
+  });
 }
 
 async function main() {

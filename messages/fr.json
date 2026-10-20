@@ -214,9 +214,29 @@
       "certifyRights": "Cochez cette case pour publier.",
       "fileRequired": "Ajoutez un fichier.",
       "previewRequired": "Ajoutez une image d'aperçu.",
-      "crop": "Recadrage invalide."
+      "crop": "Recadrage invalide.",
+      "reportReason": "Choisissez un motif.",
+      "reportDetailsLength": "1 000 caractères maximum.",
+      "reportDetailsRequired": "Précisez le problème.",
+      "reasonLength": "Entre 3 et 500 caractères."
     },
     "notFound": "Ce modèle est introuvable.",
+    "report": {
+      "own": "Vous ne pouvez pas signaler votre propre modèle.",
+      "duplicate": "Vous avez déjà signalé ce modèle : il est en cours d'examen."
+    },
+    "admin": {
+      "notPublished": "Ce modèle n'est pas publié.",
+      "notHidden": "Ce modèle n'est pas masqué.",
+      "reportNotFound": "Ce signalement est introuvable.",
+      "reportClosed": "Ce signalement a déjà été traité.",
+      "memberNotFound": "Ce membre est introuvable.",
+      "banAdmin": "Un administrateur ne peut pas être banni.",
+      "alreadyBanned": "Ce membre est déjà banni.",
+      "notBanned": "Ce membre n'est pas banni.",
+      "alreadyAdmin": "Ce membre est déjà administrateur.",
+      "promoteBanned": "Un membre banni ne peut pas devenir administrateur."
+    },
     "upload": {
       "fileName": "Nom de fichier invalide (1 à 120 caractères).",
       "doubleExtension": "Ce nom de fichier contient une double extension suspecte.",
@@ -277,6 +297,47 @@
       "subject": "Votre mot de passe a changé",
       "greeting": "Bonjour {pseudo},",
       "intro": "Le mot de passe de votre compte vient d'être modifié et vos autres sessions ont été fermées. Si vous n'êtes pas à l'origine de ce changement, réinitialisez-le immédiatement."
+    },
+    "reportReceived": {
+      "subject": "Nous avons bien reçu votre signalement",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Merci d'avoir signalé le modèle « {title} ». L'équipe de modération va l'examiner.",
+      "action": "Revoir le modèle",
+      "note": "Nous ne répondons pas à chaque signalement, mais chacun est lu."
+    },
+    "modelHidden": {
+      "subject": "Votre modèle « {title} » a été masqué",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Votre modèle « {title} » a été masqué par l'équipe de modération : il n'apparaît plus dans le catalogue et ne peut plus être téléchargé.",
+      "reason": "Motif : {reason}",
+      "action": "Voir le modèle",
+      "note": "Vous pouvez toujours le modifier ou le supprimer. Pour contester cette décision, répondez à ce message."
+    },
+    "modelRestored": {
+      "subject": "Votre modèle « {title} » est de nouveau visible",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Votre modèle « {title} » a été réaffiché : il est de nouveau dans le catalogue.",
+      "action": "Voir le modèle"
+    },
+    "modelRemoved": {
+      "subject": "Votre modèle « {title} » a été supprimé",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Votre modèle « {title} » a été supprimé par l'équipe de modération, avec son fichier et ses aperçus.",
+      "reason": "Motif : {reason}",
+      "note": "Pour contester cette décision, répondez à ce message."
+    },
+    "accountBanned": {
+      "subject": "Votre compte Canvathèque est suspendu",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Votre compte a été suspendu par l'équipe de modération : vous ne pouvez plus vous connecter.",
+      "reason": "Motif : {reason}",
+      "note": "Pour contester cette décision, répondez à ce message."
+    },
+    "accountRestored": {
+      "subject": "Votre compte Canvathèque est rétabli",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "La suspension de votre compte a été levée : vous pouvez de nouveau vous connecter.",
+      "action": "Se connecter"
     }
   },
   "modelCard": {

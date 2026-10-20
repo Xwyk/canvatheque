@@ -38,6 +38,10 @@ export type ModelPageData = {
   descriptionText: string;
   preview: PreviewInfo | null;
   canEdit: boolean;
+  /** Administrateur : masquer, réafficher, supprimer depuis la fiche. */
+  canModerate: boolean;
+  /** Pilule « Signaler » : modèle publié, pas celui de l'acteur (visiteur : modale). */
+  canReport: boolean;
 };
 
 /**
@@ -109,6 +113,8 @@ export async function getModelPage(
     descriptionText: model.description ? markdownToText(model.description) : "",
     preview: previewInfo(model),
     canEdit: can(actor, "model:update", { ownerId: author.id }),
+    canModerate: can(actor, "model:hide"),
+    canReport: model.status === "PUBLISHED" && actor?.id !== author.id,
   };
 }
 

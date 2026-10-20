@@ -3,10 +3,9 @@
 Application web communautaire et gratuite de partage de modèles de découpe pour Brother ScanNCut
 (`.cwprj` et `.svg`).
 
-> **État : étape 4 (téléchargement et favoris) livrée.** Socle, comptes, publication, catalogue
-> public, téléchargement (modale visiteur, ouverture dans CanvasWorkspace) et favoris. La
-> modération arrive à l'étape 5 (voir [Feuille de route](#feuille-de-route)) ; les liens Aide et
-> pages légales mènent encore à une 404.
+> **État : étape 5 (modération et administration) livrée.** Socle, comptes, publication, catalogue
+> public, téléchargement et favoris, signalements et administration. Les pages Aide et légales
+> arrivent à l'étape 6 (voir [Feuille de route](#feuille-de-route)) et mènent encore à une 404.
 
 ## Démarrage rapide (Docker)
 
@@ -83,7 +82,9 @@ par le seed lui-même et 4 `.cwprj` fictifs, passés par le même pipeline d'ape
 
 Les E2E lisent les e-mails dans Mailpit : lancez la pile avec la surcharge `docker-compose.e2e.yml`
 (Mailpit actif, limites de débit relevées, PostgreSQL publié sur `127.0.0.1:5432`), puis
-`npm run db:seed` : les tests du catalogue s'appuient sur les 30 modèles de démonstration. Premier lancement : `npx playwright install`.
+`npm run db:seed` : les tests du catalogue s'appuient sur les 30 modèles de démonstration. Les
+scénarios de modération promeuvent un compte de test administrateur directement en base
+(`DATABASE_URL` de `.env`). Premier lancement : `npx playwright install`.
 
 ## Vérification de bout en bout
 
@@ -131,7 +132,7 @@ Sessions en base : jeton aléatoire dans un cookie `httpOnly`, seul son hachage 
 immédiate au bannissement ([ADR-002](docs/adr/002-auth-sessions-en-base.md)). Limites de débit dans
 PostgreSQL ([ADR-004](docs/adr/004-rate-limit-postgresql.md)) : connexion 10/15 min (IP + e-mail),
 inscription 5/h (IP), réinitialisation 3/h (adresse), configurables par variables `RATE_LIMIT_*`.
-Le bannissement est disponible côté service (`banUser`) ; son interface arrive avec l'étape 5.
+Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modération et administration](#modération-et-administration)).
 
 ### Publication
 
@@ -201,6 +202,27 @@ Le bannissement est disponible côté service (`banUser`) ; son interface arrive
   directement est renvoyé vers la connexion, puis sur la fiche.
 - `GET /api/models` renseigne les favoris d'un membre connecté (réponse privée, `Vary: Cookie`).
 
+### Modération et administration
+
+| Parcours        | Où                              | Détails                                                                                                                                                           |
+| --------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Signaler        | pilule « Signaler » de la fiche | membre (pas sur son propre modèle) ; motif, précisions (obligatoires pour « Autre ») ; accusé de réception par e-mail ; 10 par jour (`RATE_LIMIT_REPORT_PER_DAY`) |
+| Tableau de bord | `/admin` (menu du compte)       | chiffres clés, plus anciens signalements ouverts, dernières actions                                                                                               |
+| Signalements    | `/admin/reports`                | à traiter (plus anciens d'abord) ou traités ; masquer ou supprimer le modèle, marquer comme traité, classer sans suite                                            |
+| Membres         | `/admin/members`                | recherche (pseudo, e-mail), filtres ; bannir (sessions fermées, modèles publiés masqués sur demande), lever le bannissement, promouvoir                           |
+| Modèles         | `/admin/models`                 | recherche (titre, auteur), filtre d'état ; masquer, réafficher, supprimer (aussi depuis la fiche)                                                                 |
+| Journal         | `/admin/log`                    | toutes les actions, filtrables par type                                                                                                                           |
+
+- **Raison obligatoire** pour chaque action, en modale de confirmation ; enregistrée dans le journal
+  (avec le titre ou le pseudo visé, lisible même après suppression) et transmise par e-mail au membre
+  concerné (modèle masqué, réaffiché ou supprimé ; compte suspendu ou rétabli).
+- Masquer ou supprimer un modèle clôt tous ses signalements ouverts ; l'auteur voit le bandeau
+  « Ce modèle est masqué » et la raison sur sa fiche.
+- Un administrateur ne peut ni être banni ni se bannir ; le rôle ne se retire pas depuis
+  l'interface. Un membre non administrateur obtient une 404 sur `/admin`.
+- Un seul signalement ouvert par membre et par modèle (index unique partiel) : une fois traité, le
+  modèle peut être signalé de nouveau.
+
 ### Sécurité (socle)
 
 - CSP à nonces par requête (`script-src 'nonce-…' 'strict-dynamic'`), `frame-ancestors 'none'`,
@@ -249,7 +271,7 @@ téléchargements, métriques du processus Node.
 | 2     | Publication : envoi présigné, validation, nettoyage SVG, aperçus, assistant        | ✅      |
 | 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | ✅      |
 | 4     | Téléchargement et favoris, CanvasWorkspace                                         | ✅      |
-| 5     | Modération et administration                                                       | à venir |
+| 5     | Modération et administration                                                       | ✅      |
 | 6     | RGPD et pages de contenu                                                           | à venir |
 | 7     | Commentaires                                                                       | à venir |
 | 8     | Finition qualité                                                                   | à venir |

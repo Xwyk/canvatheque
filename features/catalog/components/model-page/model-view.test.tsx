@@ -6,6 +6,8 @@ const actions = vi.hoisted(() => ({ deleteModelAction: vi.fn() }));
 const toast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }));
 const router = vi.hoisted(() => ({ push: vi.fn(), refresh: vi.fn() }));
 vi.mock("@/features/models/actions", () => actions);
+vi.mock("@/features/reports/actions", () => ({ createReportAction: vi.fn() }));
+vi.mock("@/features/admin/actions", () => ({}));
 vi.mock("sonner", () => ({ toast }));
 vi.mock("next/navigation", () => ({
   useRouter: () => router,
@@ -66,6 +68,8 @@ function pageData(
     descriptionText: "Un papillon aux ailes dentelées.",
     preview,
     canEdit: false,
+    canModerate: false,
+    canReport: true,
     ...overrides.rest,
   };
 }

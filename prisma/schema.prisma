@@ -249,7 +249,9 @@ model Report {
   reporter     User         @relation("reporter", fields: [reporterId], references: [id])
   resolvedBy   User?        @relation("resolver", fields: [resolvedById], references: [id])
 
-  @@unique([modelId, reporterId, status])
+  /// Un seul signalement ouvert par membre et par modèle : index unique partiel
+  /// `Report_open_reporter_key` (WHERE status = 'OPEN'), ajouté dans la migration.
+  @@index([modelId, status])
   @@index([status, createdAt])
 }
 
