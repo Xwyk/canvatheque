@@ -100,7 +100,7 @@ describe("useDownload", () => {
       await visitor.result.current("papillon", "papillon.svg");
     });
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(screen.getByRole("dialog", { name: /pour télécharger/ })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /pour télécharger/ })).toBeInTheDocument();
     visitor.unmount();
 
     fetchMock.mockResolvedValueOnce(json(401, { code: "UNAUTHORIZED", loginUrl: "/login?x" }));
@@ -187,7 +187,9 @@ describe("CanvasWorkspaceDialog", () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
     renderWithProviders(<CanvasWorkspaceDialog open fileName="boite.cwprj" onClose={onClose} />);
-    const dialog = screen.getByRole("dialog", { name: "Ouvrir le modèle dans CanvasWorkspace" });
+    const dialog = await screen.findByRole("dialog", {
+      name: "Ouvrir le modèle dans CanvasWorkspace",
+    });
     expect(dialog).toHaveTextContent(
       "Sélectionnez « boite.cwprj » dans votre dossier Téléchargements.",
     );
@@ -257,7 +259,7 @@ describe("actions de la fiche", () => {
     const user = userEvent.setup();
     renderPanel("SVG", false);
     await user.click(screen.getAllByRole("link", { name: /Télécharger le SVG/ })[0]!);
-    expect(screen.getByRole("dialog", { name: /pour télécharger/ })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /pour télécharger/ })).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 

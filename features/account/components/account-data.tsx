@@ -8,7 +8,7 @@ import { FormMessage } from "@/components/forms/form-message";
 import { PasswordField } from "@/components/forms/password-field";
 import { pillButton } from "@/components/ui/pill-button";
 import { deleteAccountAction } from "@/features/account/actions";
-import { DELETE_MODES } from "@/features/account/schemas";
+import { DELETE_MODES } from "@/features/account/modes";
 import { IDLE } from "@/features/auth/form-state";
 import { cn } from "@/lib/utils";
 

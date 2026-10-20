@@ -3,6 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { waitForMail } from "./support/mailpit";
 import { PASSWORD, publishSvg, signUp, verifiedMember } from "./support/members";
+import { useColorScheme } from "./support/theme";
 
 test("exporter ses données au format JSON", async ({ page }, testInfo) => {
   const member = await signUp(page, testInfo, "export");
@@ -64,7 +65,7 @@ const PAGES = [
 
 for (const colorScheme of ["light", "dark"] as const) {
   test(`pages de contenu sans violation axe en thème ${colorScheme}`, async ({ page }) => {
-    await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+    await useColorScheme(page, colorScheme);
     for (const [path, title] of PAGES) {
       await page.goto(path);
       await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();

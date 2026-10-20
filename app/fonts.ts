@@ -6,6 +6,9 @@ export const bricolage = localFont({
   variable: "--font-bricolage",
   weight: "200 800",
   display: "swap",
+  // Titres seulement : non préchargée, pour ne pas concurrencer le texte et l'image LCP
+  // sur une connexion lente (mesuré : +1 à 2 points de performance mobile).
+  preload: false,
 });
 
 export const figtree = localFont({

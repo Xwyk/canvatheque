@@ -29,7 +29,9 @@ describe("AuthGateProvider", () => {
       </AuthGateProvider>,
     );
     await user.click(screen.getByRole("button", { name: "ouvrir" }));
-    const dialog = screen.getByRole("dialog", { name: "Créez un compte gratuit pour télécharger" });
+    const dialog = await screen.findByRole("dialog", {
+      name: "Créez un compte gratuit pour télécharger",
+    });
     expect(dialog).toHaveAccessibleDescription(/Votre téléchargement démarre dès l'inscription/);
     expect(screen.getByRole("tab", { name: "Inscription" })).toHaveAttribute(
       "aria-selected",
@@ -69,7 +71,7 @@ describe("AuthGateProvider", () => {
       </AuthGateProvider>,
     );
     await user.click(screen.getByRole("button", { name: "ouvrir" }));
-    expect(screen.getByRole("dialog", { name: /garder vos favoris/ })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /garder vos favoris/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Créer mon compte" })).toBeInTheDocument();
     await user.keyboard("{Escape}");
     expect(screen.queryByRole("dialog")).toBeNull();
@@ -80,7 +82,7 @@ describe("AuthGateProvider", () => {
       </AuthGateProvider>,
     );
     await user.click(screen.getByRole("button", { name: "ouvrir" }));
-    expect(screen.getByRole("dialog", { name: /pour publier/ })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /pour publier/ })).toBeInTheDocument();
   });
 
   it("se ferme d'elle-même une fois connecté", async () => {

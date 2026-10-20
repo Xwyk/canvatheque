@@ -1,6 +1,7 @@
+import { COMMENT_MAX_LENGTH } from "@/features/comments/limits";
 import { z } from "@/lib/validation";
 
-export const COMMENT_MAX_LENGTH = 1000;
+export { COMMENT_MAX_LENGTH };
 
 /** Commentaire : texte brut de 1 à 1 000 caractères. Messages = `errors.field.*`. */
 export const commentSchema = z.object({

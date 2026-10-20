@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type APIRequestContext, type Page, type TestInfo } from "@playwright/test";
+import { acceptTerms } from "./support/members";
 import { linkFrom, uniqueEmail, waitForMail } from "./support/mailpit";
 
 const PASSWORD = "papillon-de-nuit-42";
@@ -19,7 +20,7 @@ async function verifiedMember(page: Page, request: APIRequestContext, testInfo: 
   await page.getByLabel("Pseudo").fill(pseudo);
   await page.getByLabel("Adresse e-mail").fill(email);
   await page.getByLabel("Mot de passe", { exact: true }).fill(PASSWORD);
-  await page.getByRole("checkbox", { name: /J'accepte les conditions/ }).check();
+  await acceptTerms(page);
   await page.getByRole("button", { name: "Créer mon compte" }).click();
   await expect(page).toHaveURL(/\/publish$/);
   const mail = await waitForMail(request, email, /Confirmez votre adresse/);
@@ -46,8 +47,11 @@ async function fillInformation(page: Page, title: string) {
 
 test.describe("publication", () => {
   test("publier un SVG, le modifier puis le supprimer", async ({ page, request }, testInfo) => {
+    test.slow();
     await verifiedMember(page, request, testInfo);
     await page.goto("/publish");
+    // Dépôt géré par React : attendre l'hydratation (sinon le fichier choisi est ignoré).
+    await page.waitForLoadState("networkidle");
     await expect(page.getByRole("heading", { level: 1, name: "Publier un modèle" })).toBeVisible();
     const axe = await new AxeBuilder({ page }).include("main").analyze();
     expect(axe.violations).toEqual([]);
@@ -102,6 +106,8 @@ test.describe("publication", () => {
   test("publier un CWPRJ avec une image d'aperçu recadrée", async ({ page, request }, testInfo) => {
     await verifiedMember(page, request, testInfo);
     await page.goto("/publish");
+    // Dépôt géré par React : attendre l'hydratation (sinon le fichier choisi est ignoré).
+    await page.waitForLoadState("networkidle");
 
     // Un exécutable déguisé est refusé.
     const exe = Buffer.alloc(256);
@@ -147,6 +153,8 @@ test.describe("publication", () => {
 
   test("un visiteur est renvoyé vers la connexion", async ({ page }) => {
     await page.goto("/publish");
+    // Dépôt géré par React : attendre l'hydratation (sinon le fichier choisi est ignoré).
+    await page.waitForLoadState("networkidle");
     await expect(page).toHaveURL(/\/login\?redirectTo=%2Fpublish$/);
   });
 });

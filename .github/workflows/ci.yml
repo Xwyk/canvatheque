@@ -47,7 +47,7 @@ jobs:
       # Les trois projets Vitest en une passe : un seul coverage/lcov.info, seuils 80 % bloquants.
       # Le projet backend démarre PostgreSQL et MinIO via Testcontainers (Docker du runner).
       - run: npm run test:coverage
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: coverage
           path: coverage/lcov.info
@@ -106,7 +106,7 @@ jobs:
       - name: Journaux en cas d'échec
         if: failure()
         run: docker compose -f docker-compose.yml -f docker-compose.e2e.yml logs --no-color
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: playwright-report

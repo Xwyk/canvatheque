@@ -24,7 +24,10 @@
     "bootstrap:admin": "tsx scripts/bootstrap-admin.ts",
     "sonar": "node scripts/sonar.mjs",
     "postinstall": "prisma generate",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "test:e2e:docker": "sh scripts/e2e-docker.sh",
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1152.0",

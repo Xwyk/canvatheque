@@ -125,7 +125,7 @@ describe("ReportButton", () => {
     renderButton(false);
     await user.click(screen.getByRole("button", { name: "Signaler" }));
     expect(
-      screen.getByRole("dialog", { name: "Connectez-vous pour signaler ce modèle" }),
+      await screen.findByRole("dialog", { name: "Connectez-vous pour signaler ce modèle" }),
     ).toBeInTheDocument();
   });
 });

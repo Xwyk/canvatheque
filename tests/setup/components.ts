@@ -1,11 +1,14 @@
 import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/react";
+import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 import "./axe";
 
 afterEach(() => {
   cleanup();
 });
+
+// Modules chargés à la demande (modale visiteur) : premier import plus lent sous charge.
+configure({ asyncUtilTimeout: 3000 });
 
 // jsdom n'implémente pas matchMedia (utilisé par next-themes).
 if (!window.matchMedia) {

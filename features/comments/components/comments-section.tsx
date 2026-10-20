@@ -16,7 +16,7 @@ import {
   deleteCommentAction,
   loadCommentsAction,
 } from "@/features/comments/actions";
-import { COMMENT_MAX_LENGTH } from "@/features/comments/schemas";
+import { COMMENT_MAX_LENGTH } from "@/features/comments/limits";
 import type { CommentPage, CommentView } from "@/features/comments/service";
 import type { Failure } from "@/lib/result";
 import { cn } from "@/lib/utils";

@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { useColorScheme } from "./support/theme";
 
 const HOME_TITLE = "Des modèles de découpe, partagés par celles et ceux qui les créent.";
 
@@ -50,6 +51,16 @@ test.describe("socle", () => {
     await expect(page.locator("#contenu")).toBeFocused();
   });
 
+  test("animations réduites : l'illustration du hero reste visible", async ({ page, isMobile }) => {
+    test.skip(isMobile, "illustration masquée sous 1024 px");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    const cards = page.locator("section [aria-hidden=true] > div");
+    await expect(cards).toHaveCount(3);
+    for (const card of await cards.all()) await expect(card).toHaveCSS("opacity", "1");
+  });
+
   test("une page inconnue renvoie la 404 illustrée", async ({ page }) => {
     const response = await page.goto("/cette-page-n-existe-pas");
     expect(response?.status()).toBe(404);
@@ -69,7 +80,7 @@ test.describe("socle", () => {
 
   for (const colorScheme of ["light", "dark"] as const) {
     test(`accueil sans violation axe en thème ${colorScheme}`, async ({ page }) => {
-      await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+      await useColorScheme(page, colorScheme);
       await page.goto("/");
       await expect(page.locator("html")).toHaveClass(
         colorScheme === "dark" ? /dark/ : /^(?!.*dark)/,

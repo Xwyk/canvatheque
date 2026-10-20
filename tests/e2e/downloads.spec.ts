@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
+import { acceptTerms } from "./support/members";
 import { uniqueEmail } from "./support/mailpit";
 
 /** Pile Docker avec le seed de démonstration (« Papillon monarque » en SVG, « Rosace de fenêtre » en CWPRJ). */
@@ -19,7 +20,7 @@ async function signUpInDialog(page: Page, testInfo: TestInfo, submit: string) {
     .getByLabel("Adresse e-mail")
     .fill(uniqueEmail("telechargement", testInfo.project.name));
   await dialog.getByLabel("Mot de passe", { exact: true }).fill(PASSWORD);
-  await dialog.getByRole("checkbox", { name: /J'accepte les conditions/ }).check();
+  await acceptTerms(dialog);
   await dialog.getByRole("button", { name: submit }).click();
 }
 
@@ -28,7 +29,7 @@ async function signUp(page: Page, testInfo: TestInfo) {
   await page.getByLabel("Pseudo").fill(pseudoFor(testInfo, "fav"));
   await page.getByLabel("Adresse e-mail").fill(uniqueEmail("favoris", testInfo.project.name));
   await page.getByLabel("Mot de passe", { exact: true }).fill(PASSWORD);
-  await page.getByRole("checkbox", { name: /J'accepte les conditions/ }).check();
+  await acceptTerms(page);
   await page.getByRole("button", { name: "Créer mon compte" }).click();
   await expect(page.getByRole("button", { name: /^Compte de / })).toBeVisible();
 }

@@ -3,9 +3,14 @@
 Application web communautaire et gratuite de partage de modèles de découpe pour Brother ScanNCut
 (`.cwprj` et `.svg`).
 
-> **État : étape 7 (commentaires) livrée.** Socle, comptes, publication, catalogue public,
-> téléchargement et favoris, modération, données personnelles, pages de contenu et commentaires.
-> Reste la finition qualité (étape 8, voir [Feuille de route](#feuille-de-route)).
+> **État : v1 livrée (étapes 0 à 8).** Comptes, publication, catalogue public, téléchargement et
+> favoris, modération, données personnelles, pages de contenu, commentaires ; accessibilité,
+> performance et qualité vérifiées (voir [Qualité](#qualité)).
+
+| Accueil                                                         | Galerie                                                        | Fiche (mobile)                                                                     |
+| --------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| ![Accueil en thème clair](docs/screenshots/accueil.png)         | ![Galerie filtrée par catégorie](docs/screenshots/galerie.png) | ![Fiche d'un projet CanvasWorkspace sur mobile](docs/screenshots/fiche-mobile.png) |
+| ![Accueil en thème sombre](docs/screenshots/accueil-sombre.png) | ![Fiche d'un modèle SVG](docs/screenshots/fiche.png)           | ![Aide : ouvrir un .cwprj dans CanvasWorkspace](docs/screenshots/aide.png)         |
 
 ## Démarrage rapide (Docker)
 
@@ -76,6 +81,9 @@ par le seed lui-même et 4 `.cwprj` fictifs, passés par le même pipeline d'ape
 | `npm run test:backend`                                        | tests d'intégration (Docker requis : Testcontainers)                           |
 | `npm run test:coverage`                                       | les trois projets, couverture fusionnée, seuils 80 % bloquants                 |
 | `npm run test:e2e`                                            | Playwright contre la pile E2E (`E2E_BASE_URL`, défaut `http://localhost:3000`) |
+| `npm run test:e2e:docker -- --project=firefox`                | mêmes E2E dans l'image Playwright officielle (Linux), contre la même pile      |
+| `npm run lighthouse`                                          | Lighthouse mobile (4G lente simulée) des pages clés, médiane de 3, seuil 90    |
+| `npm run screenshots`                                         | captures du README (`docs/screenshots/`)                                       |
 | `npm run db:migrate` / `db:deploy` / `db:seed`                | migrations Prisma et données de démonstration                                  |
 | `npm run bootstrap:admin`                                     | crée ou vérifie l'administrateur hors serveur                                  |
 | `npm run sonar`                                               | analyse SonarQube locale, Quality Gate bloquant                                |
@@ -116,7 +124,7 @@ Quality Gate « Canvatheque » (Sonar way + couverture ≥ 80 %) et un jeton d'a
 Arborescence : `app/` (routes), `components/` (interface partagée), `features/<domaine>/`
 (logique métier), `lib/` (transverse), `prisma/` (schéma, migrations, seed), `tests/`,
 `docs/` ([ADR](docs/adr/README.md), [design tokens](docs/design-tokens.md),
-[maquettes](docs/mockups/)), `scripts/`, `docker/`.
+[maquettes](docs/mockups/)), `scripts/`, `docker/`. Vue détaillée : [docs/architecture.md](docs/architecture.md).
 
 ### Comptes
 
@@ -258,6 +266,56 @@ Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modéra
 - Jetons stockés hachés (SHA-256) ; mots de passe en argon2id.
 - Image Docker non root, `tini`, healthcheck.
 
+## Qualité
+
+| Critère                                           | Résultat                                                                                           |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Tests (unit, composants, intégration)             | 670+ tests, couverture fusionnée ≥ 97 % des lignes, ≥ 92 % des branches (seuils bloquants 80 %)    |
+| Bout en bout                                      | Chromium, Firefox, WebKit et Pixel 7 contre la pile Docker de production                           |
+| Accessibilité                                     | axe (WCAG 2.2 AA) sans violation sur chaque écran, thème clair et sombre ; parcours clavier testés |
+| Performance (Lighthouse mobile, 4G lente simulée) | accueil 92, galerie 90, fiche 90, aide 94 ; accessibilité, bonnes pratiques et SEO 100             |
+| SonarQube                                         | Quality Gate passé, aucun problème ouvert                                                          |
+
+- **Accessibilité** : `tests/e2e/a11y.spec.ts` parcourt toutes les pages (publiques, membre,
+  administration dans `moderation.spec.ts`) ; `tests/e2e/keyboard.spec.ts` vérifie focus piégé,
+  Échap et retour du focus dans les modales, filtres et menus au clavier. Les animations sont
+  supprimées sous `prefers-reduced-motion`.
+- **Performance** : JavaScript initial allégé (formulaires de la modale visiteur chargés à la
+  première ouverture, textes serveur non transmis au navigateur, Zod hors des écrans publics),
+  police des titres non préchargée. Le LCP simulé (≈ 3,1 à 3,6 s en 4G lente) est l'aperçu de la
+  première carte ou le titre ; il dépend surtout du poids total chargé avant lui.
+- **Firefox sous Windows** : si le navigateur ne démarre pas en local, `npm run test:e2e:docker`
+  lance les mêmes tests dans un conteneur Linux (relais des ports 3000, 9000, 8025 et 5432).
+
+## FAQ
+
+**Le premier démarrage n'affiche aucun modèle.** Le seed n'est pas lancé automatiquement :
+`npm run db:seed` (pile démarrée) crée catégories, membres, 30 modèles, un signalement et deux
+commentaires de démonstration.
+
+**Comment me connecter en administrateur ?** L'administrateur `ADMIN_EMAIL` est créé au
+démarrage ; sans `ADMIN_PASSWORD`, un lien de définition du mot de passe est envoyé par e-mail et
+affiché une fois dans les journaux (`docker compose logs app`). `npm run bootstrap:admin` en
+réémet un.
+
+**Les e-mails n'arrivent pas.** En développement ils sont dans Mailpit (<http://localhost:8025>,
+profil `dev` ou surcharge E2E). Sans SMTP configuré, ils sont seulement journalisés.
+
+**Les aperçus ne s'affichent pas en production.** `S3_PUBLIC_URL` doit être le sous-domaine public
+du stockage (pas un sous-chemin : la signature des URL couvre le chemin) et figurer dans la CSP,
+ce que fait `proxy.ts` à partir de cette variable.
+
+**Peut-on ouvrir un .cwprj directement dans CanvasWorkspace ?** Brother ne documente aucun lien
+d'ouverture : le site télécharge le fichier et affiche le pas à pas. Si un schéma est publié un
+jour, il suffit de renseigner `CANVAS_WORKSPACE_PROTOCOL` (`features/downloads/`).
+
+**Les pages légales affichent « à compléter ».** Renseignez `LEGAL_PUBLISHER`, `LEGAL_ADDRESS`,
+`LEGAL_HOST` et `CONTACT_EMAIL`, et faites relire les textes (`messages/fr/content.json`).
+
+**Un test E2E échoue sur des données inattendues.** Les E2E créent des comptes et des modèles :
+sur une pile utilisée longtemps, repartez d'une base propre (`docker compose down -v`, puis
+démarrage et seed) ; les tests du catalogue s'appuient sur les modèles de démonstration.
+
 ## Exploitation
 
 ### Mise en production (VPS)
@@ -290,14 +348,14 @@ téléchargements, métriques du processus Node.
 
 ## Feuille de route
 
-| Étape | Contenu                                                                            | État    |
-| ----- | ---------------------------------------------------------------------------------- | ------- |
-| 0     | Socle : design system, accueil, Docker, base, tests, CI                            | ✅      |
-| 1     | Comptes : inscription, connexion, e-mails, réinitialisation, bannissement, limites | ✅      |
-| 2     | Publication : envoi présigné, validation, nettoyage SVG, aperçus, assistant        | ✅      |
-| 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | ✅      |
-| 4     | Téléchargement et favoris, CanvasWorkspace                                         | ✅      |
-| 5     | Modération et administration                                                       | ✅      |
-| 6     | RGPD et pages de contenu                                                           | ✅      |
-| 7     | Commentaires                                                                       | ✅      |
-| 8     | Finition qualité                                                                   | à venir |
+| Étape | Contenu                                                                            | État |
+| ----- | ---------------------------------------------------------------------------------- | ---- |
+| 0     | Socle : design system, accueil, Docker, base, tests, CI                            | ✅   |
+| 1     | Comptes : inscription, connexion, e-mails, réinitialisation, bannissement, limites | ✅   |
+| 2     | Publication : envoi présigné, validation, nettoyage SVG, aperçus, assistant        | ✅   |
+| 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | ✅   |
+| 4     | Téléchargement et favoris, CanvasWorkspace                                         | ✅   |
+| 5     | Modération et administration                                                       | ✅   |
+| 6     | RGPD et pages de contenu                                                           | ✅   |
+| 7     | Commentaires                                                                       | ✅   |
+| 8     | Finition qualité                                                                   | ✅   |

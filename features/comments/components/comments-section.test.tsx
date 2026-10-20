@@ -176,7 +176,7 @@ describe("CommentsSection", () => {
     expect(screen.queryByRole("link", { name: "Auteur supprimé" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Se connecter pour commenter" }));
     expect(
-      screen.getByRole("dialog", { name: "Connectez-vous pour commenter" }),
+      await screen.findByRole("dialog", { name: "Connectez-vous pour commenter" }),
     ).toBeInTheDocument();
   });
 });

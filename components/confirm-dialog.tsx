@@ -2,6 +2,7 @@
 
 import { AlertDialog } from "radix-ui";
 import { pillButton } from "@/components/ui/pill-button";
+import { useRestoreFocus } from "@/components/ui/restore-focus";
 import { cn } from "@/lib/utils";
 
 /** Confirmation d'une action sensible (suppression…) : focus piégé, Échap annule. */
@@ -24,11 +25,13 @@ export function ConfirmDialog({
   pending?: boolean;
   onConfirm: () => void;
 }) {
+  const focus = useRestoreFocus({});
   return (
     <AlertDialog.Root open={open} onOpenChange={onOpenChange}>
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-[var(--overlay)] data-[state=open]:animate-in data-[state=open]:fade-in-0" />
         <AlertDialog.Content
+          {...focus}
           className={cn(
             "fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-[460px] -translate-x-1/2 -translate-y-1/2 flex-col gap-4 rounded-[28px] bg-popover p-6 text-popover-foreground shadow-dialog outline-none md:p-8",
             "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",

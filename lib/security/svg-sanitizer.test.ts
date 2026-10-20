@@ -69,7 +69,8 @@ describe("sanitizeSvg", () => {
     expect(sanitizeSvg(fixture("script.svg"), 10)).toEqual({ ok: false, error: "tooLarge" });
   });
 
-  it("borne la complexité à SVG_MAX_NODES éléments", () => {
+  // 50 000 éléments à analyser puis nettoyer : plusieurs secondes sur un exécuteur CI partagé.
+  it("borne la complexité à SVG_MAX_NODES éléments", { timeout: 30_000 }, () => {
     expect(SVG_MAX_NODES).toBe(50_000);
     const ok = `<svg xmlns="http://www.w3.org/2000/svg">${"<g/>".repeat(SVG_MAX_NODES - 1)}</svg>`;
     expect(sanitizeSvg(Buffer.from(ok), MAX).ok).toBe(true);

@@ -1,6 +1,7 @@
+import { DELETE_MODES } from "@/features/account/modes";
 import { z } from "@/lib/validation";
 
-export const DELETE_MODES = ["TRANSFER", "DELETE_ALL"] as const;
+export { DELETE_MODES };
 
 /** Suppression du compte : mot de passe actuel et sort des modèles. Messages = `errors.field.*`. */
 export const deleteAccountSchema = z.object({

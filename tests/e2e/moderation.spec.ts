@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Browser, type Page } from "@playwright/test";
 import { waitForMail } from "./support/mailpit";
 import { adminMember, PASSWORD, publishSvg, signUp, verifiedMember } from "./support/members";
+import { useColorScheme } from "./support/theme";
 
 /**
  * Modération (étape 5) : chaque acteur a son propre contexte de navigation (sessions
@@ -142,7 +143,7 @@ for (const colorScheme of ["light", "dark"] as const) {
     page,
   }, testInfo) => {
     await adminMember(page, testInfo);
-    await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+    await useColorScheme(page, colorScheme);
     for (const path of ["/admin", "/admin/members", "/admin/models", "/admin/log"]) {
       await page.goto(path);
       await expect(page.locator("html")).toHaveClass(

@@ -15,6 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { DEFAULT_OG_IMAGE } from "@/features/catalog/seo";
 import { getCurrentUser } from "@/lib/auth/current";
 import { originOf } from "@/lib/security/csp";
+import { clientMessages } from "@/messages/client";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -70,7 +71,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${bricolage.variable} ${figtree.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col pb-20 md:pb-0">
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={clientMessages}>
           <ThemeProvider nonce={nonce}>
             <a
               href="#contenu"

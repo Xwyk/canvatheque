@@ -72,7 +72,7 @@ describe("FavoriteButton", () => {
     const user = userEvent.setup();
     renderButton(false, "icon", false);
     await user.click(screen.getByRole("button", { name: /Ajouter « Papillon »/ }));
-    expect(screen.getByRole("dialog", { name: /garder vos favoris/ })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: /garder vos favoris/ })).toBeInTheDocument();
     expect(action.toggleFavoriteAction).not.toHaveBeenCalled();
   });
 

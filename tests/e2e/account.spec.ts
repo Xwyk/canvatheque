@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { acceptTerms } from "./support/members";
 import { linkFrom, uniqueEmail, waitForMail } from "./support/mailpit";
+import { useColorScheme } from "./support/theme";
 
 const PASSWORD = "papillon-de-nuit-42";
 const NEW_PASSWORD = "nouvelle-phrase-secrete-2026";
@@ -10,7 +12,7 @@ async function signUp(page: Page, pseudo: string, email: string, redirectTo = "/
   await page.getByLabel("Pseudo").fill(pseudo);
   await page.getByLabel("Adresse e-mail").fill(email);
   await page.getByLabel("Mot de passe", { exact: true }).fill(PASSWORD);
-  await page.getByRole("checkbox", { name: /J'accepte les conditions/ }).check();
+  await acceptTerms(page);
   await page.getByRole("button", { name: "Créer mon compte" }).click();
 }
 
@@ -110,7 +112,7 @@ test.describe("comptes", () => {
 
   for (const colorScheme of ["light", "dark"] as const) {
     test(`pages d'authentification sans violation axe (${colorScheme})`, async ({ page }) => {
-      await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+      await useColorScheme(page, colorScheme);
       for (const path of ["/login", "/signup", "/forgot-password", "/reset/jeton-invalide"]) {
         await page.goto(path);
         const results = await new AxeBuilder({ page })

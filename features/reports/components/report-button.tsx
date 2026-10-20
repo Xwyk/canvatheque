@@ -14,7 +14,7 @@ import {
   REPORT_DETAILS_MAX_LENGTH,
   REPORT_REASONS,
   type ReportReasonValue,
-} from "@/features/reports/schemas";
+} from "@/features/reports/reasons";
 import { cn } from "@/lib/utils";
 
 /** Pilule « Signaler » de la fiche ; visiteur : modale d'inscription. */

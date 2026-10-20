@@ -1,17 +1,11 @@
+import { REPORT_DETAILS_MAX_LENGTH, REPORT_REASONS } from "@/features/reports/reasons";
 import { z } from "@/lib/validation";
 
-/** Motifs de signalement, dans l'ordre d'affichage (enum Prisma `ReportReason`). */
-export const REPORT_REASONS = [
-  "DROITS_AUTEUR",
-  "CONTENU_INAPPROPRIE",
-  "FICHIER_DEFECTUEUX",
-  "SPAM",
-  "AUTRE",
-] as const;
-
-export type ReportReasonValue = (typeof REPORT_REASONS)[number];
-
-export const REPORT_DETAILS_MAX_LENGTH = 1000;
+export {
+  REPORT_DETAILS_MAX_LENGTH,
+  REPORT_REASONS,
+  type ReportReasonValue,
+} from "@/features/reports/reasons";
 
 /** Signalement d'un modèle ; précisions obligatoires pour le motif « Autre ». Messages = `errors.field.*`. */
 export const reportSchema = z

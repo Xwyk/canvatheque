@@ -1,8 +1,25 @@
-import { expect, type APIRequestContext, type Page, type TestInfo } from "@playwright/test";
+import {
+  expect,
+  type APIRequestContext,
+  type Locator,
+  type Page,
+  type TestInfo,
+} from "@playwright/test";
 import { promoteToAdmin } from "./database";
 import { linkFrom, uniqueEmail, waitForMail } from "./mailpit";
 
 export const PASSWORD = "papillon-de-nuit-42";
+
+/**
+ * Coche « J'accepte les conditions ». La jauge de robustesse du mot de passe, chargée à la
+ * demande, peut décaler la case au moment du clic (Firefox sous charge) : on réessaie.
+ */
+export async function acceptTerms(scope: Page | Locator): Promise<void> {
+  const box = scope.getByRole("checkbox", { name: /J'accepte les conditions/ });
+  await expect(async () => {
+    await box.check({ timeout: 2000 });
+  }).toPass({ timeout: 10_000 });
+}
 
 export type TestMember = { pseudo: string; email: string };
 
@@ -19,7 +36,7 @@ export async function signUp(
   await page.getByLabel("Pseudo").fill(pseudo);
   await page.getByLabel("Adresse e-mail").fill(email);
   await page.getByLabel("Mot de passe", { exact: true }).fill(PASSWORD);
-  await page.getByRole("checkbox", { name: /J'accepte les conditions/ }).check();
+  await acceptTerms(page);
   await page.getByRole("button", { name: "Créer mon compte" }).click();
   await expect(page.getByRole("button", { name: `Compte de ${pseudo}` })).toBeVisible();
   return { pseudo, email };
@@ -52,6 +69,8 @@ const STAR =
 /** Publie un SVG minimal (membre confirmé) et renvoie l'adresse de sa fiche. */
 export async function publishSvg(page: Page, title: string): Promise<string> {
   await page.goto("/publish");
+  // Dépôt géré par React : attendre l'hydratation (sinon le fichier choisi est ignoré).
+  await page.waitForLoadState("networkidle");
   await page
     .getByRole("main")
     .locator("input[type=file]")

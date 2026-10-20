@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+import { useColorScheme } from "./support/theme";
 
 /** Pile Docker avec le seed de démonstration (30 modèles publiés, 9 catégories). */
 
@@ -100,7 +101,7 @@ test.describe("galerie", () => {
 
   for (const colorScheme of ["light", "dark"] as const) {
     test(`galerie sans violation axe en thème ${colorScheme}`, async ({ page }) => {
-      await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+      await useColorScheme(page, colorScheme);
       await page.goto("/models?format=svg");
       await expect(cards(page).first()).toBeVisible();
       const results = await new AxeBuilder({ page })

@@ -1,9 +1,9 @@
+import { REASON_MAX_LENGTH, REASON_MIN_LENGTH } from "@/features/admin/limits";
 import { z } from "@/lib/validation";
 
 /** Schémas des actions d'administration. Messages = clés `errors.field.*`. */
 
-export const REASON_MIN_LENGTH = 3;
-export const REASON_MAX_LENGTH = 500;
+export { REASON_MAX_LENGTH, REASON_MIN_LENGTH };
 
 const id = z.string().min(1).max(64);
 

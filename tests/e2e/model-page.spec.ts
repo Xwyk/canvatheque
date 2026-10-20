@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type APIRequestContext, type Page, type TestInfo } from "@playwright/test";
+import { acceptTerms } from "./support/members";
 import { linkFrom, uniqueEmail, waitForMail } from "./support/mailpit";
 
 const PASSWORD = "papillon-de-nuit-42";
@@ -13,7 +14,7 @@ async function verifiedMember(page: Page, request: APIRequestContext, testInfo: 
   await page.getByLabel("Pseudo").fill(pseudo);
   await page.getByLabel("Adresse e-mail").fill(email);
   await page.getByLabel("Mot de passe", { exact: true }).fill(PASSWORD);
-  await page.getByRole("checkbox", { name: /J'accepte les conditions/ }).check();
+  await acceptTerms(page);
   await page.getByRole("button", { name: "Créer mon compte" }).click();
   await expect(page).toHaveURL(/\/publish$/);
   const mail = await waitForMail(request, email, /Confirmez votre adresse/);
@@ -25,6 +26,8 @@ async function verifiedMember(page: Page, request: APIRequestContext, testInfo: 
 /** Publie un SVG par l'interface et renvoie l'adresse de sa fiche. */
 async function publishSvg(page: Page, title: string): Promise<string> {
   await page.goto("/publish");
+  // Dépôt géré par React : attendre l'hydratation (sinon le fichier choisi est ignoré).
+  await page.waitForLoadState("networkidle");
   await page
     .getByRole("main")
     .locator("input[type=file]")

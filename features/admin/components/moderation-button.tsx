@@ -29,7 +29,7 @@ import {
   unbanMemberAction,
   unhideModelAction,
 } from "@/features/admin/actions";
-import { REASON_MAX_LENGTH } from "@/features/admin/schemas";
+import { REASON_MAX_LENGTH } from "@/features/admin/limits";
 import type { Result } from "@/lib/result";
 import { cn } from "@/lib/utils";
 
