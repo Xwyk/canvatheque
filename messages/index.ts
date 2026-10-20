@@ -1,4 +1,6 @@
 import base from "./fr.json";
+import account from "./fr/account.json";
+import content from "./fr/content.json";
 import downloads from "./fr/downloads.json";
 import homeSections from "./fr/home-sections.json";
 import gallery from "./fr/gallery.json";
@@ -16,6 +18,8 @@ export const messages = {
   ...homeSections,
   ...downloads,
   ...moderation,
+  ...account,
+  ...content,
 };
 
 export default messages;

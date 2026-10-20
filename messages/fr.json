@@ -154,7 +154,8 @@
       "signedIn": "Vous êtes connecté·e.",
       "signedOut": "Vous êtes déconnecté·e.",
       "passwordReset": "Mot de passe modifié. Vous êtes connecté·e.",
-      "modelPublished": "Votre modèle est publié. Merci pour ce partage !"
+      "modelPublished": "Votre modèle est publié. Merci pour ce partage !",
+      "accountDeleted": "Votre compte est supprimé. Merci d'avoir partagé avec nous."
     }
   },
   "settings": {
@@ -218,9 +219,13 @@
       "reportReason": "Choisissez un motif.",
       "reportDetailsLength": "1 000 caractères maximum.",
       "reportDetailsRequired": "Précisez le problème.",
-      "reasonLength": "Entre 3 et 500 caractères."
+      "reasonLength": "Entre 3 et 500 caractères.",
+      "deleteMode": "Choisissez que faire de vos modèles."
     },
     "notFound": "Ce modèle est introuvable.",
+    "account": {
+      "adminDelete": "Un administrateur ne peut pas supprimer son compte depuis cette page."
+    },
     "report": {
       "own": "Vous ne pouvez pas signaler votre propre modèle.",
       "duplicate": "Vous avez déjà signalé ce modèle : il est en cours d'examen."
@@ -332,6 +337,12 @@
       "intro": "Votre compte a été suspendu par l'équipe de modération : vous ne pouvez plus vous connecter.",
       "reason": "Motif : {reason}",
       "note": "Pour contester cette décision, répondez à ce message."
+    },
+    "accountDeleted": {
+      "subject": "Votre compte Canvathèque est supprimé",
+      "greeting": "Bonjour {pseudo},",
+      "intro": "Votre compte a été supprimé à votre demande, avec vos favoris, vos téléchargements et les modèles que vous n'avez pas transférés.",
+      "note": "Ce message est le dernier que vous recevrez de notre part. Si vous n'êtes pas à l'origine de cette suppression, répondez-y sans attendre."
     },
     "accountRestored": {
       "subject": "Votre compte Canvathèque est rétabli",

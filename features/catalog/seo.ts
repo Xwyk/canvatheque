@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { CONTENT_PATHS } from "@/features/content/paths";
 import type { PrismaClient } from "@/lib/generated/prisma/client";
 import { env } from "@/lib/env";
 
@@ -45,6 +46,11 @@ export async function sitemapEntries(
     { url: url("/"), changeFrequency: "daily", priority: 1 },
     { url: url("/models"), changeFrequency: "daily", priority: 0.9 },
     { url: url("/categories"), changeFrequency: "weekly", priority: 0.6 },
+    ...Object.values(CONTENT_PATHS).map((path) => ({
+      url: url(path),
+      changeFrequency: "monthly" as const,
+      priority: 0.3,
+    })),
     ...categories.map((category) => ({
       url: url(`/categories/${category.slug}`),
       changeFrequency: "daily" as const,

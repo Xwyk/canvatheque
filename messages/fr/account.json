@@ -1,0 +1,29 @@
+{
+  "accountData": {
+    "dataTitle": "Mes données",
+    "exportText": "Téléchargez toutes les données liées à votre compte au format JSON : profil, modèles, favoris, téléchargements, signalements et sessions ouvertes.",
+    "exportButton": "Exporter mes données",
+    "deleteTitle": "Supprimer mon compte",
+    "deleteText": "La suppression est définitive : vos favoris, vos téléchargements et vos sessions disparaissent, et vous recevez un dernier e-mail de confirmation.",
+    "adminText": "Un administrateur ne peut pas supprimer son compte depuis cette page.",
+    "modeLegend": "Que faire de vos modèles ?",
+    "modes": {
+      "TRANSFER": {
+        "label": "Les transférer à « Auteur supprimé »",
+        "hint": "Vos modèles publiés restent en ligne, sans votre pseudo. Brouillons et modèles masqués sont supprimés."
+      },
+      "DELETE_ALL": {
+        "label": "Tout supprimer",
+        "hint": "Tous vos modèles sont supprimés, avec leurs fichiers et leurs aperçus."
+      }
+    },
+    "deleteButton": "Supprimer mon compte",
+    "confirmTitle": "Supprimer définitivement votre compte ?",
+    "confirm": {
+      "TRANSFER": "Vos modèles publiés seront transférés à « Auteur supprimé » ; tout le reste sera supprimé. Cette action est irréversible.",
+      "DELETE_ALL": "Votre compte et tous vos modèles seront supprimés. Cette action est irréversible."
+    },
+    "confirmButton": "Supprimer définitivement",
+    "cancel": "Annuler"
+  }
+}

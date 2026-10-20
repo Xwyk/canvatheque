@@ -94,9 +94,10 @@ test.describe("comptes", () => {
     await expect(page.getByRole("link", { name: "Demander un nouveau lien" })).toBeVisible();
 
     await page.goto("/me/settings");
-    await page.getByRole("textbox", { name: "Mot de passe actuel" }).last().fill(NEW_PASSWORD);
-    await page.getByRole("textbox", { name: "Nouveau mot de passe" }).fill(PASSWORD);
-    await page.getByRole("button", { name: "Changer le mot de passe" }).click();
+    const card = page.getByRole("region", { name: "Mot de passe", exact: true });
+    await card.getByRole("textbox", { name: "Mot de passe actuel" }).fill(NEW_PASSWORD);
+    await card.getByRole("textbox", { name: "Nouveau mot de passe" }).fill(PASSWORD);
+    await card.getByRole("button", { name: "Changer le mot de passe" }).click();
     await expect(page.getByRole("main").getByRole("status")).toContainText("Mot de passe modifié");
     await waitForMail(request, email, /Votre mot de passe a changé/);
   });

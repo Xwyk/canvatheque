@@ -37,6 +37,12 @@ export const envSchema = z.object({
   MAX_MODELS_PER_USER: intFromString(200),
   SIGNED_URL_TTL_SECONDS: intFromString(300),
 
+  // Mentions légales et contact (pages /legal) : vides = « à compléter » affiché.
+  LEGAL_PUBLISHER: optionalString,
+  LEGAL_ADDRESS: optionalString,
+  LEGAL_HOST: optionalString,
+  CONTACT_EMAIL: optionalString,
+
   METRICS_TOKEN: optionalString,
   SENTRY_DSN: optionalString,
 

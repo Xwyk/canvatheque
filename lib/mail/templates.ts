@@ -192,3 +192,14 @@ export function accountRestoredNotice({ to, pseudo }: Recipient, url: string): M
     action: { label: t("accountRestored.action"), url },
   });
 }
+
+// --- Données personnelles (étape 6) ----------------------------------------------------------
+
+export function accountDeletedNotice({ to, pseudo }: Recipient): MailMessage {
+  return render({
+    to,
+    subject: t("accountDeleted.subject"),
+    paragraphs: [t("accountDeleted.greeting", { pseudo }), t("accountDeleted.intro")],
+    notes: [t("accountDeleted.note")],
+  });
+}

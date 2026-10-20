@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { MeTabs } from "@/components/layout/me-tabs";
+import { DeleteAccountForm, ExportData } from "@/features/account/components/account-data";
 import { EmailForm, PasswordForm, ProfileForm } from "@/features/auth/components/settings-forms";
 import { requireUserPage } from "@/lib/auth/current";
 import { db } from "@/lib/db";
@@ -12,11 +13,25 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("settings"), robots: { index: false } };
 }
 
-function SettingsCard({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+function SettingsCard({
+  id,
+  title,
+  danger = false,
+  children,
+}: {
+  id: string;
+  title: string;
+  /** Zone « danger » (suppression du compte). */
+  danger?: boolean;
+  children: ReactNode;
+}) {
   return (
     <section
       aria-labelledby={id}
-      className="flex flex-col gap-5 rounded-3xl border bg-card p-5 shadow-card md:p-8"
+      className={cn(
+        "flex flex-col gap-5 rounded-3xl border bg-card p-5 shadow-card md:p-8",
+        danger && "border-2 border-destructive",
+      )}
     >
       <h2 id={id} className="m-0 text-2xl font-bold">
         {title}
@@ -29,6 +44,7 @@ function SettingsCard({ id, title, children }: { id: string; title: string; chil
 export default async function SettingsPage() {
   const session = await requireUserPage("/me/settings");
   const t = await getTranslations("settings");
+  const tData = await getTranslations("accountData");
   const profile = await db().user.findUniqueOrThrow({
     where: { id: session.id },
     select: { bio: true, website: true },
@@ -67,6 +83,14 @@ export default async function SettingsPage() {
 
       <SettingsCard id="password-title" title={t("passwordTitle")}>
         <PasswordForm />
+      </SettingsCard>
+
+      <SettingsCard id="data-title" title={tData("dataTitle")}>
+        <ExportData />
+      </SettingsCard>
+
+      <SettingsCard id="delete-title" title={tData("deleteTitle")} danger>
+        <DeleteAccountForm isAdmin={session.role === "ADMIN"} />
       </SettingsCard>
     </div>
   );

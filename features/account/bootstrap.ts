@@ -11,6 +11,16 @@ export const SYSTEM_USER = {
 export const ADMIN_PSEUDO = "admin";
 export const ADMIN_RESET_TTL_MS = 24 * 60 * 60 * 1000;
 
+/** Compte système « Auteur supprimé » (modèles transférés, contenus anonymisés). */
+export function ensureSystemUser(prisma: PrismaClient, now = new Date()) {
+  return prisma.user.upsert({
+    where: { pseudoSlug: SYSTEM_USER.pseudoSlug },
+    update: {},
+    create: { ...SYSTEM_USER, isSystem: true, tosAcceptedAt: now, emailVerifiedAt: now },
+    select: { id: true, pseudo: true },
+  });
+}
+
 export type BootstrapOptions = {
   adminEmail: string;
   adminPassword?: string;
@@ -37,11 +47,7 @@ export async function ensureCoreAccounts(
 ): Promise<BootstrapResult> {
   const email = adminEmail.trim().toLowerCase();
 
-  const systemUser = await prisma.user.upsert({
-    where: { pseudoSlug: SYSTEM_USER.pseudoSlug },
-    update: {},
-    create: { ...SYSTEM_USER, isSystem: true, tosAcceptedAt: now, emailVerifiedAt: now },
-  });
+  const systemUser = await ensureSystemUser(prisma, now);
 
   let admin = await prisma.user.findUnique({ where: { email } });
   if (!admin) {

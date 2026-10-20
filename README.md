@@ -3,9 +3,9 @@
 Application web communautaire et gratuite de partage de modèles de découpe pour Brother ScanNCut
 (`.cwprj` et `.svg`).
 
-> **État : étape 5 (modération et administration) livrée.** Socle, comptes, publication, catalogue
-> public, téléchargement et favoris, signalements et administration. Les pages Aide et légales
-> arrivent à l'étape 6 (voir [Feuille de route](#feuille-de-route)) et mènent encore à une 404.
+> **État : étape 6 (RGPD et pages de contenu) livrée.** Socle, comptes, publication, catalogue
+> public, téléchargement et favoris, modération, export et suppression du compte, pages À propos,
+> Aide et légales. Les commentaires arrivent à l'étape 7 (voir [Feuille de route](#feuille-de-route)).
 
 ## Démarrage rapide (Docker)
 
@@ -223,6 +223,22 @@ Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modéra
 - Un seul signalement ouvert par membre et par modèle (index unique partiel) : une fois traité, le
   modèle peut être signalé de nouveau.
 
+### Données personnelles et pages de contenu
+
+| Parcours             | Où                                                            | Détails                                                                                                                                                        |
+| -------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Exporter ses données | `/me/settings`, `GET /api/me/export`                          | fichier JSON en pièce jointe : profil, modèles, favoris, téléchargements, signalements, sessions ouvertes ; sans hachage ni jeton ; 10 par heure               |
+| Supprimer son compte | `/me/settings` (zone danger)                                  | mot de passe et confirmation ; modèles publiés transférés à « Auteur supprimé » ou tout supprimer ; e-mail de confirmation ; session fermée                    |
+| Pages de contenu     | `/about`, `/help`, `/legal`, `/legal/privacy`, `/legal/terms` | colonne 720 px, sommaire latéral à partir de 1024 px ; l'aide contient le pas à pas « Ouvrir un .cwprj dans CanvasWorkspace » ; présentes dans le plan du site |
+
+- **Suppression vérifiée en base et dans MinIO** : brouillons, modèles masqués ou déjà supprimés
+  (et tous les modèles en mode « Tout supprimer ») sont effacés avec leurs fichiers, aperçus et
+  envois en attente ; favoris (compteurs mis à jour), téléchargements, sessions et jetons partent
+  avec le compte ; signalements et commentaires sont conservés, anonymisés (compte système).
+- Un administrateur ne supprime pas son compte depuis les paramètres.
+- Mentions légales : `LEGAL_PUBLISHER`, `LEGAL_ADDRESS`, `LEGAL_HOST` et `CONTACT_EMAIL` ; une
+  valeur absente est affichée « à compléter » plutôt qu'inventée.
+
 ### Sécurité (socle)
 
 - CSP à nonces par requête (`script-src 'nonce-…' 'strict-dynamic'`), `frame-ancestors 'none'`,
@@ -238,7 +254,8 @@ Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modéra
 ### Mise en production (VPS)
 
 1. `.env` : `APP_URL=https://votre-domaine`, `S3_PUBLIC_URL=https://s3.votre-domaine`,
-   secrets forts (`AUTH_SECRET`, `POSTGRES_PASSWORD`, `S3_SECRET_KEY`, `METRICS_TOKEN`), SMTP.
+   secrets forts (`AUTH_SECRET`, `POSTGRES_PASSWORD`, `S3_SECRET_KEY`, `METRICS_TOKEN`), SMTP,
+   mentions légales (`LEGAL_PUBLISHER`, `LEGAL_ADDRESS`, `LEGAL_HOST`, `CONTACT_EMAIL`).
 2. Reverse proxy HTTPS : [`docker/Caddyfile.example`](docker/Caddyfile.example) (deux hôtes :
    l'application et le stockage ; un sous-chemin casserait la signature des URL présignées).
 3. `docker compose -f docker-compose.yml up -d --build --wait`.
@@ -272,6 +289,6 @@ téléchargements, métriques du processus Node.
 | 3     | Catalogue : recherche, filtres, galerie, fiche, profil, SEO                        | ✅      |
 | 4     | Téléchargement et favoris, CanvasWorkspace                                         | ✅      |
 | 5     | Modération et administration                                                       | ✅      |
-| 6     | RGPD et pages de contenu                                                           | à venir |
+| 6     | RGPD et pages de contenu                                                           | ✅      |
 | 7     | Commentaires                                                                       | à venir |
 | 8     | Finition qualité                                                                   | à venir |

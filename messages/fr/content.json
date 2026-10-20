@@ -1,0 +1,334 @@
+{
+  "content": {
+    "toc": "Sommaire",
+    "updated": "Mise à jour le {date}",
+    "missing": "à compléter par l'éditeur du site",
+    "about": {
+      "title": "À propos de Canvathèque",
+      "description": "Canvathèque est une bibliothèque gratuite et communautaire de modèles de découpe .cwprj et .svg pour Brother ScanNCut.",
+      "intro": "Canvathèque est une bibliothèque gratuite de modèles de découpe pour Brother ScanNCut, alimentée par celles et ceux qui les créent.",
+      "sections": [
+        {
+          "id": "projet",
+          "title": "Le projet",
+          "blocks": [
+            "Trouver un bon modèle de découpe prend souvent plus de temps que la découpe elle-même. Canvathèque rassemble au même endroit des projets CanvasWorkspace (.cwprj) et des fichiers vectoriels (.svg) prêts à l'emploi, classés par catégorie et faciles à chercher.",
+            "Le site est **gratuit**, sans publicité et sans abonnement. Il n'est ni édité ni soutenu par Brother : ScanNCut et CanvasWorkspace sont des marques de Brother Industries."
+          ]
+        },
+        {
+          "id": "communaute",
+          "title": "Une bibliothèque faite par la communauté",
+          "blocks": [
+            "Chaque modèle est publié par un membre, qui en garde la paternité et choisit sa licence : libre même pour un usage commercial, libre hors usage commercial, ou réservé à un usage personnel.",
+            {
+              "ul": [
+                "Créez un compte gratuit pour télécharger et garder vos favoris.",
+                "Publiez vos créations depuis [Publier un modèle](/publish).",
+                "Signalez un modèle qui pose problème : l'équipe de modération l'examine."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "confiance",
+          "title": "Sécurité et respect de vos données",
+          "blocks": [
+            "Chaque fichier envoyé est vérifié : les SVG sont nettoyés de tout script, les fichiers exécutables sont refusés. Vous ne recevez jamais d'autre e-mail que ceux liés à votre compte.",
+            "Vous pouvez exporter vos données ou supprimer votre compte à tout moment depuis vos [paramètres](/me/settings). Le détail est dans la [politique de confidentialité](/legal/privacy)."
+          ]
+        },
+        {
+          "id": "contact",
+          "title": "Nous écrire",
+          "blocks": [
+            "Une question, une suggestion ? Écrivez à {contact}. Pour un problème sur un modèle précis, utilisez plutôt le bouton « Signaler » de sa fiche."
+          ]
+        }
+      ]
+    },
+    "help": {
+      "title": "Aide",
+      "description": "Télécharger un modèle, l'ouvrir dans CanvasWorkspace, publier vos créations : les réponses aux questions fréquentes.",
+      "intro": "Les réponses aux questions les plus fréquentes, du premier téléchargement à la publication de vos propres modèles.",
+      "sections": [
+        {
+          "id": "telecharger",
+          "title": "Télécharger un modèle",
+          "blocks": [
+            "Le téléchargement est gratuit et demande un compte : inscrivez-vous en une minute depuis la fiche du modèle, le téléchargement démarre aussitôt après.",
+            "Respectez la licence indiquée sur la fiche : certaines autorisent un usage commercial, d'autres seulement un usage personnel."
+          ]
+        },
+        {
+          "id": "canvasworkspace",
+          "title": "Ouvrir un .cwprj dans CanvasWorkspace",
+          "blocks": [
+            "Les fichiers .cwprj sont des projets CanvasWorkspace pour ordinateur. Brother ne propose pas d'ouverture directe depuis un site web : le bouton « Ouvrir dans CanvasWorkspace » télécharge le fichier, qu'il suffit ensuite d'ouvrir.",
+            {
+              "ol": [
+                "Lancez CanvasWorkspace sur votre ordinateur (Windows ou macOS).",
+                "Choisissez **Fichier**, puis **Ouvrir**.",
+                "Sélectionnez le fichier .cwprj dans votre dossier Téléchargements.",
+                "Envoyez le projet vers votre ScanNCut comme d'habitude (Wi-Fi ou clé USB)."
+              ]
+            },
+            "Vous n'avez pas encore le logiciel ? [Téléchargez CanvasWorkspace sur le site de Brother](https://support.canvasworkspace.brother.com/cwsinfo/download_cws/en.html). La version web de CanvasWorkspace a fermé : seul le logiciel pour ordinateur permet d'ouvrir ces fichiers."
+          ]
+        },
+        {
+          "id": "svg",
+          "title": "Utiliser un fichier SVG",
+          "blocks": [
+            "Un SVG s'importe dans CanvasWorkspace (**Fichier**, puis **Importer**) ou dans la plupart des logiciels de découpe et de dessin vectoriel. Le contour est découpé tel quel : vérifiez la taille avant l'envoi vers la machine."
+          ]
+        },
+        {
+          "id": "publier",
+          "title": "Publier un modèle",
+          "blocks": [
+            "Confirmez d'abord votre adresse e-mail (lien reçu à l'inscription), puis suivez les quatre étapes de [Publier un modèle](/publish) :",
+            {
+              "ol": [
+                "**Fichier** : un .cwprj ou un .svg de 20 Mo au plus.",
+                "**Aperçu** : généré automatiquement pour un SVG ; pour un .cwprj, ajoutez une photo ou une capture.",
+                "**Informations** : titre, description, catégorie, mots-clés et licence.",
+                "**Relecture** : certifiez que vous avez le droit de partager ce modèle, puis publiez."
+              ]
+            },
+            "Votre brouillon est enregistré à chaque étape : vous pouvez le reprendre plus tard depuis [Mes modèles](/me)."
+          ]
+        },
+        {
+          "id": "licences",
+          "title": "Choisir une licence",
+          "blocks": [
+            {
+              "ul": [
+                "**CC0, CC BY, CC BY-SA** : usage libre, même commercial (avec ou sans attribution, partage à l'identique pour CC BY-SA).",
+                "**CC BY-NC, CC BY-NC-SA** : usage libre hors usage commercial.",
+                "**Usage personnel** : pour soi uniquement, ni revente ni redistribution."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "signaler",
+          "title": "Signaler un modèle",
+          "blocks": [
+            "Un modèle copié, inapproprié ou défectueux ? Utilisez le bouton « Signaler » de sa fiche et précisez le problème. Votre signalement reste confidentiel ; l'équipe de modération peut masquer ou supprimer le modèle."
+          ]
+        },
+        {
+          "id": "compte",
+          "title": "Votre compte",
+          "blocks": [
+            "Mot de passe oublié ? Utilisez [Mot de passe oublié](/forgot-password) depuis la page de connexion. Depuis vos [paramètres](/me/settings), vous pouvez changer d'adresse e-mail ou de mot de passe, exporter vos données et supprimer votre compte."
+          ]
+        }
+      ]
+    },
+    "legal": {
+      "title": "Mentions légales",
+      "description": "Éditeur, hébergeur et conditions de reproduction du site Canvathèque.",
+      "intro": "Informations relatives à l'éditeur et à l'hébergement du site, conformément à la loi pour la confiance dans l'économie numérique.",
+      "updated": "20 octobre 2026",
+      "sections": [
+        {
+          "id": "editeur",
+          "title": "Éditeur",
+          "blocks": [
+            "Le site Canvathèque est édité par {publisher}, {address}.",
+            "Contact : {contact}."
+          ]
+        },
+        {
+          "id": "hebergement",
+          "title": "Hébergement",
+          "blocks": ["Le site est hébergé par {host}."]
+        },
+        {
+          "id": "contenus",
+          "title": "Contenus et propriété intellectuelle",
+          "blocks": [
+            "Les modèles publiés restent la propriété de leurs auteurs, qui les diffusent sous la licence indiquée sur chaque fiche. Toute reproduction en dehors de cette licence est interdite.",
+            "Le nom, le logo et l'interface de Canvathèque ne peuvent être reproduits sans autorisation. ScanNCut et CanvasWorkspace sont des marques de Brother Industries, sans lien avec ce site."
+          ]
+        },
+        {
+          "id": "signalement",
+          "title": "Signaler un contenu illicite",
+          "blocks": [
+            "Tout contenu manifestement illicite peut être signalé depuis le bouton « Signaler » de la fiche du modèle, ou par e-mail à {contact}. Les signalements sont examinés dans les meilleurs délais."
+          ]
+        },
+        {
+          "id": "donnees",
+          "title": "Données personnelles",
+          "blocks": [
+            "Le traitement de vos données est décrit dans la [politique de confidentialité](/legal/privacy) ; les règles d'usage du site dans les [conditions d'utilisation](/legal/terms)."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "description": "Quelles données Canvathèque collecte, pourquoi, combien de temps elles sont conservées et comment exercer vos droits.",
+      "intro": "Canvathèque ne collecte que les données nécessaires au fonctionnement du site, ne les vend pas et n'affiche aucune publicité.",
+      "updated": "20 octobre 2026",
+      "sections": [
+        {
+          "id": "responsable",
+          "title": "Responsable du traitement",
+          "blocks": [
+            "{publisher}, {address}. Contact pour toute question sur vos données : {contact}."
+          ]
+        },
+        {
+          "id": "collecte",
+          "title": "Données collectées",
+          "blocks": [
+            {
+              "ul": [
+                "**Compte** : pseudo, adresse e-mail, mot de passe (stocké uniquement sous forme chiffrée irréversible, argon2id), présentation et site web facultatifs, dates d'inscription et d'acceptation des conditions.",
+                "**Contributions** : modèles publiés (fichiers, aperçus, descriptions), signalements.",
+                "**Activité** : favoris et historique de vos téléchargements.",
+                "**Technique** : session de connexion ; journaux techniques sans adresse e-mail et avec une adresse IP tronquée."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "finalites",
+          "title": "Finalités et bases légales",
+          "blocks": [
+            {
+              "ul": [
+                "Fournir le service (compte, publication, téléchargement, favoris) : exécution des conditions d'utilisation.",
+                "Sécuriser le site (limites de tentatives, modération, journaux) : intérêt légitime.",
+                "Vous écrire au sujet de votre compte (confirmation d'adresse, mot de passe, modération) : exécution des conditions d'utilisation. Aucune lettre d'information, aucune publicité."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "durees",
+          "title": "Durées de conservation",
+          "blocks": [
+            {
+              "ul": [
+                "Compte, contributions, favoris et téléchargements : jusqu'à la suppression du compte.",
+                "Session de connexion : 30 jours, prolongée tant que vous utilisez le site.",
+                "Liens envoyés par e-mail : 1 heure (mot de passe), 24 heures (changement d'adresse), 48 heures (confirmation).",
+                "Signalements et journal de modération : conservés de façon anonymisée après la suppression du compte."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "destinataires",
+          "title": "Destinataires",
+          "blocks": [
+            "Vos données ne sont ni vendues ni cédées. Seuls y accèdent l'équipe d'administration du site et l'hébergeur ({host}) pour le stockage. Votre pseudo, votre présentation et vos modèles publiés sont publics ; votre adresse e-mail ne l'est jamais."
+          ]
+        },
+        {
+          "id": "cookies",
+          "title": "Cookies et stockage local",
+          "blocks": [
+            "Le site n'utilise que des cookies nécessaires à son fonctionnement, sans traceur ni mesure d'audience : le cookie de session (connexion) et un cookie de message temporaire, effacé dès son affichage. Votre navigateur garde aussi votre choix de thème et la préférence « Ne plus afficher » des explications CanvasWorkspace. Aucun consentement n'est donc demandé."
+          ]
+        },
+        {
+          "id": "droits",
+          "title": "Vos droits",
+          "blocks": [
+            "Vous disposez d'un droit d'accès, de rectification, d'effacement, de portabilité et d'opposition. Depuis vos [paramètres](/me/settings), vous pouvez :",
+            {
+              "ul": [
+                "modifier votre profil, votre adresse e-mail et votre mot de passe ;",
+                "**exporter vos données** dans un fichier JSON ;",
+                "**supprimer votre compte** : vos modèles sont supprimés ou, à votre choix, les modèles publiés sont transférés à « Auteur supprimé »."
+              ]
+            },
+            "Pour toute autre demande, écrivez à {contact}. Vous pouvez aussi adresser une réclamation à la CNIL ([www.cnil.fr](https://www.cnil.fr))."
+          ]
+        },
+        {
+          "id": "securite",
+          "title": "Sécurité",
+          "blocks": [
+            "Connexions chiffrées (HTTPS), mots de passe hachés, jetons de session stockés hachés, fichiers vérifiés et SVG nettoyés à l'envoi, téléchargements par liens temporaires."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Conditions générales d'utilisation",
+      "description": "Les règles d'utilisation de Canvathèque : compte, publication, licences, modération.",
+      "intro": "En créant un compte, vous acceptez les présentes conditions. Elles visent à garder Canvathèque utile, gratuit et respectueux de chacun.",
+      "updated": "20 octobre 2026",
+      "sections": [
+        {
+          "id": "objet",
+          "title": "Objet du service",
+          "blocks": [
+            "Canvathèque permet de partager et de télécharger gratuitement des modèles de découpe (.cwprj et .svg) pour Brother ScanNCut. Le service est fourni tel quel, sans garantie de disponibilité permanente."
+          ]
+        },
+        {
+          "id": "compte",
+          "title": "Compte",
+          "blocks": [
+            "L'inscription est gratuite. Vous choisissez un pseudo (définitif) et fournissez une adresse e-mail valide, qui doit être confirmée pour publier. Vous êtes responsable de la confidentialité de votre mot de passe.",
+            "Vous pouvez supprimer votre compte à tout moment depuis vos [paramètres](/me/settings)."
+          ]
+        },
+        {
+          "id": "publication",
+          "title": "Publication de modèles",
+          "blocks": [
+            "En publiant, vous certifiez être l'auteur du modèle ou disposer des droits nécessaires pour le partager, et vous le diffusez sous la licence que vous choisissez. Vous en restez propriétaire.",
+            "Sont interdits :",
+            {
+              "ul": [
+                "les modèles copiés sans autorisation, y compris les créations vendues ailleurs ;",
+                "les contenus illicites, haineux, violents ou à caractère sexuel ;",
+                "les fichiers malveillants ou détournés (le site refuse les exécutables et nettoie les SVG) ;",
+                "la publicité et les publications sans rapport avec la découpe."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "telechargement",
+          "title": "Téléchargement et licences",
+          "blocks": [
+            "Chaque modèle téléchargé s'utilise dans le respect de sa licence, indiquée sur sa fiche. Le nombre de téléchargements peut être limité pour protéger le service."
+          ]
+        },
+        {
+          "id": "moderation",
+          "title": "Signalement et modération",
+          "blocks": [
+            "Tout membre peut signaler un modèle. L'équipe de modération peut masquer ou supprimer un modèle, et suspendre un compte qui ne respecte pas ces conditions ; la personne concernée est prévenue par e-mail avec le motif et peut contester en y répondant."
+          ]
+        },
+        {
+          "id": "responsabilite",
+          "title": "Responsabilité",
+          "blocks": [
+            "Les modèles sont publiés sous la responsabilité de leurs auteurs. Canvathèque n'est pas responsable du résultat d'une découpe ni d'un usage d'un modèle contraire à sa licence. Vérifiez un modèle avant de l'envoyer vers votre machine."
+          ]
+        },
+        {
+          "id": "evolution",
+          "title": "Évolution des conditions",
+          "blocks": [
+            "Ces conditions peuvent évoluer ; la date de mise à jour figure en haut de cette page. Elles sont soumises au droit français. Contact : {contact}."
+          ]
+        }
+      ]
+    }
+  }
+}
