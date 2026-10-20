@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
+import { waitForAnimations } from "./support/animations";
 import { acceptTerms } from "./support/members";
 import { uniqueEmail } from "./support/mailpit";
 
@@ -48,6 +49,7 @@ test.describe("téléchargement", () => {
     await downloadButton(page, isMobile, /Télécharger le SVG/).click();
     const dialog = page.getByRole("dialog", { name: "Créez un compte gratuit pour télécharger" });
     await expect(dialog).toBeVisible();
+    await waitForAnimations(dialog);
     const axe = await new AxeBuilder({ page }).include('[role="dialog"]').analyze();
     expect(axe.violations).toEqual([]);
 

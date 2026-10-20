@@ -26,8 +26,14 @@ const HOST = process.env.SONAR_HOST_URL ?? "http://localhost:9002";
 const ADMIN_PASSWORD = process.env.SONAR_ADMIN_PASSWORD || localAdminPassword();
 const SCANNER_IMAGE = "sonarsource/sonar-scanner-cli:12.2.0.4256_8.1.0";
 const GATE = "Canvatheque";
-const ORGANIZATION = process.env.SONAR_ORGANIZATION;
-const PROJECT_KEY = process.env.SONAR_PROJECT_KEY ?? "canvatheque";
+/** Clé SonarQube (lettres, chiffres, « _ - . : ») : rien d'autre ne part vers le scanner. */
+function sonarKey(value, name) {
+  if (value && !/^[\w.:-]{1,400}$/.test(value)) throw new Error(`${name} invalide`);
+  return value;
+}
+
+const ORGANIZATION = sonarKey(process.env.SONAR_ORGANIZATION, "SONAR_ORGANIZATION");
+const PROJECT_KEY = sonarKey(process.env.SONAR_PROJECT_KEY, "SONAR_PROJECT_KEY") ?? "canvatheque";
 
 /** Mot de passe admin de l'instance locale : généré une fois, conservé hors dépôt. */
 function localAdminPassword() {

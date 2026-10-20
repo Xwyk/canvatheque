@@ -8,6 +8,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // Les relances servent au diagnostic (trace du premier échec), pas à masquer une
+  // instabilité : un test qui ne passe qu'en relance fait échouer la CI.
+  failOnFlakyTests: !!process.env.CI,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : [["list"]],
   use: {
     baseURL,

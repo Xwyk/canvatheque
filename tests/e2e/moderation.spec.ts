@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Browser, type Page } from "@playwright/test";
+import { waitForAnimations } from "./support/animations";
 import { waitForMail } from "./support/mailpit";
 import { adminMember, PASSWORD, publishSvg, signUp, verifiedMember } from "./support/members";
 import { useColorScheme } from "./support/theme";
@@ -48,6 +49,7 @@ test("signaler un modèle puis le masquer depuis la file des signalements", asyn
   await reporterPage.getByRole("button", { name: "Signaler" }).click();
   const dialog = reporterPage.getByRole("dialog", { name: `Signaler « ${title} »` });
   await expect(dialog).toBeVisible();
+  await waitForAnimations(dialog);
   const axe = await new AxeBuilder({ page: reporterPage }).include('[role="dialog"]').analyze();
   expect(axe.violations).toEqual([]);
   await dialog.getByRole("radio", { name: /Atteinte aux droits d'auteur/ }).check();
