@@ -220,9 +220,14 @@
       "reportDetailsLength": "1 000 caractères maximum.",
       "reportDetailsRequired": "Précisez le problème.",
       "reasonLength": "Entre 3 et 500 caractères.",
-      "deleteMode": "Choisissez que faire de vos modèles."
+      "deleteMode": "Choisissez que faire de vos modèles.",
+      "commentRequired": "Écrivez votre commentaire.",
+      "commentLength": "1 000 caractères maximum."
     },
     "notFound": "Ce modèle est introuvable.",
+    "comment": {
+      "notFound": "Ce commentaire n'existe plus."
+    },
     "account": {
       "adminDelete": "Un administrateur ne peut pas supprimer son compte depuis cette page."
     },

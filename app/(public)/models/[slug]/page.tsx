@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { countComments, listComments } from "@/features/comments/service";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -79,12 +80,16 @@ export default async function ModelPage({ params }: PageProps<"/models/[slug]">)
   const requestHeaders = await headers();
   const nonce = requestHeaders.get("x-nonce") ?? undefined;
   const user = await getCurrentUser();
-  const [similarModels, otherModels, description] = await Promise.all([
+  const published = data.model.status === "PUBLISHED";
+  const commentTarget = { id: data.model.id, authorId: data.author.id };
+  const [similarModels, otherModels, description, comments, commentCount] = await Promise.all([
     getSimilarModels(db(), data.model),
     data.author.hasProfile
       ? getAuthorModels(db(), { id: data.model.id, authorId: data.author.id })
       : [],
     describe(data),
+    published ? listComments(db(), user, commentTarget) : null,
+    published ? countComments(db(), data.model.id) : 0,
   ]);
   // Une seule requête de favoris pour la fiche et ses deux listes.
   const marked = await withFavorites(db(), user?.id, [
@@ -118,6 +123,7 @@ export default async function ModelPage({ params }: PageProps<"/models/[slug]">)
         canonicalUrl={canonical}
         favorited={favorited.has(data.model.id)}
         os={clientOs(requestHeaders.get("user-agent"))}
+        comments={comments ? { initial: comments, total: commentCount } : undefined}
       />
     </>
   );

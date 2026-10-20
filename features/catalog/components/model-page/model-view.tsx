@@ -14,6 +14,8 @@ import { ZoomablePreview } from "@/features/catalog/components/model-page/zoomab
 import type { ModelPageData } from "@/features/catalog/model-page";
 import type { CatalogItem } from "@/features/catalog/search";
 import type { ClientOs } from "@/features/downloads/links";
+import { CommentsSection } from "@/features/comments/components/comments-section";
+import type { CommentPage } from "@/features/comments/service";
 import { ModerationButton } from "@/features/admin/components/moderation-button";
 import { FavoriteButton } from "@/features/favorites/components/favorite-button";
 import { ReportButton } from "@/features/reports/components/report-button";
@@ -253,6 +255,7 @@ export function ModelView({
   canonicalUrl,
   favorited = false,
   os,
+  comments,
 }: {
   data: ModelPageData;
   similar: CatalogItem[];
@@ -261,6 +264,8 @@ export function ModelView({
   /** Modèle dans les favoris du membre connecté. */
   favorited?: boolean;
   os: ClientOs;
+  /** Commentaires (modèle publié uniquement). */
+  comments?: { initial: CommentPage; total: number };
 }) {
   const t = useTranslations("modelPage");
   const { model, author, preview } = data;
@@ -361,6 +366,10 @@ export function ModelView({
           )}
         </section>
       </div>
+
+      {comments && (
+        <CommentsSection modelId={model.id} initial={comments.initial} total={comments.total} />
+      )}
 
       <ModelSection id="similar" title={t("similar")} items={similar} />
       <ModelSection

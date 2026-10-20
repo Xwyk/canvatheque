@@ -134,6 +134,7 @@ describe("seed", () => {
     expect(hit?.title).toBe("Boîte à dragées");
     // Un signalement ouvert de démonstration, créé une seule fois.
     expect(await prisma.report.count({ where: { status: "OPEN" } })).toBe(1);
+    expect(await prisma.comment.count()).toBe(2);
   });
 
   it("ordonne les catégories comme la maquette", async () => {

@@ -160,7 +160,8 @@
         "REPORT_DISMISS": "Signalement classé sans suite",
         "COMMENT_DELETE": "Commentaire supprimé"
       },
-      "reason": "Raison : {reason}"
+      "reason": "Raison : {reason}",
+      "excerpt": "Extrait : « {excerpt} »"
     },
     "pagination": {
       "label": "Pagination",

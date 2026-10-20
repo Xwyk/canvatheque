@@ -3,9 +3,9 @@
 Application web communautaire et gratuite de partage de modèles de découpe pour Brother ScanNCut
 (`.cwprj` et `.svg`).
 
-> **État : étape 6 (RGPD et pages de contenu) livrée.** Socle, comptes, publication, catalogue
-> public, téléchargement et favoris, modération, export et suppression du compte, pages À propos,
-> Aide et légales. Les commentaires arrivent à l'étape 7 (voir [Feuille de route](#feuille-de-route)).
+> **État : étape 7 (commentaires) livrée.** Socle, comptes, publication, catalogue public,
+> téléchargement et favoris, modération, données personnelles, pages de contenu et commentaires.
+> Reste la finition qualité (étape 8, voir [Feuille de route](#feuille-de-route)).
 
 ## Démarrage rapide (Docker)
 
@@ -239,6 +239,15 @@ Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modéra
 - Mentions légales : `LEGAL_PUBLISHER`, `LEGAL_ADDRESS`, `LEGAL_HOST` et `CONTACT_EMAIL` ; une
   valeur absente est affichée « à compléter » plutôt qu'inventée.
 
+### Commentaires
+
+- Fiche d'un modèle publié : du plus récent au plus ancien, 20 par page (« Afficher les
+  commentaires plus anciens »), texte brut de 1 000 caractères au plus ; visiteur : modale de
+  connexion. 30 par heure et par membre (`RATE_LIMIT_COMMENT_PER_HOUR`).
+- Suppression (après confirmation) par l'auteur du commentaire, l'auteur du modèle ou un
+  administrateur ; celle d'un administrateur est journalisée avec un extrait (`/admin/log`).
+- Compte supprimé : ses commentaires restent, signés « Auteur supprimé » (anonymisation).
+
 ### Sécurité (socle)
 
 - CSP à nonces par requête (`script-src 'nonce-…' 'strict-dynamic'`), `frame-ancestors 'none'`,
@@ -290,5 +299,5 @@ téléchargements, métriques du processus Node.
 | 4     | Téléchargement et favoris, CanvasWorkspace                                         | ✅      |
 | 5     | Modération et administration                                                       | ✅      |
 | 6     | RGPD et pages de contenu                                                           | ✅      |
-| 7     | Commentaires                                                                       | à venir |
+| 7     | Commentaires                                                                       | ✅      |
 | 8     | Finition qualité                                                                   | à venir |

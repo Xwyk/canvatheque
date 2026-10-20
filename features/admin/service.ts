@@ -655,6 +655,8 @@ export type AdminActionView = {
   admin: { pseudo: string };
   reason: string | null;
   label: string | null;
+  /** Début du commentaire supprimé (COMMENT_DELETE). */
+  excerpt: string | null;
 };
 
 function detailString(details: Prisma.JsonValue, key: string): string | null {
@@ -685,6 +687,7 @@ export async function listAdminActions(
     ...action,
     reason: detailString(details, "reason"),
     label: detailString(details, "label"),
+    excerpt: detailString(details, "excerpt"),
   }));
   return take ? { items, page: 1, hasNext: false } : paginate(items, page);
 }

@@ -1,5 +1,6 @@
 import base from "./fr.json";
 import account from "./fr/account.json";
+import comments from "./fr/comments.json";
 import content from "./fr/content.json";
 import downloads from "./fr/downloads.json";
 import homeSections from "./fr/home-sections.json";
@@ -20,6 +21,7 @@ export const messages = {
   ...moderation,
   ...account,
   ...content,
+  ...comments,
 };
 
 export default messages;

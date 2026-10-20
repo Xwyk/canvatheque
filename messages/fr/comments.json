@@ -1,0 +1,20 @@
+{
+  "comments": {
+    "title": "{count, plural, =0 {Commentaires} one {# commentaire} other {# commentaires}}",
+    "label": "Votre commentaire",
+    "hint": "{count, plural, one {# caractère restant} other {# caractères restants}}",
+    "submit": "Publier le commentaire",
+    "published": "Commentaire publié.",
+    "rateLimited": "Vous avez beaucoup commenté : réessayez dans une heure.",
+    "visitorText": "Une question sur ce modèle, une astuce de découpe ? Connectez-vous pour commenter.",
+    "visitorButton": "Se connecter pour commenter",
+    "empty": "Aucun commentaire pour l'instant. Partagez le premier avis !",
+    "more": "Afficher les commentaires plus anciens",
+    "delete": "Supprimer le commentaire de {pseudo}",
+    "deleteTitle": "Supprimer ce commentaire ?",
+    "deleteText": "Le commentaire disparaît de la fiche. Cette action est irréversible.",
+    "deleteConfirm": "Supprimer",
+    "cancel": "Annuler",
+    "deleted": "Commentaire supprimé."
+  }
+}

@@ -20,9 +20,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-/** Journal des actions d'administration, filtrable par type (commentaires : étape 7). */
-const LISTED_TYPES = ACTION_TYPES.filter((type) => type !== "COMMENT_DELETE");
-
 export default async function AdminLogPage({ searchParams }: Props) {
   await requireAdminPage("/admin/log");
   const t = await getTranslations("admin");
@@ -39,7 +36,7 @@ export default async function AdminLogPage({ searchParams }: Props) {
         label={t("log.filtersLabel")}
         items={[
           { href: href({}), label: t("log.all"), active: type === undefined },
-          ...LISTED_TYPES.map((value) => ({
+          ...ACTION_TYPES.map((value) => ({
             href: href({ type: value }),
             label: t(`log.types.${value}`),
             active: value === type,

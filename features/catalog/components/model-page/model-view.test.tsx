@@ -8,6 +8,7 @@ const router = vi.hoisted(() => ({ push: vi.fn(), refresh: vi.fn() }));
 vi.mock("@/features/models/actions", () => actions);
 vi.mock("@/features/reports/actions", () => ({ createReportAction: vi.fn() }));
 vi.mock("@/features/admin/actions", () => ({}));
+vi.mock("@/features/comments/actions", () => ({}));
 vi.mock("sonner", () => ({ toast }));
 vi.mock("next/navigation", () => ({
   useRouter: () => router,
@@ -219,6 +220,20 @@ describe("ModelView", () => {
       "/models/papillon-ajoure/edit",
     );
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("affiche les commentaires quand la page les fournit", () => {
+    renderWithProviders(
+      <ModelView
+        data={pageData()}
+        similar={[]}
+        authorModels={[]}
+        canonicalUrl={CANONICAL}
+        os="windows"
+        comments={{ initial: { items: [], nextCursor: null }, total: 0 }}
+      />,
+    );
+    expect(screen.getByRole("heading", { level: 2, name: "Commentaires" })).toBeInTheDocument();
   });
 
   it("modèle masqué : bandeau ambre avec motif", () => {

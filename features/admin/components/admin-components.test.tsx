@@ -343,6 +343,7 @@ describe("gabarit d'administration", () => {
             admin: { pseudo: "admin" },
             reason: "Copie",
             label: "Papillon",
+            excerpt: null,
           },
           {
             id: "a2",
@@ -353,6 +354,7 @@ describe("gabarit d'administration", () => {
             admin: { pseudo: "admin" },
             reason: null,
             label: null,
+            excerpt: "Pub pour mon site",
           },
         ]}
       />,
@@ -363,5 +365,6 @@ describe("gabarit d'administration", () => {
     expect(items[0]).toHaveTextContent("admin · 20 oct. 2026, 12:00");
     expect(items[1]).toHaveTextContent("Membre banni");
     expect(items[1]).not.toHaveTextContent("Raison");
+    expect(items[1]).toHaveTextContent("Extrait : « Pub pour mon site »");
   });
 });

@@ -16,6 +16,11 @@ export function ActionLog({ actions }: { actions: AdminActionView[] }) {
             {t(`types.${action.type}`)}
             {action.label && <> · « {action.label} »</>}
           </span>
+          {action.excerpt && (
+            <span className="break-words text-text-secondary">
+              {t("excerpt", { excerpt: action.excerpt })}
+            </span>
+          )}
           {action.reason && (
             <span className="text-text-secondary">{t("reason", { reason: action.reason })}</span>
           )}

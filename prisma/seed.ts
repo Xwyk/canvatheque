@@ -83,7 +83,34 @@ export async function seed(prisma: PrismaClient, options: SeedOptions) {
 
   const models = options.storage ? await seedModels(prisma, options.storage, authors, now) : 0;
   await seedReport(prisma, authors);
+  await seedComments(prisma, authors);
   return { ...core, models };
+}
+
+/** Deux commentaires de démonstration sur le modèle publié le plus récent (idempotent). */
+async function seedComments(prisma: PrismaClient, authors: { id: string }[]) {
+  const [first, second, third] = authors;
+  if (!first || !second || !third) return;
+  const model = await prisma.model.findFirst({
+    where: { status: "PUBLISHED", deletedAt: null, authorId: first.id },
+    orderBy: [{ publishedAt: "desc" }, { id: "asc" }],
+    select: { id: true },
+  });
+  if (!model || (await prisma.comment.count({ where: { modelId: model.id } })) > 0) return;
+  await prisma.comment.createMany({
+    data: [
+      {
+        modelId: model.id,
+        authorId: second.id,
+        content: "Découpé sur du papier 160 g, le rendu est superbe. Merci pour le partage !",
+      },
+      {
+        modelId: model.id,
+        authorId: third.id,
+        content: "Astuce : réduisez la vitesse de coupe pour les petits détails.",
+      },
+    ],
+  });
 }
 
 /** Un signalement ouvert de démonstration (idempotent) pour l'administration. */

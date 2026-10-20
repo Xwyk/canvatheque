@@ -8,7 +8,7 @@ import { SignInForm } from "@/features/auth/components/sign-in-form";
 import { SignUpForm } from "@/features/auth/components/sign-up-form";
 import { cn } from "@/lib/utils";
 
-export type GateReason = "download" | "favorite" | "publish" | "report";
+export type GateReason = "download" | "favorite" | "publish" | "report" | "comment";
 
 type GateState = { reason: GateReason; redirectTo: string; tab: "signUp" | "signIn" };
 
@@ -24,7 +24,7 @@ export const useAuthGate = () => useContext(AuthGateContext);
 
 /**
  * Modale visiteur (planche Connexion) partagée par toute l'application : téléchargement,
- * favoris, publication, signalement. Focus piégé et Échap gérés par Radix Dialog.
+ * favoris, publication, signalement, commentaire. Focus piégé et Échap gérés par Radix Dialog.
  */
 export function AuthGateProvider({
   signedIn,
