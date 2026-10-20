@@ -127,6 +127,12 @@ async function scannerToken(auth) {
   return body.token;
 }
 
+/** Jeton d'analyse : caractères attendus seulement (il peut venir d'une réponse HTTP). */
+function checkedToken(token) {
+  if (!/^[\w-]{16,256}$/.test(token ?? "")) throw new Error("Jeton d'analyse invalide");
+  return token;
+}
+
 async function main() {
   if (!existsSync("coverage/lcov.info")) {
     throw new Error("coverage/lcov.info absent : lancez d'abord `npm run test:coverage`");
@@ -147,6 +153,12 @@ async function main() {
   const scannerHost = HOST.replace(/\/\/(localhost|127\.0\.0\.1)/, "//host.docker.internal");
   log("Analyse en cours");
   // Script de développement/CI : « docker » est résolu via le PATH de l'opérateur.
+  // Valeurs variables transmises par l'environnement (`-e NOM` sans valeur) : rien de
+  // dynamique dans les arguments, et le jeton n'apparaît pas dans la liste des processus.
+  const scannerOptions = [
+    `-Dsonar.projectKey=${PROJECT_KEY}`,
+    ...(ORGANIZATION ? [`-Dsonar.organization=${ORGANIZATION}`] : []),
+  ].join(" ");
   const result = spawnSync(
     "docker", // NOSONAR
     [
@@ -154,16 +166,24 @@ async function main() {
       "--rm",
       "--add-host=host.docker.internal:host-gateway",
       "-e",
-      `SONAR_HOST_URL=${scannerHost}`,
+      "SONAR_HOST_URL",
       "-e",
-      `SONAR_TOKEN=${token}`,
+      "SONAR_TOKEN",
+      "-e",
+      "SONAR_SCANNER_OPTS",
       "-v",
       `${resolve(".")}:/usr/src`,
       SCANNER_IMAGE,
-      `-Dsonar.projectKey=${PROJECT_KEY}`,
-      ...(ORGANIZATION ? [`-Dsonar.organization=${ORGANIZATION}`] : []),
     ],
-    { stdio: "inherit" },
+    {
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        SONAR_HOST_URL: scannerHost,
+        SONAR_TOKEN: checkedToken(token),
+        SONAR_SCANNER_OPTS: scannerOptions,
+      },
+    },
   );
   if (result.status !== 0) {
     throw new Error(`Analyse en échec ou Quality Gate non atteint (code ${result.status})`);
