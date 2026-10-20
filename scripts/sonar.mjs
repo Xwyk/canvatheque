@@ -12,6 +12,10 @@
  *   docker compose --profile quality up -d sonarqube
  * Variables : SONAR_HOST_URL, SONAR_TOKEN (sinon créé), SONAR_ADMIN_PASSWORD (sinon
  *   généré dans .sonar/admin-password).
+ *
+ * SonarCloud (SONAR_ORGANIZATION renseignée) : ni installation ni Quality Gate à créer ;
+ * SONAR_TOKEN obligatoire, clé du projet par SONAR_PROJECT_KEY. L'analyse automatique de
+ * SonarCloud doit être désactivée (elle ne connaît pas la couverture).
  */
 import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
@@ -22,7 +26,8 @@ const HOST = process.env.SONAR_HOST_URL ?? "http://localhost:9002";
 const ADMIN_PASSWORD = process.env.SONAR_ADMIN_PASSWORD || localAdminPassword();
 const SCANNER_IMAGE = "sonarsource/sonar-scanner-cli:12.2.0.4256_8.1.0";
 const GATE = "Canvatheque";
-const PROJECT_KEY = "canvatheque";
+const ORGANIZATION = process.env.SONAR_ORGANIZATION;
+const PROJECT_KEY = process.env.SONAR_PROJECT_KEY ?? "canvatheque";
 
 /** Mot de passe admin de l'instance locale : généré une fois, conservé hors dépôt. */
 function localAdminPassword() {
@@ -120,11 +125,17 @@ async function main() {
   if (!existsSync("coverage/lcov.info")) {
     throw new Error("coverage/lcov.info absent : lancez d'abord `npm run test:coverage`");
   }
-  log(`Attente de SonarQube (${HOST})`);
-  await waitUntilUp();
-  const auth = await adminAuth();
-  await ensureQualityGate(auth);
-  const token = await scannerToken(auth);
+  let token = process.env.SONAR_TOKEN;
+  if (ORGANIZATION) {
+    if (!token) throw new Error("SONAR_TOKEN requis pour SonarCloud");
+    log(`SonarCloud : organisation ${ORGANIZATION}, projet ${PROJECT_KEY}`);
+  } else {
+    log(`Attente de SonarQube (${HOST})`);
+    await waitUntilUp();
+    const auth = await adminAuth();
+    await ensureQualityGate(auth);
+    token = await scannerToken(auth);
+  }
 
   // Le scanner tourne dans Docker : localhost de l'hôte devient host.docker.internal.
   const scannerHost = HOST.replace(/\/\/(localhost|127\.0\.0\.1)/, "//host.docker.internal");
@@ -143,6 +154,8 @@ async function main() {
       "-v",
       `${resolve(".")}:/usr/src`,
       SCANNER_IMAGE,
+      `-Dsonar.projectKey=${PROJECT_KEY}`,
+      ...(ORGANIZATION ? [`-Dsonar.organization=${ORGANIZATION}`] : []),
     ],
     { stdio: "inherit" },
   );

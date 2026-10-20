@@ -75,10 +75,14 @@ jobs:
         with:
           name: coverage
           path: coverage
-      # Instance éphémère : le script initialise le Quality Gate puis échoue s'il n'est pas atteint.
+      # Avec le secret SONAR_TOKEN : analyse publiée sur SonarCloud (tableau de bord durable).
+      # Sans lui (fork) : instance éphémère, le script crée le Quality Gate puis le vérifie.
       - run: node scripts/sonar.mjs
         env:
-          SONAR_HOST_URL: http://localhost:9000
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_TOKEN && 'https://sonarcloud.io' || 'http://localhost:9000' }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_TOKEN && 'xwyk' || '' }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_TOKEN && 'Xwyk_canvatheque' || 'canvatheque' }}
 
   docker-e2e:
     name: Image Docker et E2E

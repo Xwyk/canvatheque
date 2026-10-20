@@ -109,6 +109,10 @@ SonarQube local : <http://localhost:9002>. À la première analyse, le script re
 passe administrateur par défaut (conservé dans `.sonar/admin-password`, hors dépôt), crée le
 Quality Gate « Canvatheque » (Sonar way + couverture ≥ 80 %) et un jeton d'analyse.
 
+En CI, avec le secret `SONAR_TOKEN`, l'analyse (couverture comprise) est publiée sur
+[SonarCloud](https://sonarcloud.io/project/overview?id=Xwyk_canvatheque) ; sans lui, une instance
+éphémère vérifie le Quality Gate. L'analyse automatique de SonarCloud doit rester désactivée.
+
 ## Architecture
 
 | Couche        | Choix                                                                                               |
