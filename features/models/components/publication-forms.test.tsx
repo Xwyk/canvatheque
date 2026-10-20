@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -24,7 +24,9 @@ describe("DescriptionField", () => {
     (textarea as HTMLTextAreaElement).setSelectionRange(3, 6);
     await userEvent.click(screen.getByRole("button", { name: "Gras" }));
     expect(textarea).toHaveValue("un **mot**");
-    await userEvent.type(textarea, " !");
+    // Sélection rétablie sur « mot » à l'image suivante : l'attendre avant de taper (CI lente).
+    await waitFor(() => expect((textarea as HTMLTextAreaElement).selectionStart).toBe(5));
+    await userEvent.type(textarea, " !", { initialSelectionStart: 10, initialSelectionEnd: 10 });
     expect(textarea).toHaveValue("un **mot** !");
     expect(await axe(container)).toHaveNoViolations();
   });
