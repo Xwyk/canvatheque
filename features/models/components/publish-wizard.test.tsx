@@ -303,4 +303,49 @@ describe("PublishWizard", () => {
     expect(screen.getByRole("button", { name: "Continuer" })).toBeDisabled();
     expect(screen.getByText("Glissez votre image ici")).toBeInTheDocument();
   });
+
+  it("CWPRJ avec miniature : aperçu extrait du projet, titre tiré du nom du motif", async () => {
+    const user = userEvent.setup();
+    const { container } = renderWithProviders(
+      <PublishWizard
+        initial={draft({
+          format: "CWPRJ",
+          fileName: "premier-jet.cwprj",
+          title: "Premier jet",
+          preview: null,
+        })}
+        {...context}
+      />,
+    );
+    uploads.confirmUploadAction.mockResolvedValueOnce({
+      ok: true,
+      data: {
+        modelId: "m1",
+        slug: "papillon",
+        created: false,
+        title: "Couronne de houx",
+        format: "CWPRJ",
+        fileName: "v2.cwprj",
+        fileSize: 4096,
+        fileSizeLabel: "4 Ko",
+        preview,
+        previewCustom: false,
+        titleUpdated: true,
+        duplicateOf: null,
+      },
+    });
+    await user.upload(fileInput(container), new File(["x"], "v2.cwprj"));
+    expect(await screen.findByText("Fichier vérifié : v2.cwprj")).toBeInTheDocument();
+    const recap = screen.getByRole("complementary", { name: "Récapitulatif" });
+    expect(within(recap).getByText("Couronne de houx")).toBeInTheDocument();
+    await act(async () => {
+      await user.click(screen.getByRole("button", { name: "Continuer" }));
+    });
+    expect(
+      await screen.findByText(/extrait cet aperçu de votre projet CanvasWorkspace/),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Remplacer par ma propre image")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Continuer" })).toBeEnabled();
+    expect(await axe(container)).toHaveNoViolations();
+  });
 });

@@ -1,3 +1,4 @@
+import { parseCwprjKeys } from "@/lib/cwprj-keys";
 import { z } from "@/lib/validation";
 
 const intFromString = (fallback: number) => z.coerce.number().int().positive().default(fallback);
@@ -8,52 +9,66 @@ const optionalString = z
   .optional()
   .transform((value) => (value ? value : undefined));
 
-export const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-  APP_URL: z.url(),
-  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
+export const envSchema = z
+  .object({
+    NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+    APP_URL: z.url(),
+    LOG_LEVEL: z
+      .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
+      .default("info"),
 
-  DATABASE_URL: z.string().startsWith("postgres"),
-  AUTH_SECRET: z.string().min(32, "AUTH_SECRET doit faire au moins 32 caractères"),
+    DATABASE_URL: z.string().startsWith("postgres"),
+    AUTH_SECRET: z.string().min(32, "AUTH_SECRET doit faire au moins 32 caractères"),
 
-  S3_ENDPOINT: z.url(),
-  S3_PUBLIC_URL: z.url(),
-  S3_REGION: z.string().default("us-east-1"),
-  S3_ACCESS_KEY: z.string().min(1),
-  S3_SECRET_KEY: z.string().min(1),
-  S3_BUCKET_MODELS: z.string().min(3).default("models"),
-  S3_BUCKET_PREVIEWS: z.string().min(3).default("previews"),
+    S3_ENDPOINT: z.url(),
+    S3_PUBLIC_URL: z.url(),
+    S3_REGION: z.string().default("us-east-1"),
+    S3_ACCESS_KEY: z.string().min(1),
+    S3_SECRET_KEY: z.string().min(1),
+    S3_BUCKET_MODELS: z.string().min(3).default("models"),
+    S3_BUCKET_PREVIEWS: z.string().min(3).default("previews"),
 
-  SMTP_HOST: optionalString,
-  SMTP_PORT: intFromString(587),
-  SMTP_USER: optionalString,
-  SMTP_PASSWORD: optionalString,
-  MAIL_FROM: z.string().min(3).default("Canvathèque <no-reply@canvatheque.local>"),
+    SMTP_HOST: optionalString,
+    SMTP_PORT: intFromString(587),
+    SMTP_USER: optionalString,
+    SMTP_PASSWORD: optionalString,
+    MAIL_FROM: z.string().min(3).default("Canvathèque <no-reply@canvatheque.local>"),
 
-  ADMIN_EMAIL: z.email(),
-  ADMIN_PASSWORD: optionalString,
+    ADMIN_EMAIL: z.email(),
+    ADMIN_PASSWORD: optionalString,
 
-  MAX_FILE_SIZE_MB: intFromString(20),
-  MAX_MODELS_PER_USER: intFromString(200),
-  SIGNED_URL_TTL_SECONDS: intFromString(300),
+    MAX_FILE_SIZE_MB: intFromString(20),
+    MAX_MODELS_PER_USER: intFromString(200),
+    SIGNED_URL_TTL_SECONDS: intFromString(300),
 
-  // Mentions légales et contact (pages /legal) : vides = « à compléter » affiché.
-  LEGAL_PUBLISHER: optionalString,
-  LEGAL_ADDRESS: optionalString,
-  LEGAL_HOST: optionalString,
-  CONTACT_EMAIL: optionalString,
+    // Mentions légales et contact (pages /legal) : vides = « à compléter » affiché.
+    LEGAL_PUBLISHER: optionalString,
+    LEGAL_ADDRESS: optionalString,
+    LEGAL_HOST: optionalString,
+    CONTACT_EMAIL: optionalString,
 
-  METRICS_TOKEN: optionalString,
-  SENTRY_DSN: optionalString,
+    // Miniature des projets CanvasWorkspace (ADR-013) : vides = fonction désactivée.
+    CWPRJ_KEY: optionalString,
+    CWPRJ_IV: optionalString,
 
-  RATE_LIMIT_LOGIN_PER_15MIN: intFromString(10),
-  RATE_LIMIT_SIGNUP_PER_HOUR: intFromString(5),
-  RATE_LIMIT_RESET_PER_HOUR: intFromString(3),
-  RATE_LIMIT_UPLOAD_PER_HOUR: intFromString(20),
-  RATE_LIMIT_DOWNLOAD_PER_HOUR: intFromString(60),
-  RATE_LIMIT_COMMENT_PER_HOUR: intFromString(30),
-  RATE_LIMIT_REPORT_PER_DAY: intFromString(10),
-});
+    METRICS_TOKEN: optionalString,
+    SENTRY_DSN: optionalString,
+
+    RATE_LIMIT_LOGIN_PER_15MIN: intFromString(10),
+    RATE_LIMIT_SIGNUP_PER_HOUR: intFromString(5),
+    RATE_LIMIT_RESET_PER_HOUR: intFromString(3),
+    RATE_LIMIT_UPLOAD_PER_HOUR: intFromString(20),
+    RATE_LIMIT_DOWNLOAD_PER_HOUR: intFromString(60),
+    RATE_LIMIT_COMMENT_PER_HOUR: intFromString(30),
+    RATE_LIMIT_REPORT_PER_DAY: intFromString(10),
+  })
+  .superRefine((config, ctx) => {
+    try {
+      parseCwprjKeys(config.CWPRJ_KEY, config.CWPRJ_IV);
+    } catch (error) {
+      ctx.addIssue({ code: "custom", path: ["CWPRJ_KEY"], message: (error as Error).message });
+    }
+  });
 
 export type Env = z.infer<typeof envSchema>;
 

@@ -16,3 +16,4 @@ Chaque décision structurante est consignée ici : contexte, décision, conséqu
 | [010](010-vitest-multi-projets.md)             | Vitest multi-projets et Testcontainers, une seule couverture       | Acceptée | 0                        |
 | [011](011-csp-nonces-sans-cache-components.md) | CSP à nonces, Cache Components désactivés                          | Acceptée | 0                        |
 | [012](012-stockage-minio-fork-pgsty.md)        | Stockage objet : fork communautaire de MinIO                       | Acceptée | 0                        |
+| [013](013-miniature-cwprj.md)                  | Miniature des projets CanvasWorkspace, déchiffrée à l'envoi        | Acceptée | issue #1                 |

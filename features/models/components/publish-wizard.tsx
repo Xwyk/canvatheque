@@ -235,6 +235,10 @@ export function PublishWizard({
         previewCustom: result.previewCustom,
       };
     });
+    if (result.titleUpdated) {
+      // Nom du motif lu dans le projet CanvasWorkspace : le titre automatique est remplacé.
+      setDetails((current) => ({ ...current, title: result.title }));
+    }
     if (result.created) {
       // Le brouillon a désormais une adresse : un rechargement le retrouve.
       setDetails((current) => ({ ...current, title: current.title || result.title }));
@@ -400,7 +404,9 @@ export function PublishWizard({
                     ? t("preview.textCustom")
                     : model.format === "SVG"
                       ? t("preview.textSvg")
-                      : t("preview.textCwprj")
+                      : model.preview
+                        ? t("preview.textCwprjExtracted")
+                        : t("preview.textCwprj")
                 }
               />
               {model.preview && (

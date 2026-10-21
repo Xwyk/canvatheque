@@ -1,5 +1,6 @@
 import type { UploadDeps } from "@/features/uploads/service";
 import { getSession } from "@/lib/auth/current";
+import { parseCwprjKeys } from "@/lib/cwprj-keys";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/logger";
@@ -17,6 +18,7 @@ export function publicationDeps(): UploadDeps {
     buckets: buckets(),
     maxFileBytes: config.MAX_FILE_SIZE_MB * 1024 * 1024,
     maxModels: config.MAX_MODELS_PER_USER,
+    cwprjKeys: parseCwprjKeys(config.CWPRJ_KEY, config.CWPRJ_IV),
   };
 }
 

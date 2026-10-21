@@ -80,7 +80,8 @@ Schéma : [`prisma/schema.prisma`](../prisma/schema.prisma).
 - **Publication** : `createUpload` (politique POST présignée : clé, taille, type) → envoi direct
   du navigateur vers MinIO → `confirmUpload` (signature du fichier, SHA-256, doublons, nettoyage
   SVG par DOMPurify, rasterisation resvg puis variantes WebP par sharp
-  [ADR-003](adr/003-rasterisation-resvg.md)) → brouillon → publication.
+  [ADR-003](adr/003-rasterisation-resvg.md) ; miniature d'un `.cwprj` déchiffrée côté serveur si une
+  clé est configurée, [ADR-013](adr/013-miniature-cwprj.md)) → brouillon → publication.
 - **Téléchargement** : `GET /api/models/<slug>/download` contrôle session, visibilité et limite,
   compte le téléchargement puis renvoie une URL présignée en pièce jointe.
 - **Modération** : signalement → file `/admin/reports` → masquer, supprimer, classer ; chaque
