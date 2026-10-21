@@ -17,3 +17,4 @@ Chaque décision structurante est consignée ici : contexte, décision, conséqu
 | [011](011-csp-nonces-sans-cache-components.md) | CSP à nonces, Cache Components désactivés                          | Acceptée | 0                        |
 | [012](012-stockage-minio-fork-pgsty.md)        | Stockage objet : fork communautaire de MinIO                       | Acceptée | 0                        |
 | [013](013-miniature-cwprj.md)                  | Miniature des projets CanvasWorkspace, déchiffrée à l'envoi        | Acceptée | issue #1                 |
+| [014](014-mode-local.md)                       | Mode local : analyse des fichiers dans le navigateur               | Acceptée | issue #2                 |

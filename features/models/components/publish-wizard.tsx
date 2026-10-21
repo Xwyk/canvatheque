@@ -3,12 +3,21 @@
 import { Check, CircleAlert, Info, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useMemo, useState, useTransition, type ReactNode } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useId,
+  useMemo,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
 import { FieldShell, inputClass, TextField } from "@/components/forms/text-field";
 import { ModelCard } from "@/components/model-card";
 import { Stepper } from "@/components/stepper";
 import { pillButton } from "@/components/ui/pill-button";
 import { publishModelAction, saveModelAction, suggestTagsAction } from "@/features/models/actions";
+import { takeHandedOffFile } from "@/features/local/handoff";
 import { DescriptionField } from "@/features/models/components/description-field";
 import { LicenseField } from "@/features/models/components/license-field";
 import { PreviewFrame } from "@/features/models/components/preview-frame";
@@ -246,6 +255,18 @@ export function PublishWizard({
       setSavedAt(Date.now());
     }
   };
+
+  // Fichier choisi dans le mode local (/local) : envoyé dès l'ouverture, comme un dépôt.
+  const sendHandedOffFile = useEffectEvent(() => {
+    const file = takeHandedOffFile();
+    if (file) void onModelFile(file);
+  });
+  useEffect(() => {
+    if (initial) return;
+    // Après le premier rendu (et une seule fois en mode strict : le premier essai est annulé).
+    const timer = window.setTimeout(sendHandedOffFile, 0);
+    return () => window.clearTimeout(timer);
+  }, [initial]);
 
   const onPreviewFile = (file: File) => {
     if (!PREVIEW_TYPES.has(file.type)) {

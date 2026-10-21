@@ -16,6 +16,9 @@ n'est pas publiée par l'éditeur du logiciel.
   (`confirmUpload`).
   - Code : `lib/cwprj.ts`, `import "server-only"`, Web Crypto de Node.
   - Aucune route publique de déchiffrement : l'assistant affiche l'aperçu produit à l'envoi.
+  - Seule exception, le mode local ([ADR-014](014-mode-local.md)) : `POST /api/local/cwprj-preview`,
+    réservé aux membres et limité, renvoie la miniature ré-encodée d'un seul fichier envoyé sur
+    demande explicite, sans rien stocker.
 - **Clé et IV par configuration, optionnels** : `CWPRJ_KEY` (64 caractères hexadécimaux) et
   `CWPRJ_IV` (32).
   - Validés au démarrage (`lib/env.ts`).

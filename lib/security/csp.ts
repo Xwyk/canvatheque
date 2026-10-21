@@ -33,6 +33,8 @@ export function buildCsp({
     `img-src 'self' blob: data:${storage}`,
     "font-src 'self'",
     `connect-src 'self'${storage}${isDev ? " ws:" : ""}`,
+    // Worker du mode local (empreintes) : même origine ; 'strict-dynamic' ne couvre pas les workers.
+    "worker-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

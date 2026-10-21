@@ -18,6 +18,7 @@ vi.mock("@/features/uploads/client", async (importOriginal) => ({
   postToStorage: storage.postToStorage,
 }));
 
+import { handOffForPublishing } from "@/features/local/handoff";
 import { PublishWizard } from "@/features/models/components/publish-wizard";
 import type { EditableModel } from "@/features/models/service";
 import { axe } from "@/tests/setup/axe";
@@ -347,5 +348,31 @@ describe("PublishWizard", () => {
     expect(screen.getByText("Remplacer par ma propre image")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Continuer" })).toBeEnabled();
     expect(await axe(container)).toHaveNoViolations();
+  });
+
+  it("fichier transmis par le mode local : envoyé dès l'ouverture de l'assistant", async () => {
+    uploads.confirmUploadAction.mockResolvedValueOnce({
+      ok: true,
+      data: {
+        modelId: "m9",
+        slug: "sapin",
+        created: true,
+        title: "Sapin",
+        format: "SVG",
+        fileName: "sapin.svg",
+        fileSize: 120,
+        fileSizeLabel: "120 o",
+        preview,
+        previewCustom: false,
+        titleUpdated: false,
+        duplicateOf: null,
+      },
+    });
+    handOffForPublishing(new File(["<svg/>"], "sapin.svg"));
+    renderWithProviders(<PublishWizard initial={null} {...context} />);
+    expect(await screen.findByText("Fichier vérifié : sapin.svg")).toBeInTheDocument();
+    expect(uploads.createUploadAction).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: "MODEL", fileName: "sapin.svg" }),
+    );
   });
 });

@@ -18,15 +18,7 @@ import {
   DownloadPanel,
   MobileActionBar,
 } from "@/features/catalog/components/model-page/download-actions";
-import { CanvasWorkspaceDialog } from "@/features/downloads/components/canvas-workspace-dialog";
 import { useDownload } from "@/features/downloads/use-download";
-import {
-  dismissHelp,
-  HELP_DISMISSED_KEY,
-  tryProtocol,
-  useOpenInCanvasWorkspace,
-} from "@/features/downloads/use-open-in-canvas-workspace";
-import { axe } from "@/tests/setup/axe";
 import { Providers, renderWithProviders } from "@/tests/setup/render";
 
 const fetchMock = vi.fn();
@@ -113,104 +105,6 @@ describe("useDownload", () => {
   });
 });
 
-describe("useOpenInCanvasWorkspace", () => {
-  it("sans protocole : télécharge puis affiche l'aide, sauf si masquée", async () => {
-    const download = vi.fn(async () => true);
-    const { result } = renderHook(() => useOpenInCanvasWorkspace({ download, protocol: null }));
-    await act(async () => {
-      expect(await result.current.open("papillon")).toBe("download");
-    });
-    expect(result.current.helpOpen).toBe(true);
-    act(() => result.current.closeHelp());
-    expect(result.current.helpOpen).toBe(false);
-
-    dismissHelp();
-    expect(window.localStorage.getItem(HELP_DISMISSED_KEY)).toBe("1");
-    await act(async () => {
-      await result.current.open("papillon");
-    });
-    expect(result.current.helpOpen).toBe(false);
-
-    download.mockResolvedValueOnce(false);
-    await act(async () => {
-      expect(await result.current.open("papillon")).toBe("none");
-    });
-  });
-
-  it("avec protocole : ouverture directe si la page perd le focus, sinon repli", async () => {
-    vi.useFakeTimers();
-    try {
-      const download = vi.fn(async () => true);
-      const protocol = (slug: string) => `cws://open/${slug}`;
-      const { result } = renderHook(() => useOpenInCanvasWorkspace({ download, protocol }));
-
-      let outcome: Promise<string>;
-      act(() => {
-        outcome = result.current.open("papillon");
-      });
-      expect(window.location.href).toBe("cws://open/papillon");
-      window.dispatchEvent(new Event("blur"));
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(1500);
-      });
-      expect(await outcome!).toBe("protocol");
-      expect(download).not.toHaveBeenCalled();
-
-      act(() => {
-        outcome = result.current.open("papillon");
-      });
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(1500);
-      });
-      expect(await outcome!).toBe("download");
-      expect(download).toHaveBeenCalledOnce();
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it("tryProtocol détecte le passage en arrière-plan", async () => {
-    vi.useFakeTimers();
-    try {
-      const pending = tryProtocol("cws://x", 100);
-      document.dispatchEvent(new Event("visibilitychange"));
-      await vi.advanceTimersByTimeAsync(100);
-      expect(await pending).toBe(true);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-});
-
-describe("CanvasWorkspaceDialog", () => {
-  it("explique l'ouverture pas à pas et mémorise « Ne plus afficher »", async () => {
-    const user = userEvent.setup();
-    const onClose = vi.fn();
-    renderWithProviders(<CanvasWorkspaceDialog open fileName="boite.cwprj" onClose={onClose} />);
-    const dialog = await screen.findByRole("dialog", {
-      name: "Ouvrir le modèle dans CanvasWorkspace",
-    });
-    expect(dialog).toHaveTextContent(
-      "Sélectionnez « boite.cwprj » dans votre dossier Téléchargements.",
-    );
-    expect(
-      screen.getByRole("link", { name: "Le télécharger sur le site de Brother" }),
-    ).toHaveAttribute("href", expect.stringContaining("canvasworkspace.brother.com"));
-    expect(await axe(dialog)).toHaveNoViolations();
-    await user.click(screen.getByRole("checkbox", { name: "Ne plus afficher ces explications" }));
-    await user.click(screen.getByRole("button", { name: "J'ai compris" }));
-    expect(onClose).toHaveBeenCalled();
-    expect(window.localStorage.getItem(HELP_DISMISSED_KEY)).toBe("1");
-  });
-
-  it("fermer sans cocher ne mémorise rien", async () => {
-    const user = userEvent.setup();
-    renderWithProviders(<CanvasWorkspaceDialog open fileName="b.cwprj" onClose={() => {}} />);
-    await user.click(screen.getByRole("button", { name: "Fermer" }));
-    expect(window.localStorage.getItem(HELP_DISMISSED_KEY)).toBeNull();
-  });
-});
-
 describe("actions de la fiche", () => {
   const renderPanel = (format: "SVG" | "CWPRJ", signedIn = true) =>
     renderWithProviders(
@@ -231,28 +125,24 @@ describe("actions de la fiche", () => {
       </AuthGateProvider>,
     );
 
-  it("CWPRJ : ouvrir dans CanvasWorkspace télécharge et explique ; liens réels sans JS", async () => {
+  it("CWPRJ : un seul bouton « Télécharger le projet », lien réel sans JS", async () => {
     const user = userEvent.setup();
     fetchMock.mockImplementation(async () => json(200, { url: "http://s3/f" }));
     renderPanel("CWPRJ");
-    const open = screen.getAllByRole("link", { name: /Ouvrir dans CanvasWorkspace/ })[0]!;
-    expect(open).toHaveAttribute("href", "/api/models/papillon/download");
-    // Pas d'exploration par les robots (le point de contrôle refuse les visiteurs).
-    for (const link of screen.getAllByRole("link", { name: /Télécharger|Ouvrir/ })) {
+    const links = screen.getAllByRole("link", { name: /Télécharger le projet/ });
+    expect(links).toHaveLength(2); // colonne de droite et barre mobile
+    for (const link of links) {
+      expect(link).toHaveAttribute("href", "/api/models/papillon/download");
+      // Pas d'exploration par les robots (le point de contrôle refuse les visiteurs).
       expect(link).toHaveAttribute("rel", "nofollow");
     }
-    await user.click(open);
-    expect(
-      await screen.findByRole("dialog", { name: /Ouvrir le modèle dans CanvasWorkspace/ }),
-    ).toBeInTheDocument();
-    expect(assign).toHaveBeenCalledWith("http://s3/f");
-    await user.click(screen.getByRole("button", { name: "J'ai compris" }));
-
-    await user.click(screen.getByRole("link", { name: "Télécharger le fichier · 184 Ko" }));
+    expect(links[0]).toHaveTextContent("À ouvrir dans CanvasWorkspace · 184 Ko");
+    expect(screen.queryByText(/Ouvrir dans CanvasWorkspace/)).toBeNull();
+    await user.click(links[0]!);
+    await waitFor(() => expect(assign).toHaveBeenCalledWith("http://s3/f"));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    await user.click(links[1]!);
     await waitFor(() => expect(assign).toHaveBeenCalledTimes(2));
-    // Barre mobile : bouton carré de téléchargement.
-    await user.click(screen.getByRole("link", { name: "Télécharger le fichier (184 Ko)" }));
-    await waitFor(() => expect(assign).toHaveBeenCalledTimes(3));
   });
 
   it("SVG pour un visiteur : modale d'inscription", async () => {

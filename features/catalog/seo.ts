@@ -46,6 +46,7 @@ export async function sitemapEntries(
     { url: url("/"), changeFrequency: "daily", priority: 1 },
     { url: url("/models"), changeFrequency: "daily", priority: 0.9 },
     { url: url("/categories"), changeFrequency: "weekly", priority: 0.6 },
+    { url: url("/local"), changeFrequency: "monthly", priority: 0.4 },
     ...Object.values(CONTENT_PATHS).map((path) => ({
       url: url(path),
       changeFrequency: "monthly" as const,

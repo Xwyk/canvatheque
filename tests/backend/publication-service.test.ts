@@ -9,6 +9,7 @@ import {
   saveModelDetails,
   suggestTags,
   unpublishModel,
+  withUniqueSlug,
   type ModelActor,
 } from "@/features/models/service";
 import {
@@ -271,6 +272,53 @@ describe("aperçu extrait d'un CWPRJ (ADR-013)", () => {
       previewCustom: true,
       preview: { width: 300 },
     });
+  });
+});
+
+describe("slug unique malgré les écritures simultanées", () => {
+  const create = (slug: string, title = "Étoile") =>
+    prisma.model.create({
+      data: { title, slug, format: "SVG", authorId: member.id, searchText: title },
+    });
+
+  it("collision au moment de l'écriture : nouvel essai avec un suffixe", async () => {
+    let calls = 0;
+    const model = await withUniqueSlug(prisma, "Étoile", async (slug) => {
+      calls += 1;
+      // Un autre envoi prend le même slug entre la vérification et l'écriture.
+      if (calls === 1) await create(slug);
+      return create(slug);
+    });
+    expect(calls).toBe(2);
+    expect(model.slug).toMatch(/^etoile-[0-9a-f]{8}$/);
+  });
+
+  it("autre erreur propagée ; abandon après plusieurs collisions", async () => {
+    await expect(
+      withUniqueSlug(prisma, "Étoile", async () => {
+        throw new Error("autre");
+      }),
+    ).rejects.toThrow("autre");
+    await create("etoile");
+    let calls = 0;
+    await expect(
+      withUniqueSlug(prisma, "Étoile", async () => {
+        calls += 1;
+        return create("etoile");
+      }),
+    ).rejects.toThrow(/Unique constraint/);
+    expect(calls).toBe(4);
+  });
+
+  it("deux envois simultanés du même fichier : deux brouillons, deux slugs", async () => {
+    const other = await createMember(prisma);
+    const results = await Promise.all([
+      upload(member, "etoile.svg", SIMPLE_SVG),
+      upload(other, "etoile.svg", SIMPLE_SVG),
+    ]);
+    expect(results.every((result) => result.ok)).toBe(true);
+    const slugs = results.map((result) => (result as { data: ConfirmedFile }).data.slug);
+    expect(new Set(slugs).size).toBe(2);
   });
 });
 

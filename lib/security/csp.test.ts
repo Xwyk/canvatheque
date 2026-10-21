@@ -16,6 +16,7 @@ describe("buildCsp", () => {
     expect(csp).toContain("connect-src 'self' https://cdn.example");
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("object-src 'none'");
+    expect(csp).toContain("worker-src 'self'");
     expect(csp).not.toContain("upgrade-insecure-requests");
   });
 

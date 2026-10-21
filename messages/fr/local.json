@@ -1,0 +1,119 @@
+{
+  "local": {
+    "metaTitle": "Mes fichiers",
+    "metaDescription": "Explorez les modèles de découpe .cwprj et .svg de votre ordinateur, sans rien envoyer : aperçus, doublons, publication en un clic.",
+    "title": "Mes fichiers",
+    "lead": "Retrouvez les modèles de découpe dispersés sur votre ordinateur : aperçus, tailles, dossiers et doublons, en un coup d'œil.",
+    "privacy": "Tout reste sur votre ordinateur : l'analyse se fait dans votre navigateur. Rien n'est envoyé, sauf si vous cliquez sur « Vérifier sur Canvathèque » (seules des empreintes partent), « Afficher la miniature » ou « Publier ».",
+    "mobile": "Le mode local est disponible sur ordinateur : il parcourt un dossier de votre disque, ce que les téléphones ne permettent pas.",
+    "choose": "Choisir un dossier",
+    "chooseHint": "Seuls les fichiers .cwprj et .svg sont lus ; les dossiers cachés et système sont ignorés.",
+    "inputLabel": "Dossier à analyser",
+    "saved": {
+      "title": "Dernière analyse",
+      "text": "{folder} · {count, plural, one {# fichier} other {# fichiers}} · le {date}",
+      "rescan": "Rescanner le dossier",
+      "show": "Revoir l'index",
+      "forget": "Oublier ce dossier"
+    },
+    "scanning": {
+      "label": "Analyse du dossier",
+      "listing": "Recherche des fichiers…",
+      "progress": "{done} sur {total, plural, one {# fichier} other {# fichiers}}",
+      "cancel": "Annuler"
+    },
+    "error": {
+      "denied": "L'accès au dossier a été refusé. Choisissez-le de nouveau pour l'analyser.",
+      "failed": "L'analyse a échoué. Réessayez, ou choisissez un autre dossier.",
+      "retry": "Choisir un dossier"
+    },
+    "result": {
+      "heading": "Dossier « {folder} »",
+      "change": "Changer de dossier",
+      "forget": "Oublier ce dossier",
+      "indexOnly": "Index de la dernière analyse : les aperçus et la publication demandent de rescanner le dossier.",
+      "truncated": "Ce dossier contient plus de {max} modèles : seuls les {max} premiers sont affichés.",
+      "empty": "Aucun fichier .cwprj ou .svg dans ce dossier.",
+      "noMatch": "Aucun fichier ne correspond à ces critères.",
+      "more": "Afficher plus de fichiers"
+    },
+    "summary": {
+      "label": "Synthèse",
+      "total": "{count, plural, one {# modèle} other {# modèles}}",
+      "formats": "{svg} SVG · {cwprj} CWPRJ",
+      "size": "{size} au total",
+      "duplicates": "{count, plural, =0 {aucun doublon} one {# fichier en double} other {# fichiers en double}}",
+      "recent": "{count, plural, =0 {aucun récent} one {# modifié ce mois-ci} other {# modifiés ce mois-ci}}",
+      "root": "racine"
+    },
+    "filters": {
+      "label": "Filtrer les fichiers",
+      "search": "Rechercher un fichier",
+      "searchPlaceholder": "Nom ou dossier",
+      "format": "Format",
+      "allFormats": "Tous les formats",
+      "sort": "Trier par",
+      "sortName": "Nom",
+      "sortDate": "Plus récents",
+      "sortSize": "Plus lourds",
+      "view": "Affichage",
+      "grid": "Grille",
+      "list": "Liste"
+    },
+    "duplicates": {
+      "heading": "Doublons",
+      "group": "{count} copies identiques",
+      "none": "Aucun doublon : chaque fichier est unique."
+    },
+    "lookup": {
+      "button": "Vérifier sur Canvathèque",
+      "hint": "Envoie les empreintes des fichiers (jamais les fichiers) pour repérer ceux déjà publiés.",
+      "done": "{count, plural, =0 {Aucun de ces fichiers n'est publié sur Canvathèque.} one {# fichier est déjà publié sur Canvathèque.} other {# fichiers sont déjà publiés sur Canvathèque.}}",
+      "partial": "Seuls les {max} premiers fichiers ont été vérifiés.",
+      "error": "La vérification a échoué. Réessayez dans un instant.",
+      "badge": "Déjà sur Canvathèque",
+      "badgeLink": "Voir « {title} » sur Canvathèque"
+    },
+    "card": {
+      "folder": "Dans {folder}",
+      "root": "À la racine",
+      "tooLarge": "Trop lourd pour être publié",
+      "publish": "Publier",
+      "publishLabel": "Publier « {name} »",
+      "thumbnail": "Afficher la miniature",
+      "thumbnailLabel": "Afficher la miniature de « {name} »",
+      "thumbnailHint": "Envoie ce seul fichier au serveur, sans le conserver."
+    },
+    "thumbnail": {
+      "noThumbnail": "Ce projet ne contient pas de miniature.",
+      "unreadable": "La miniature de ce projet ne peut pas être lue.",
+      "rateLimited": "Vous avez affiché beaucoup de miniatures : réessayez plus tard.",
+      "error": "La miniature n'a pas pu être affichée. Réessayez dans un instant."
+    },
+    "list": {
+      "caption": "Fichiers du dossier",
+      "name": "Nom",
+      "folder": "Dossier",
+      "format": "Format",
+      "size": "Taille",
+      "modified": "Modifié",
+      "actions": "Actions"
+    },
+    "tree": {
+      "label": "Dossiers",
+      "expand": "Déplier « {name} »",
+      "collapse": "Replier « {name} »",
+      "count": "{count, plural, one {# modèle} other {# modèles}}"
+    },
+    "path": {
+      "button": "Afficher le chemin",
+      "buttonLabel": "Afficher le chemin de « {name} »",
+      "title": "Chemin de « {name} »",
+      "description": "Depuis le dossier que vous avez choisi : le navigateur ne connaît pas son emplacement complet sur le disque. Retrouvez-le dans l'Explorateur ou dans Fichier, puis Ouvrir, de CanvasWorkspace.",
+      "copy": "Copier le chemin",
+      "copied": "Chemin copié.",
+      "copyFailed": "Copie impossible : sélectionnez le chemin à la main.",
+      "close": "Fermer"
+    }
+  }
+}

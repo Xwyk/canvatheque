@@ -208,7 +208,7 @@ Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modéra
 | ---------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Télécharger                  | fiche, `GET /api/models/<slug>/download`  | membre connecté (adresse confirmée ou non) ; URL présignée courte (`SIGNED_URL_TTL_SECONDS`), toujours en pièce jointe ; 60 par heure (`RATE_LIMIT_DOWNLOAD_PER_HOUR`) |
 | Visiteur                     | modale sur la fiche                       | « Créez un compte gratuit pour télécharger » (inscription ou connexion), retour sur la fiche et téléchargement automatique                                             |
-| Ouvrir dans CanvasWorkspace  | fiche d'un `.cwprj`                       | Brother ne documente aucun lien d'ouverture directe : téléchargement puis explications pas à pas (« Ne plus afficher » mémorisé dans le navigateur)                    |
+| Projet CanvasWorkspace       | fiche d'un `.cwprj`                       | « Télécharger le projet », à ouvrir dans CanvasWorkspace ; pas à pas dans l'Aide (`/help#canvasworkspace`)                                                             |
 | Favoris                      | cœur des cartes, pilule et icône de fiche | mise à jour immédiate puis confirmée ; visiteur : modale d'inscription                                                                                                 |
 | Mes favoris, téléchargements | `/me/favorites`, `/me/downloads`          | onglets de l'espace membre avec Mes modèles et Paramètres                                                                                                              |
 
@@ -218,6 +218,21 @@ Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modéra
   fiche, qui garde la page) ; erreurs JSON 401 (avec `loginUrl`), 404, 429 (`Retry-After`) ; un visiteur qui ouvre le lien
   directement est renvoyé vers la connexion, puis sur la fiche.
 - `GET /api/models` renseigne les favoris d'un membre connecté (réponse privée, `Vary: Cookie`).
+
+### Mode local (mes fichiers)
+
+| Parcours       | Où       | Détails                                                                                                                       |
+| -------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Analyser       | `/local` | choix d'un dossier de l'ordinateur (sélecteur Chromium, ou dossier entier sous Firefox et Safari), analyse dans le navigateur |
+| Vue d'ensemble | `/local` | synthèse, dossiers principaux, doublons (même empreinte), grille ou liste, recherche, filtres, tris                           |
+| Agir           | `/local` | « Vérifier sur Canvathèque » (empreintes seules), « Afficher la miniature » d'un `.cwprj` (membre), « Publier »               |
+
+- **Rien ne quitte l'ordinateur sans clic** ([ADR-014](docs/adr/014-mode-local.md)). Les empreintes
+  SHA-256 sont calculées dans un Web Worker. Seuls les fichiers `.cwprj` et `.svg` sont lus ;
+  dossiers cachés et système ignorés ; 5 000 fichiers et 12 niveaux au plus.
+- Sous Chromium, le dossier est mémorisé (IndexedDB) pour être rescanné ; « Oublier ce dossier »
+  efface tout. Les aperçus SVG sont des images locales (`blob:`).
+- Ordinateur uniquement : sur téléphone, la page l'explique.
 
 ### Modération et administration
 
@@ -314,9 +329,11 @@ profil `dev` ou surcharge E2E). Sans SMTP configuré, ils sont seulement journal
 du stockage (pas un sous-chemin : la signature des URL couvre le chemin) et figurer dans la CSP,
 ce que fait `proxy.ts` à partir de cette variable.
 
-**Peut-on ouvrir un .cwprj directement dans CanvasWorkspace ?** Brother ne documente aucun lien
-d'ouverture : le site télécharge le fichier et affiche le pas à pas. Si un schéma est publié un
-jour, il suffit de renseigner `CANVAS_WORKSPACE_PROTOCOL` (`features/downloads/`).
+**Peut-on ouvrir un .cwprj directement dans CanvasWorkspace ?** Non : le logiciel ne déclare aucun
+lien d'ouverture (seulement l'association de l'extension `.cwprj`) et un navigateur ne peut pas
+lancer une application. La fiche propose donc de télécharger le projet ; sous Chrome ou Edge,
+« Toujours ouvrir les fichiers de ce type » l'ouvre ensuite automatiquement. En mode local,
+« Afficher le chemin » aide à retrouver le fichier sur le disque.
 
 **Les pages légales affichent « à compléter ».** Renseignez `LEGAL_PUBLISHER`, `LEGAL_ADDRESS`,
 `LEGAL_HOST` et `CONTACT_EMAIL`, et faites relire les textes (`messages/fr/content.json`).

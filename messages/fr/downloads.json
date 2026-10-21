@@ -8,6 +8,8 @@
     "publishSubtitle": "Partagez vos créations avec la communauté, gratuitement.",
     "commentTitle": "Connectez-vous pour commenter",
     "commentSubtitle": "Créez un compte gratuit ou connectez-vous pour échanger avec la communauté.",
+    "previewTitle": "Connectez-vous pour afficher la miniature",
+    "previewSubtitle": "La miniature d'un projet CanvasWorkspace est lue sur le serveur : un compte gratuit suffit.",
     "reportTitle": "Connectez-vous pour signaler ce modèle",
     "reportSubtitle": "Les signalements sont réservés aux membres : cela nous aide à écarter les abus.",
     "close": "Fermer",
@@ -34,16 +36,6 @@
     "error": "Le téléchargement a échoué. Réessayez dans un instant.",
     "rateLimited": "Vous avez beaucoup téléchargé : réessayez dans {minutes, plural, one {# minute} other {# minutes}}.",
     "notFound": "Ce fichier n'est plus disponible."
-  },
-  "canvasWorkspace": {
-    "title": "Ouvrir le modèle dans CanvasWorkspace",
-    "intro": "Le fichier « {name} » est en cours de téléchargement. Pour l'ouvrir :",
-    "step1": "Lancez CanvasWorkspace sur votre ordinateur (Windows ou macOS).",
-    "step2": "Choisissez Fichier, puis Ouvrir.",
-    "step3": "Sélectionnez « {name} » dans votre dossier Téléchargements.",
-    "noSoftware": "Vous n'avez pas CanvasWorkspace ? <link>Le télécharger sur le site de Brother</link>.",
-    "dontShowAgain": "Ne plus afficher ces explications",
-    "ok": "J'ai compris"
   },
   "library": {
     "tabsLabel": "Sections de mon espace",

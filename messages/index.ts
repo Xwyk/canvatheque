@@ -2,6 +2,7 @@ import base from "./fr.json";
 import account from "./fr/account.json";
 import comments from "./fr/comments.json";
 import content from "./fr/content.json";
+import local from "./fr/local.json";
 import downloads from "./fr/downloads.json";
 import homeSections from "./fr/home-sections.json";
 import gallery from "./fr/gallery.json";
@@ -22,6 +23,7 @@ export const messages = {
   ...account,
   ...content,
   ...comments,
+  ...local,
 };
 
 export default messages;

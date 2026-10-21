@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 const ITEMS = [
   { href: "/models", key: "models" },
   { href: "/categories", key: "categories" },
+  { href: "/local", key: "local" },
   { href: "/help", key: "help" },
 ] as const;
 

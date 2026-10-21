@@ -374,7 +374,8 @@ describe("pages", () => {
     expect(json).not.toContain("<");
     expect(JSON.parse(json)).toMatchObject({ "@type": "CreativeWork", name: "Papillon ajoure" });
     expect(page).toContain("<h1");
-    expect(page).toContain("Ouvrir dans CanvasWorkspace");
+    expect(page).toContain("Télécharger le projet");
+    expect(page).not.toContain("Ouvrir dans CanvasWorkspace");
     expect(page).toContain("Le télécharger pour macOS ou Windows");
     expect(page).toContain("Dans le même esprit");
     expect(page).toContain(`Autres modèles de ${author.pseudo}`);

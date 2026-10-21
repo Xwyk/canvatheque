@@ -1,6 +1,6 @@
 import type { S3Client } from "@aws-sdk/client-s3";
 import type { ModelDetails } from "@/features/models/schemas";
-import type { PrismaClient } from "@/lib/generated/prisma/client";
+import { Prisma, type PrismaClient } from "@/lib/generated/prisma/client";
 import type { License, ModelFormat, ModelStatus } from "@/lib/generated/prisma/enums";
 import { logger } from "@/lib/logger";
 import { can, type Actor } from "@/lib/permissions";
@@ -171,6 +171,36 @@ export async function uniqueSlug(
   return `${base}-${crypto.randomUUID().slice(0, 8)}`;
 }
 
+/** Collision sur l'index unique du slug (écriture concurrente). */
+export function isSlugConflict(error: unknown): boolean {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2002" &&
+    `${error.message} ${JSON.stringify(error.meta ?? {})}`.includes("slug")
+  );
+}
+
+/**
+ * Écriture qui pose un slug libre. Deux écritures simultanées peuvent calculer le même slug
+ * (vérification puis insertion) : en cas de collision, nouvel essai avec un suffixe aléatoire.
+ */
+export async function withUniqueSlug<T>(
+  prisma: PrismaClient,
+  title: string,
+  write: (slug: string) => Promise<T>,
+  excludeId?: string,
+): Promise<T> {
+  let slug = await uniqueSlug(prisma, title, excludeId);
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      return await write(slug);
+    } catch (error) {
+      if (attempt >= 4 || !isSlugConflict(error)) throw error;
+      slug = `${slugify(title, 60) || "modele"}-${crypto.randomUUID().slice(0, 8)}`;
+    }
+  }
+}
+
 /** Texte dénormalisé source de la recherche plein texte (titre, description, tags, pseudo). */
 export function buildSearchText(
   title: string,
@@ -265,14 +295,16 @@ export async function publishModel(
     return fail("VALIDATION", "errors.publish.incomplete", { fields });
   }
 
-  const slug = model.publishedAt
-    ? model.slug
-    : await uniqueSlug(deps.prisma, model.title, model.id);
-  const updated = await deps.prisma.model.update({
-    where: { id: model.id },
-    data: { status: "PUBLISHED", slug, publishedAt: model.publishedAt ?? clock(deps) },
-    select: { slug: true },
-  });
+  const publish = (slug: string) =>
+    deps.prisma.model.update({
+      where: { id: model.id },
+      data: { status: "PUBLISHED", slug, publishedAt: model.publishedAt ?? clock(deps) },
+      select: { slug: true },
+    });
+  // Slug définitif à la première publication ; ensuite il ne change plus.
+  const updated = model.publishedAt
+    ? await publish(model.slug)
+    : await withUniqueSlug(deps.prisma, model.title, publish, model.id);
   logger.info({ event: "model_published", modelId: model.id }, "Modèle publié");
   return ok({ slug: updated.slug });
 }
