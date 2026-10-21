@@ -136,17 +136,11 @@ describe("ModelView", () => {
     expect(image).toHaveAttribute("fetchpriority", "high");
 
     const href = downloadHref("papillon-ajoure");
-    for (const link of screen.getAllByRole("link", { name: /Ouvrir dans CanvasWorkspace/ })) {
-      expect(link).toHaveAttribute("href", href);
-    }
-    expect(screen.getByRole("link", { name: "Télécharger le fichier · 184 Ko" })).toHaveAttribute(
-      "href",
-      href,
-    );
-    expect(screen.getByRole("link", { name: "Télécharger le fichier (184 Ko)" })).toHaveAttribute(
-      "href",
-      href,
-    );
+    const downloads = screen.getAllByRole("link", { name: /Télécharger le projet/ });
+    expect(downloads).toHaveLength(2);
+    for (const link of downloads) expect(link).toHaveAttribute("href", href);
+    expect(screen.getByText("À ouvrir dans CanvasWorkspace · 184 Ko")).toBeInTheDocument();
+    expect(screen.queryByText(/Ouvrir dans CanvasWorkspace/)).toBeNull();
     expect(
       screen.getByRole("link", { name: "Le télécharger pour Windows ou macOS" }),
     ).toHaveAttribute("href", expect.stringContaining("canvasworkspace.brother.com"));

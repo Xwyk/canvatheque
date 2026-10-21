@@ -20,6 +20,7 @@ const PUBLIC_PAGES = [
   "/models/papillon-monarque",
   "/models/rosace-de-fenetre",
   "/members/claire-cuts",
+  "/local",
   "/about",
   "/help",
   "/legal",

@@ -5,7 +5,7 @@ import {
   clock,
   countActiveModels,
   findActionableModel,
-  uniqueSlug,
+  withUniqueSlug,
   type ModelActor,
   type ModelDeps,
 } from "@/features/models/service";
@@ -363,15 +363,17 @@ async function confirmModelFile(
       return fail("FORBIDDEN", "errors.upload.quota", { fields: { file: "quota" } });
     }
     const title = designTitle(file.designName) ?? titleFromFileName(upload.declaredName);
-    model = await deps.prisma.model.create({
-      data: {
-        title,
-        slug: await uniqueSlug(deps.prisma, title),
-        format: file.format,
-        authorId: actor.id,
-        searchText: `${title} ${actor.pseudo}`,
-      },
-    });
+    model = await withUniqueSlug(deps.prisma, title, (slug) =>
+      deps.prisma.model.create({
+        data: {
+          title,
+          slug,
+          format: file.format,
+          authorId: actor.id,
+          searchText: `${title} ${actor.pseudo}`,
+        },
+      }),
+    );
   }
 
   const extension = file.format === "SVG" ? "svg" : "cwprj";

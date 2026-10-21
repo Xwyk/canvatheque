@@ -38,7 +38,7 @@ Navigateur ──HTTPS──► Caddy ──► app (Next.js, Node 24) ──►
 
 Domaines : `auth` (comptes, sessions), `account` (amorçage, export et suppression RGPD), `uploads`
 et `models` (publication), `catalog` (recherche, galerie, fiche, profils, SEO), `downloads`,
-`favorites`, `reports` et `admin` (modération), `comments`, `content` (pages À propos, Aide,
+`favorites`, `reports` et `admin` (modération), `comments`, `local` (mode local), `content` (pages À propos, Aide,
 légales).
 
 ### Couches d'une action
@@ -86,6 +86,9 @@ Schéma : [`prisma/schema.prisma`](../prisma/schema.prisma).
   compte le téléchargement puis renvoie une URL présignée en pièce jointe.
 - **Modération** : signalement → file `/admin/reports` → masquer, supprimer, classer ; chaque
   action exige une raison, est journalisée et prévient le membre par e-mail.
+- **Mode local** ([ADR-014](adr/014-mode-local.md)) : dossier de l'ordinateur analysé dans le
+  navigateur (empreintes en Web Worker, index en IndexedDB) ; empreintes, miniature d'un `.cwprj` ou
+  publication envoyées seulement sur clic.
 - **RGPD** : export JSON (`GET /api/me/export`) ; suppression du compte avec transfert des
   modèles publiés au compte système ou suppression totale (base et MinIO).
 

@@ -64,24 +64,16 @@ test.describe("téléchargement", () => {
     await expect(page.getByRole("link", { name: "Papillon monarque" })).toBeVisible();
   });
 
-  test("CWPRJ : ouverture dans CanvasWorkspace = téléchargement et explications", async ({
+  test("CWPRJ : téléchargement du projet, sans bouton d'ouverture", async ({
     page,
     isMobile,
   }, testInfo) => {
     await signUp(page, testInfo);
     await page.goto(CWPRJ_MODEL);
+    await expect(page.getByText(/Ouvrir dans CanvasWorkspace/)).toHaveCount(0);
     const download = page.waitForEvent("download");
-    await downloadButton(page, isMobile, /Ouvrir dans CanvasWorkspace/).click();
+    await downloadButton(page, isMobile, /Télécharger le projet/).click();
     expect((await download).suggestedFilename()).toBe("rosace-de-fenetre.cwprj");
-    const help = page.getByRole("dialog", { name: "Ouvrir le modèle dans CanvasWorkspace" });
-    await expect(help).toContainText("rosace-de-fenetre.cwprj");
-    await help.getByRole("checkbox", { name: "Ne plus afficher ces explications" }).check();
-    await help.getByRole("button", { name: "J'ai compris" }).click();
-
-    // Explications masquées au téléchargement suivant.
-    const again = page.waitForEvent("download");
-    await downloadButton(page, isMobile, /Ouvrir dans CanvasWorkspace/).click();
-    await again;
     await expect(page.getByRole("dialog")).toHaveCount(0);
   });
 });

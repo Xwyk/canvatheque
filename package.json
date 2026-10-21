@@ -85,6 +85,7 @@
     "axe-core": "^4.14.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",
+    "fake-indexeddb": "6.2.5",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "msw": "^3.0.3",

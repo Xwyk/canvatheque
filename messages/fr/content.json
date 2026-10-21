@@ -64,7 +64,7 @@
           "id": "canvasworkspace",
           "title": "Ouvrir un .cwprj dans CanvasWorkspace",
           "blocks": [
-            "Les fichiers .cwprj sont des projets CanvasWorkspace pour ordinateur. Brother ne propose pas d'ouverture directe depuis un site web : le bouton « Ouvrir dans CanvasWorkspace » télécharge le fichier, qu'il suffit ensuite d'ouvrir.",
+            "Les fichiers .cwprj sont des projets CanvasWorkspace pour ordinateur. Un site web ne peut pas lancer CanvasWorkspace : téléchargez le projet depuis sa fiche (« Télécharger le projet »), puis ouvrez-le. Astuce : sous Chrome ou Edge, choisissez « Toujours ouvrir les fichiers de ce type » dans le menu du téléchargement pour que les suivants s'ouvrent tout seuls.",
             {
               "ol": [
                 "Lancez CanvasWorkspace sur votre ordinateur (Windows ou macOS).",

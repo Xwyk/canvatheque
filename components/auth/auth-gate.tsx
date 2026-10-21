@@ -15,7 +15,7 @@ import {
 // chargés à la première ouverture de la modale.
 const AuthGateDialog = lazy(() => import("@/components/auth/auth-gate-dialog"));
 
-export type GateReason = "download" | "favorite" | "publish" | "report" | "comment";
+export type GateReason = "download" | "favorite" | "publish" | "report" | "comment" | "preview";
 
 export type GateState = { reason: GateReason; redirectTo: string; tab: "signUp" | "signIn" };
 
