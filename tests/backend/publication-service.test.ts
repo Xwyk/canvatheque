@@ -22,6 +22,7 @@ import {
 import { buckets } from "@/lib/storage/s3";
 import { previewObjectKeys } from "@/lib/storage/previews";
 import { demoCwprj } from "@/prisma/seed-models";
+import { bmpImage, cwprjFile, testCwprjKey, thumbnailImage } from "@/tests/support/cwprj";
 import { prisma } from "@/tests/setup/backend";
 import {
   createCategory,
@@ -93,6 +94,7 @@ describe("envoi d'un SVG", () => {
       format: "SVG",
       fileName: "papillon-ajoure.svg",
       previewCustom: false,
+      titleUpdated: false,
       duplicateOf: null,
     });
     const model = await prisma.model.findUniqueOrThrow({ where: { id: file.modelId } });
@@ -149,6 +151,125 @@ describe("envoi d'un CWPRJ", () => {
     expect(await upload(member, "setup.cwprj", exe)).toMatchObject({
       ok: false,
       error: { message: "errors.upload.signature" },
+    });
+  });
+});
+
+describe("aperçu extrait d'un CWPRJ (ADR-013)", () => {
+  const key = testCwprjKey();
+  const withKey = () => ({ ...deps, cwprjKeys: key.keys });
+
+  async function uploadCwprj(name: string, body: Buffer, modelId?: string) {
+    const result = await upload(member, name, body, { modelId });
+    if (!result.ok) throw new Error(result.error.message);
+    return result.data as ConfirmedFile;
+  }
+
+  it("miniature → trois aperçus WebP, titre tiré du motif, publication sans image", async () => {
+    deps = withKey();
+    const png = await thumbnailImage("png", 120, 90);
+    const body = cwprjFile(key, { designName: "Boîte &amp; houx", thumbnail: png });
+    const file = await uploadCwprj("boite-houx.cwprj", body);
+    expect(file).toMatchObject({
+      format: "CWPRJ",
+      title: "Boîte & houx",
+      previewCustom: false,
+      titleUpdated: false,
+      preview: { width: 120, height: 90 },
+    });
+    const model = await prisma.model.findUniqueOrThrow({ where: { id: file.modelId } });
+    expect(model.previewKey).toMatch(new RegExp(`^${model.id}/`));
+    for (const objectKey of previewObjectKeys(model.previewKey!)) {
+      expect(await objectExists(buckets().previews, objectKey)).toBe(true);
+    }
+    // Le fichier stocké reste le projet chiffré d'origine.
+    expect(model.fileSize).toBe(body.length);
+
+    const category = await createCategory(prisma);
+    await saveModelDetails(deps, member, {
+      modelId: file.modelId,
+      title: file.title,
+      description: "",
+      categoryId: category.id,
+      license: "CC0",
+      tags: [],
+    });
+    expect(await publishModel(deps, member, file.modelId)).toMatchObject({ ok: true });
+  });
+
+  it("BMP converti ; nom de motif trop court ignoré", async () => {
+    deps = withKey();
+    const file = await uploadCwprj(
+      "sapin-de-noel.cwprj",
+      cwprjFile(key, { designName: "ab", thumbnail: bmpImage({ width: 8, height: 6 }) }),
+    );
+    expect(file).toMatchObject({ title: "Sapin de noel", preview: { width: 8, height: 6 } });
+  });
+
+  it("sans clé, ou fichier illisible : envoi accepté sans aperçu, comme avant", async () => {
+    const body = cwprjFile(key, { designName: "Couronne", thumbnail: await thumbnailImage() });
+    expect(await uploadCwprj("couronne.cwprj", body)).toMatchObject({
+      title: "Couronne",
+      preview: null,
+    });
+    deps = { ...deps, cwprjKeys: testCwprjKey().keys };
+    expect(await uploadCwprj("autre-cle.cwprj", body)).toMatchObject({
+      title: "Autre cle",
+      preview: null,
+    });
+    deps = withKey();
+    expect(await uploadCwprj("sans-miniature.cwprj", cwprjFile(key))).toMatchObject({
+      preview: null,
+    });
+    expect(await uploadCwprj("ancien.cwprj", Buffer.from("#FCM0123456789ab"))).toMatchObject({
+      preview: null,
+    });
+  });
+
+  it("nouvel envoi : titre automatique remplacé, titre saisi conservé, image du membre gardée", async () => {
+    deps = withKey();
+    const first = await uploadCwprj("premier-jet.cwprj", cwprjFile(key));
+    expect(first.title).toBe("Premier jet");
+    const second = await uploadCwprj(
+      "v2.cwprj",
+      cwprjFile(key, { designName: "Couronne de houx", thumbnail: await thumbnailImage() }),
+      first.modelId,
+    );
+    expect(second).toMatchObject({ title: "Couronne de houx", titleUpdated: true });
+    expect(
+      (await prisma.model.findUniqueOrThrow({ where: { id: first.modelId } })).searchText,
+    ).toContain("Couronne de houx");
+
+    // Titre saisi par le membre, puis image personnelle : ni l'un ni l'autre remplacés.
+    await saveModelDetails(deps, member, {
+      modelId: first.modelId,
+      title: "Ma couronne",
+      description: "",
+      categoryId: null,
+      license: null,
+      tags: [],
+    });
+    const photo = await sharp({
+      create: { width: 300, height: 200, channels: 3, background: "#D9F0EF" },
+    })
+      .png()
+      .toBuffer();
+    const custom = await upload(member, "photo.png", photo, {
+      kind: "PREVIEW",
+      modelId: first.modelId,
+      mime: "image/png",
+    });
+    expect(custom).toMatchObject({ ok: true, data: { previewCustom: true } });
+    const third = await uploadCwprj(
+      "v3.cwprj",
+      cwprjFile(key, { designName: "Autre motif", thumbnail: await thumbnailImage() }),
+      first.modelId,
+    );
+    expect(third).toMatchObject({
+      title: "Ma couronne",
+      titleUpdated: false,
+      previewCustom: true,
+      preview: { width: 300 },
     });
   });
 });

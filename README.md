@@ -167,6 +167,11 @@ Le bannissement se fait depuis l'administration (`/admin/members`, voir [Modéra
 - **Aperçus** ([ADR-003](docs/adr/003-rasterisation-resvg.md)) : rendu resvg du SVG (fond
   transparent) ou image du membre, recadrage carré optionnel, rotation EXIF appliquée puis
   métadonnées supprimées, WebP 400 / 800 / 1600 px dans le bucket public `previews`.
+- **Aperçu des `.cwprj`** ([ADR-013](docs/adr/013-miniature-cwprj.md)) : avec `CWPRJ_KEY` et
+  `CWPRJ_IV` configurés, la miniature contenue dans le projet est extraite à l'envoi, côté
+  serveur, et passe par le même pipeline. Le nom du motif propose le titre. Le membre peut
+  toujours la remplacer par sa propre image. Sans clé, ou si le fichier ne se lit pas, il fournit
+  une image comme avant. L'activation revient à l'éditeur du site (format propriétaire).
 - **Doublons** : empreinte SHA-256 ; un fichier identique à un modèle publié est signalé, sans blocage.
 - **Règles** : publication réservée aux adresses confirmées, catégorie, licence, aperçu et
   certification des droits obligatoires ; quota `MAX_MODELS_PER_USER` (brouillons compris,

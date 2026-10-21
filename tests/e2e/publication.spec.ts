@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type APIRequestContext, type Page, type TestInfo } from "@playwright/test";
+import { e2eCwprj } from "./support/cwprj";
 import { acceptTerms } from "./support/members";
 import { linkFrom, uniqueEmail, waitForMail } from "./support/mailpit";
 
@@ -15,7 +16,7 @@ const svg = (color: string) =>
 /** Membre inscrit et adresse confirmée (la publication l'exige). */
 async function verifiedMember(page: Page, request: APIRequestContext, testInfo: TestInfo) {
   const email = uniqueEmail("publication", testInfo.project.name);
-  const pseudo = `pub${Date.now().toString(36)}${testInfo.project.name.slice(0, 3)}`;
+  const pseudo = `pub${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
   await page.goto("/signup?redirectTo=%2Fpublish");
   await page.getByLabel("Pseudo").fill(pseudo);
   await page.getByLabel("Adresse e-mail").fill(email);
@@ -151,10 +152,51 @@ test.describe("publication", () => {
     );
   });
 
-  test("un visiteur est renvoyé vers la connexion", async ({ page }) => {
+  test("publier un CWPRJ sans image : aperçu extrait du projet", async ({
+    page,
+    request,
+  }, testInfo) => {
+    test.slow();
+    await verifiedMember(page, request, testInfo);
     await page.goto("/publish");
     // Dépôt géré par React : attendre l'hydratation (sinon le fichier choisi est ignoré).
     await page.waitForLoadState("networkidle");
+    const designName = `Couronne de houx ${testInfo.project.name} ${Date.now().toString(36)}`;
+    const thumbnail = PNG_1PX;
+    await fileInput(page).setInputFiles({
+      name: "couronne.cwprj",
+      mimeType: "",
+      buffer: e2eCwprj(designName, thumbnail),
+    });
+    await expect(page.getByText("Fichier vérifié : couronne.cwprj")).toBeVisible();
+    const recap = page.getByRole("complementary", { name: "Récapitulatif" });
+    await expect(recap.locator("img")).toBeVisible();
+    await expect(recap).toContainText(designName);
+
+    await page.getByRole("button", { name: "Continuer" }).click();
+    await expect(
+      page.getByText(/extrait cet aperçu de votre projet CanvasWorkspace/),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Continuer" }).click();
+    await expect(page.getByRole("textbox", { name: "Titre" })).toHaveValue(designName);
+    await page.getByRole("combobox", { name: "Catégorie" }).selectOption({ label: "Décoration" });
+    await page.getByRole("radio", { name: /CC BY-SA/ }).check();
+    await page.getByRole("button", { name: "Continuer" }).click();
+    await page.getByRole("checkbox", { name: /Je certifie/ }).check();
+    await page.getByRole("button", { name: "Publier", exact: true }).click();
+    await expect(page).toHaveURL(/\/me$/);
+
+    // Galerie et fiche : l'aperçu extrait est affiché.
+    await page.goto(`/models?q=${encodeURIComponent(designName)}`);
+    const card = main(page).getByRole("article").filter({ hasText: designName });
+    await expect(card.locator("img")).toHaveAttribute("src", /-sm\.webp$/);
+    await card.getByRole("link", { name: designName }).click();
+    await expect(page.getByRole("heading", { level: 1, name: designName })).toBeVisible();
+    await expect(page.getByRole("img", { name: `Aperçu de « ${designName} »` })).toBeVisible();
+  });
+
+  test("un visiteur est renvoyé vers la connexion", async ({ page }) => {
+    await page.goto("/publish");
     await expect(page).toHaveURL(/\/login\?redirectTo=%2Fpublish$/);
   });
 });

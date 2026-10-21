@@ -1,10 +1,17 @@
 import react from "@vitejs/plugin-react";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
 // Trois projets, une seule couverture fusionnée (coverage/lcov.info) : ADR-010.
 export default defineConfig({
   plugins: [react()],
-  resolve: { tsconfigPaths: true },
+  resolve: {
+    tsconfigPaths: true,
+    // « server-only » lève une erreur hors des composants serveur de Next : neutre en test.
+    alias: {
+      "server-only": fileURLToPath(new URL("tests/support/server-only.ts", import.meta.url)),
+    },
+  },
   test: {
     projects: [
       {

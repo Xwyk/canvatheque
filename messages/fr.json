@@ -415,7 +415,7 @@
     "quotaReached": "Vous avez atteint le nombre maximal de modèles ({max}).",
     "file": {
       "heading": "Choisissez votre fichier",
-      "text": "Un projet CanvasWorkspace (.cwprj) ou une image vectorielle (.svg). Les SVG sont nettoyés et leur aperçu est généré automatiquement.",
+      "text": "Un projet CanvasWorkspace (.cwprj) ou une image vectorielle (.svg). Les SVG sont nettoyés ; leur aperçu est généré automatiquement, comme celui des projets CanvasWorkspace quand c'est possible.",
       "dropTitle": "Glissez votre fichier ici",
       "dropHint": ".cwprj ou .svg · {max} Mo maximum",
       "replaceTitle": "Glissez un autre fichier pour le remplacer",
@@ -427,6 +427,7 @@
       "heading": "Ajoutez une image d'aperçu",
       "textCwprj": "Les fichiers .cwprj ne peuvent pas s'afficher dans le navigateur. Une belle photo ou capture de votre modèle aide les autres à le reconnaître.",
       "textSvg": "Nous avons généré cet aperçu à partir de votre SVG. Vous pouvez le remplacer par votre propre image.",
+      "textCwprjExtracted": "Nous avons extrait cet aperçu de votre projet CanvasWorkspace. Vous pouvez le remplacer par votre propre image.",
       "textCustom": "Votre image sera affichée dans la galerie. Vous pouvez la remplacer à tout moment.",
       "none": "Aucun aperçu pour l'instant",
       "dropTitle": "Glissez votre image ici",

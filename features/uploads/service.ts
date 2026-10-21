@@ -9,6 +9,8 @@ import {
   type ModelActor,
   type ModelDeps,
 } from "@/features/models/service";
+import { CwprjError, extractCwprjPreview, type CwprjPreview } from "@/lib/cwprj";
+import type { CwprjKey } from "@/lib/cwprj-keys";
 import { formatFileSize, titleFromFileName } from "@/lib/format";
 import type { Model, Upload } from "@/lib/generated/prisma/client";
 import type { ModelFormat } from "@/lib/generated/prisma/enums";
@@ -50,7 +52,11 @@ import {
  * présigné, puis vérifie et traite l'objet reçu. Il ne relaie jamais le binaire entrant.
  */
 
-export type UploadDeps = ModelDeps & { publicS3: S3Client };
+export type UploadDeps = ModelDeps & {
+  publicS3: S3Client;
+  /** Clés de déchiffrement des .cwprj (ADR-013) ; vide ou absent : pas d'aperçu automatique. */
+  cwprjKeys?: CwprjKey[];
+};
 
 /** Durée de validité d'un envoi en attente (et du formulaire présigné). */
 export const UPLOAD_TTL_MS = 15 * 60 * 1000;
@@ -156,6 +162,8 @@ export type ConfirmedFile = {
   fileSizeLabel: string;
   preview: PreviewInfo | null;
   previewCustom: boolean;
+  /** Titre remplacé par le nom du motif d'un .cwprj (brouillon existant au titre automatique). */
+  titleUpdated: boolean;
   /** Modèle publié au contenu identique (avertissement non bloquant). */
   duplicateOf: { slug: string; title: string } | null;
 };
@@ -168,6 +176,8 @@ type ProcessedModelFile = {
   body: Buffer;
   contentType: string;
   previews: PreviewSet | null;
+  /** Nom du motif lu dans un .cwprj, titre proposé. */
+  designName: string | null;
 };
 
 async function processModelFile(
@@ -185,14 +195,57 @@ async function processModelFile(
       body: Buffer.from(clean.svg, "utf8"),
       contentType: "image/svg+xml",
       previews: await buildPreviewSet(raster),
+      designName: null,
     });
   }
   if (format === "CWPRJ") {
     const check = await checkCwprjContent(buffer);
     if (!check.ok) return uploadError(check.error);
-    return ok({ format, body: buffer, contentType: "application/octet-stream", previews: null });
+    const extracted = await readCwprjPreview(deps, buffer);
+    return ok({
+      format,
+      body: buffer,
+      contentType: "application/octet-stream",
+      previews: extracted.image ? await buildPreviewSet(extracted.image) : null,
+      designName: extracted.designName,
+    });
   }
   return uploadError("extension");
+}
+
+/**
+ * Miniature et nom du motif d'un .cwprj (ADR-013). Tout échec laisse l'envoi accepté sans
+ * aperçu automatique : ancien format, autre clé, fichier illisible, image inattendue.
+ */
+async function readCwprjPreview(deps: UploadDeps, buffer: Buffer): Promise<CwprjPreview> {
+  if (!deps.cwprjKeys?.length) return { designName: null, image: null };
+  try {
+    const preview = await extractCwprjPreview(buffer, deps.cwprjKeys);
+    if (!preview.image) {
+      logger.info(
+        { event: "cwprj_preview_unavailable", reason: "noThumbnail" },
+        "Pas de miniature",
+      );
+    }
+    return preview;
+  } catch (error) {
+    if (!(error instanceof CwprjError)) throw error;
+    logger.warn(
+      { event: "cwprj_preview_unavailable", reason: error.reason },
+      "Miniature du projet illisible",
+    );
+    return { designName: null, image: null };
+  }
+}
+
+/** Titre tiré du nom du motif (3 à 80 caractères), sinon null. */
+function designTitle(designName: string | null): string | null {
+  const title = designName
+    ?.replace(/\p{Cc}/gu, "")
+    .trim()
+    .slice(0, 80)
+    .trim();
+  return title && title.length >= 3 ? title : null;
 }
 
 async function storePreviews(deps: UploadDeps, modelId: string, set: PreviewSet) {
@@ -309,7 +362,7 @@ async function confirmModelFile(
     if (!canCreateModel(deps, actor, await countActiveModels(deps.prisma, actor.id))) {
       return fail("FORBIDDEN", "errors.upload.quota", { fields: { file: "quota" } });
     }
-    const title = titleFromFileName(upload.declaredName);
+    const title = designTitle(file.designName) ?? titleFromFileName(upload.declaredName);
     model = await deps.prisma.model.create({
       data: {
         title,
@@ -349,10 +402,19 @@ async function confirmModelFile(
       };
     }
 
+    // Nom du motif d'un nouveau fichier : remplace le titre tant qu'il est celui tiré du
+    // nom du fichier précédent (jamais un titre saisi par le membre).
+    const newTitle = existing ? designTitle(file.designName) : null;
+    const titleUpdated =
+      newTitle !== null &&
+      newTitle !== existing!.title &&
+      existing!.title === titleFromFileName(existing!.fileName ?? "");
+
     const checksum = sha256(file.body);
     const updated = await deps.prisma.model.update({
       where: { id: model.id },
       data: {
+        ...(titleUpdated ? { title: newTitle, searchText: `${newTitle} ${actor.pseudo}` } : {}),
         format: file.format,
         fileKey,
         fileName: upload.declaredName,
@@ -398,6 +460,7 @@ async function confirmModelFile(
       fileSizeLabel: formatFileSize(file.body.length),
       preview: previewInfo(updated),
       previewCustom: updated.previewCustom,
+      titleUpdated,
       duplicateOf: duplicate,
     });
   } catch (error) {
